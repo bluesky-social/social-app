@@ -63,13 +63,18 @@ somewhere to put them. As of 2026-11-24 Iris drops both. That's Algo's work.
 - `loop` is which time through the video this is: 0 for the first watch, 1 for
   the second, and so on. Looping, replaying after the end and seeking back to
   the first ~1.5 seconds all start a new loop. A segment never spans two loops:
-  it ends with `looped`.
+  it ends with `looped`. Many players stop for a moment at the seam (a pause on
+  native, a buffering stall on web), so a pause or stall is held for up to 2
+  seconds: if playback picks up from the start, the segment ends `looped`;
+  otherwise it ends `paused` or `buffering` as usual.
 - `muted`, `fullscreen` and `autoplay` describe the whole segment. Muting or
   unmuting ends the segment with `muteChanged`, and entering or leaving
   fullscreen ends it with `fullscreenChanged`.
   - `muted` counts zero volume as muted on web.
   - `fullscreen` is the player's own fullscreen mode. The immersive feed has
-    none, so it's always false there; use `context` for that.
+    none, so it's always false there; use `context` for that. Android shows
+    fullscreen video in a separate screen that the OS reports as the app
+    being in the background, so the embed keeps counting while it's open.
   - `autoplay` is false when the user pressed play to start this run of
     playback (until the next pause). Resuming because the video scrolled back
     into view counts as autoplay.

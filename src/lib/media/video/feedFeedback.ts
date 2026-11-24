@@ -251,6 +251,11 @@ export function createBoundPlaybackDurationTracker({
     buffering: false,
   }
   const mode = {...initialMode}
+  /**
+   * An `autoplay` change that arrived while a pause was held. It applies only
+   * if the pause was real; resuming at a loop seam continues the same run.
+   */
+  let pendingAutoplay: boolean | undefined
   let currentBinding = binding
   let tracker = create()
 
@@ -261,6 +266,12 @@ export function createBoundPlaybackDurationTracker({
       now,
       // Segments are emitted before the mode changes, so this is its mode.
       onSegment: segment => onSegment(segment, sessionBinding, {...mode}),
+      onHoldResolved: looped => {
+        if (!looped && pendingAutoplay !== undefined) {
+          mode.autoplay = pendingAutoplay
+        }
+        pendingAutoplay = undefined
+      },
     })
   }
 
@@ -294,7 +305,11 @@ export function createBoundPlaybackDurationTracker({
         mode.fullscreen = fullscreen
       }
       if (autoplay !== undefined) {
-        mode.autoplay = autoplay
+        if (tracker.isHolding()) {
+          pendingAutoplay = autoplay
+        } else {
+          mode.autoplay = autoplay
+        }
       }
     },
     flush(endReason: PlaybackDurationEndReason) {

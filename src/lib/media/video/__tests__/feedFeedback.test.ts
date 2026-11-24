@@ -106,8 +106,13 @@ describe('createBoundPlaybackDurationTracker', () => {
   let calls: [PlaybackDurationSegment, VideoWatchBinding, VideoWatchMode][]
 
   beforeEach(() => {
+    jest.useFakeTimers()
     time = 0
     calls = []
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
   })
 
   const playFor = (
@@ -234,6 +239,35 @@ describe('createBoundPlaybackDurationTracker', () => {
       ],
       [1500, 'paused', {muted: false, fullscreen: true, autoplay: true}],
       [500, 'unmounted', {muted: false, fullscreen: true, autoplay: false}],
+    ])
+  })
+
+  it('keeps the run going through a loop seam', () => {
+    const tracker = createBoundPlaybackDurationTracker({
+      enabled: true,
+      now: () => time,
+      binding: {attribution},
+      mode: {...mode, autoplay: false},
+      onSegment: (s, binding, segmentMode) =>
+        calls.push([s, binding, segmentMode]),
+    })
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    playFor(tracker, 1500)
+    // The player stops at the end of the video and restarts by itself.
+    tracker.setPlaying(false)
+    tracker.setMode({autoplay: true})
+    tracker.setPlaying(true)
+    tracker.observeProgress(0.1)
+    time += 1000
+    tracker.observeProgress(1.1)
+    tracker.flush('unmounted')
+
+    expect(
+      calls.map(([s, , m]) => [s.loop, s.durationMs, s.endReason, m.autoplay]),
+    ).toEqual([
+      [0, 1500, 'looped', false],
+      [1, 1000, 'unmounted', false],
     ])
   })
 })

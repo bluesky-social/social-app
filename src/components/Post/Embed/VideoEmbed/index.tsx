@@ -22,6 +22,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
 import {useVideoWatchBinding} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {GifPresentationControls} from './GifPresentationControls'
@@ -129,8 +130,20 @@ function InnerWrapper({embed, post}: Props) {
     tracker.setForeground(getCurrentState() === 'active')
     return tracker
   })
+  const isAppActive = useRef(getCurrentState() === 'active')
+  const isFullscreen = useRef(false)
+  /*
+   * Android plays fullscreen video in a separate Activity, which AppState
+   * reports as the app going to the background. Keep counting while it's up.
+   */
+  const updateForeground = () => {
+    durationTracker.setForeground(
+      isAppActive.current || (IS_ANDROID && isFullscreen.current),
+    )
+  }
   useOnAppStateChange(state => {
-    durationTracker.setForeground(state === 'active')
+    isAppActive.current = state === 'active'
+    updateForeground()
   })
   useEffect(() => {
     durationTracker.rebind(videoWatchBinding)
@@ -213,6 +226,10 @@ function InnerWrapper({embed, post}: Props) {
         }}
         onPlaybackModeChange={mode => {
           durationTracker.setMode(mode)
+          if (mode.fullscreen !== undefined) {
+            isFullscreen.current = mode.fullscreen
+            updateForeground()
+          }
         }}
         onError={error => {
           durationTracker.flush('error')

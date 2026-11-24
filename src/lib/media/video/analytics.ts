@@ -10,6 +10,12 @@ export const PLAYBACK_DURATION_CHECKPOINT_MS = 30_000
  * whole seconds.
  */
 export const LOOP_RESTART_WINDOW_SECONDS = 1.5
+/**
+ * Players often stop briefly at the seam of a loop (a pause on native, a
+ * buffering stall on web). A pause or stall is held this long before it ends
+ * the segment, so that if playback resumes from the start it ends as `looped`.
+ */
+export const LOOP_SEAM_WINDOW_MS = 2_000
 
 /**
  * A small positive threshold distinguishes rendered playback from metadata
@@ -65,8 +71,14 @@ export function createPlaybackDurationTracker({
   now = () => performance.now(),
   playbackSessionId = nanoid(),
   enabled = true,
+  onHoldResolved,
 }: {
   onSegment: (segment: PlaybackDurationSegment) => void
+  /**
+   * Called once a held pause or stall is resolved (after its segment, if any,
+   * is emitted): `looped` if playback resumed from the start.
+   */
+  onHoldResolved?: (looped: boolean) => void
   now?: () => number
   playbackSessionId?: string
   /** When false, no watch time is accumulated and no segments are emitted. */
@@ -86,6 +98,13 @@ export function createPlaybackDurationTracker({
    * pauses, so a replay after the video ends still counts as a new loop.
    */
   let lastSessionPosition: number | undefined
+  /** A pause or stall that may turn out to be the seam of a loop. */
+  let held:
+    | {
+        endReason: 'paused' | 'buffering'
+        timer: ReturnType<typeof setTimeout>
+      }
+    | undefined
 
   const eligible = () =>
     enabled && active && playing && foreground && !buffering
@@ -109,9 +128,41 @@ export function createPlaybackDurationTracker({
     })
   }
 
+  /**
+   * Resolves a held stop. Its segment keeps the held reason, except that a
+   * final reason wins so the segment is still sent right away.
+   */
+  const release = (endReason?: PlaybackDurationEndReason) => {
+    if (!held) return
+    const heldReason = held.endReason
+    clearTimeout(held.timer)
+    held = undefined
+    emit(
+      endReason === 'backgrounded' || endReason === 'unmounted'
+        ? endReason
+        : heldReason,
+    )
+    onHoldResolved?.(false)
+  }
+
+  /** Ends the current segment, resolving a held stop first. */
+  const end = (endReason: PlaybackDurationEndReason) => {
+    release(endReason)
+    emit(endReason)
+  }
+
+  const hold = (endReason: 'paused' | 'buffering') => {
+    // Nothing accrues while held, so an earlier hold already covers this one.
+    if (held) return
+    held = {
+      endReason,
+      timer: setTimeout(() => release(), LOOP_SEAM_WINDOW_MS),
+    }
+  }
+
   const flush = (endReason: PlaybackDurationEndReason) => {
     resetObservation()
-    emit(endReason)
+    end(endReason)
   }
 
   const transition = (
@@ -120,7 +171,14 @@ export function createPlaybackDurationTracker({
   ) => {
     const wasEligible = eligible()
     update()
-    if (wasEligible && !eligible()) flush(endReason)
+    if (wasEligible && !eligible()) {
+      resetObservation()
+      if (endReason === 'paused' || endReason === 'buffering') {
+        hold(endReason)
+      } else {
+        end(endReason)
+      }
+    }
     if (!wasEligible && eligible()) resetObservation()
   }
 
@@ -147,8 +205,17 @@ export function createPlaybackDurationTracker({
         positionSeconds <= LOOP_RESTART_WINDOW_SECONDS
       if (looped) {
         // Time up to the wrap belongs to the loop that just finished.
+        const wasHeld = !!held
+        if (held) {
+          clearTimeout(held.timer)
+          held = undefined
+        }
         emit('looped')
         loop++
+        if (wasHeld) onHoldResolved?.(true)
+      } else if (held) {
+        // Resumed without wrapping, so the stop was a real pause or stall.
+        release()
       } else if (accumulatedMs >= PLAYBACK_DURATION_CHECKPOINT_MS) {
         emit('checkpoint')
       }
@@ -174,7 +241,11 @@ export function createPlaybackDurationTracker({
      * because the surface's playback state changed.
      */
     split(endReason: PlaybackDurationEndReason) {
-      emit(endReason)
+      end(endReason)
+    },
+    /** Whether a pause or stall is being held to see if it was a loop seam. */
+    isHolding() {
+      return !!held
     },
   }
 }
