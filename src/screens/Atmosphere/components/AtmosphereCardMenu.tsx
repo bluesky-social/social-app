@@ -15,6 +15,7 @@ import {
   useAtmosphereMetricContext,
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
+import {getAtmosphereProvider} from '#/components/atmosphere/providers'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
@@ -71,6 +72,7 @@ export function AtmosphereCardMenu({
   reportableTypes,
   author,
   galleryFocus,
+  inline = false,
   offsetY = 0,
   offsetX = 0,
   children,
@@ -90,6 +92,11 @@ export function AtmosphereCardMenu({
    */
   author?: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ItemFocusProps
+  /**
+   * Renders in the parent's layout, e.g. a card's footer row, instead of
+   * pinned to the card's top-right corner. The offsets are then ignored.
+   */
+  inline?: boolean
   /**
    * Distance from the card's top edge.
    */
@@ -144,13 +151,21 @@ export function AtmosphereCardMenu({
         report: l`Report article`,
       }
       break
-    case 'photo':
+    case 'photo': {
+      const provider = getAtmosphereProvider(item.providerId)
       labels = {
         trigger: l`Photo options`,
-        view: l`View photo`,
+        view: provider
+          ? l({
+              message: `View on ${provider.name}`,
+              comment:
+                'Menu item that opens a photo gallery in the app it was posted with, e.g. “View on Grain”',
+            })
+          : l`View photo`,
         report: l`Report photo`,
       }
       break
+    }
     case 'publication':
       labels = {
         trigger: l`Publication options`,
@@ -201,14 +216,18 @@ export function AtmosphereCardMenu({
 
   return (
     <View
-      style={[
-        a.absolute,
-        a.z_10,
-        {
-          top: offsetY > 0 ? offsetY - BUTTON_VISUAL_ADJUSTMENT : 0,
-          right: offsetX > 0 ? offsetX - BUTTON_VISUAL_ADJUSTMENT : 0,
-        },
-      ]}>
+      style={
+        inline
+          ? undefined
+          : [
+              a.absolute,
+              a.z_10,
+              {
+                top: offsetY > 0 ? offsetY - BUTTON_VISUAL_ADJUSTMENT : 0,
+                right: offsetX > 0 ? offsetX - BUTTON_VISUAL_ADJUSTMENT : 0,
+              },
+            ]
+      }>
       <Menu.Root control={loggedMenuControl}>
         <Menu.Trigger label={labels.trigger}>
           {({props}) => (

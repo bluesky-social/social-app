@@ -5,6 +5,7 @@ import {
   ScrollView,
   type StyleProp,
   StyleSheet,
+  Text,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -861,6 +862,29 @@ describe('Gallery ref', () => {
     expect(onIndexChange).toHaveBeenCalledWith(0, 2)
   })
 
+  it('scrolls an item to the front, clamped to the end, as navigation', () => {
+    const onIndexChange = jest.fn()
+    const ref = createRef<Gallery.GalleryRef>()
+    threeCards({ref, onIndexChange})
+    act(() => ref.current?.scrollToIndex(1))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 208, animated: true})
+    expect(onIndexChange).toHaveBeenLastCalledWith(1, 0)
+    // item c starts at 416, but the content ends at 616 - 300
+    act(() => ref.current?.scrollToIndex(2))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 316, animated: true})
+    expect(onIndexChange).toHaveBeenLastCalledWith(2, 1)
+  })
+
+  it('tells footers where the end is', () => {
+    function EndIndex() {
+      const {endIndex} = Gallery.useGalleryContext()
+      return <Text testID="endIndex">{endIndex}</Text>
+    }
+    threeCards({footer: <EndIndex />})
+    // scrolled all the way, item b's midpoint is past the leading edge
+    expect(screen.getByTestId('endIndex')).toHaveTextContent('2')
+  })
+
   it('ignores invalid indices', () => {
     const ref = createRef<Gallery.GalleryRef>()
     threeCards({ref})
@@ -937,7 +961,10 @@ describe('Gallery ref', () => {
   it('supports callback refs', () => {
     const calls: (Gallery.GalleryRef | null)[] = []
     const {unmount} = threeCards({ref: node => void calls.push(node)})
-    expect(calls[0]).toEqual({scrollIntoView: expect.any(Function)})
+    expect(calls[0]).toEqual({
+      scrollIntoView: expect.any(Function),
+      scrollToIndex: expect.any(Function),
+    })
     unmount()
     expect(calls[calls.length - 1]).toBeNull()
   })
