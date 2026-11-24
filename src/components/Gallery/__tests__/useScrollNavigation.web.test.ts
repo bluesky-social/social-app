@@ -25,7 +25,7 @@ function setup() {
   onNavigate = jest.fn((index: number) => {
     currentIndexRef.current = index
   })
-  renderHook(() =>
+  const hook = renderHook(() =>
     useScrollNavigation({
       scrollRef: {current: {getScrollableNode: () => scroller}},
       itemWidthsRef: {
@@ -41,7 +41,7 @@ function setup() {
       onNavigate,
     }),
   )
-  return {currentIndexRef}
+  return {...hook, currentIndexRef}
 }
 
 function scrollTo(offset: number) {
@@ -62,6 +62,30 @@ afterEach(() => {
 })
 
 describe('useScrollNavigation (web)', () => {
+  it.each(['wheel', 'touch'])(
+    'ends %s attribution before a dot reveal, and accepts fresh scrolling',
+    input => {
+      const {result, currentIndexRef} = setup()
+      if (input === 'wheel') {
+        scroller.dispatch('wheel', {deltaX: 50, deltaY: 0})
+      } else {
+        scroller.dispatch('touchstart')
+      }
+      scrollTo(150)
+      expect(onNavigate.mock.calls).toEqual([[1]])
+      onNavigate.mockClear()
+
+      result.current()
+      currentIndexRef.current = 2
+      scrollTo(300)
+      expect(onNavigate).not.toHaveBeenCalled()
+
+      scroller.dispatch('wheel', {deltaX: -50, deltaY: 0})
+      scrollTo(150)
+      expect(onNavigate.mock.calls).toEqual([[1]])
+    },
+  )
+
   it('reports each item a touch scrolls to, including its momentum', () => {
     setup()
     scroller.dispatch('touchstart')

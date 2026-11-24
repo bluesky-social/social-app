@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {isEditableTarget} from '#/components/Gallery/domUtils'
 import {tween} from '#/components/Gallery/tween'
@@ -16,11 +16,20 @@ export function useKeyboardHandlers({
   itemCount,
   resetKey,
 }: NavigationHandlerArgs) {
+  const cancelRef = useRef<(() => void) | null>(null)
+
   useEffect(() => {
     if (itemCount <= 1) return
 
     let stopTween: (() => void) | null = null
     let pendingIndex: number | null = null
+
+    const cancel = () => {
+      stopTween?.()
+      stopTween = null
+      pendingIndex = null
+    }
+    cancelRef.current = cancel
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.defaultPrevented) return
@@ -86,7 +95,8 @@ export function useKeyboardHandlers({
     window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
-      if (stopTween) stopTween()
+      cancel()
+      cancelRef.current = null
     }
   }, [
     scrollRef,
@@ -97,4 +107,6 @@ export function useKeyboardHandlers({
     itemCount,
     resetKey,
   ])
+
+  return () => cancelRef.current?.()
 }

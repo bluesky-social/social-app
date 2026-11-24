@@ -82,6 +82,39 @@ function release() {
 }
 
 describe('usePointerHandlers (web)', () => {
+  it('cancels a settle for a dot reveal and allows subsequent drags', () => {
+    const {result} = setup()
+    mouseDown(text)
+    drag(150)
+    release()
+    scrollTo.mockClear()
+    result.current()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+
+    mouseDown(text)
+    drag(150)
+    release()
+    dom.flushFrames()
+    expect(onSettle).toHaveBeenCalledTimes(1)
+  })
+
+  it('cancels a drag and clears overscroll displacement for a dot reveal', () => {
+    const {result} = setup()
+    mouseDown(text)
+    drag(400)
+    scrollTo.mockClear()
+    result.current()
+    drag(450)
+    release()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+    expect(scroller.style.transform).toBe('')
+    expect(scroller.style.userSelect).toBe('')
+  })
+
   it('does not prevent default on mousedown, so focus and selection work', () => {
     setup()
     const e = mouseDown(text)
