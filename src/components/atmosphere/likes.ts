@@ -73,15 +73,16 @@ const KINDS: Record<
 
 /**
  * Optimistic override of a record's `viewer.like`, shared by every view of
- * the record whichever query it came from. It only applies while a view
- * still has the server state it was based on, so once a refetch catches up,
- * the server wins.
+ * the record whichever query it came from. It applies to any view whose
+ * server `viewer.like` is still `baseLike`, even if its `likeCount` differs
+ * from the view the toggle came from. Once a refetch reports a different
+ * `viewer.like`, the server wins. A refetch that counts the new like before
+ * returning `viewer.like` can briefly overcount by one.
  */
 type LikeShadow = {
   /** `'pending'` while the record is being created. */
   likeUri: AtUriString | 'pending' | undefined
   baseLike: AtUriString | undefined
-  baseCount: number
 }
 
 const shadows = new Map<string, LikeShadow>()
@@ -95,7 +96,6 @@ function updateShadow(
   shadows.set(key, {
     likeUri,
     baseLike: view.viewer?.like,
-    baseCount: view.likeCount ?? 0,
   })
   emitter.emit(key)
 }
@@ -123,8 +123,7 @@ function useLikeState(view: LikeableView, kind: AtmosphereLikeKind) {
 
   const serverLike = view.viewer?.like
   const serverCount = view.likeCount ?? 0
-  const isShadowed =
-    shadow?.baseLike === serverLike && shadow?.baseCount === serverCount
+  const isShadowed = !!shadow && shadow.baseLike === serverLike
   const likeUri = isShadowed ? shadow.likeUri : serverLike
   const likeCount = isShadowed
     ? Math.max(0, serverCount + Number(!!likeUri) - Number(!!serverLike))
