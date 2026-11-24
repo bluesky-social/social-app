@@ -3,7 +3,8 @@ import {type DidString, type HandleString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAppviewClient, usePdsClient} from '#/state/session'
+import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {app, com} from '#/lexicons'
 
 const handleQueryKeyRoot = 'handle'
@@ -42,6 +43,7 @@ export function useUpdateHandleMutation(opts?: {
 }) {
   const queryClient = useQueryClient()
   const client = usePdsClient()
+  const {currentAccount} = useSession()
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
@@ -51,6 +53,17 @@ export function useUpdateHandleMutation(opts?: {
       })
     },
     onSuccess(_data, variables) {
+      if (currentAccount) {
+        /*
+         * The AppView picks up handle changes asynchronously, so refetching the
+         * profile right away can return the old handle.
+         */
+        queryClient.setQueryData<app.bsky.actor.defs.ProfileViewDetailed>(
+          RQKEY_PROFILE(currentAccount.did),
+          profile =>
+            profile && {...profile, handle: variables.handle as HandleString},
+        )
+      }
       opts?.onSuccess?.(variables.handle)
       queryClient.invalidateQueries({
         queryKey: fetchHandleQueryKey(variables.handle),

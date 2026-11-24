@@ -13,7 +13,7 @@ import Animated, {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
@@ -23,7 +23,6 @@ import {
   validateServiceHandle,
 } from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
-import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession, useSessionApi} from '#/state/session'
@@ -154,8 +153,6 @@ function ProvidedHandlePage({
   const [subdomain, setSubdomain] = useState('')
   const {refreshSession} = useSessionApi()
   const control = Dialog.useDialogContext()
-  const {currentAccount} = useSession()
-  const queryClient = useQueryClient()
   const profile = useCurrentAccountProfile()
   const verification = useSimpleVerificationState({
     profile,
@@ -168,11 +165,6 @@ function ProvidedHandlePage({
     isSuccess,
   } = useUpdateHandleMutation({
     onSuccess: () => {
-      if (currentAccount) {
-        queryClient.invalidateQueries({
-          queryKey: RQKEY_PROFILE(currentAccount.did),
-        })
-      }
       refreshSession().then(() => control.close())
     },
   })
@@ -314,7 +306,6 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const {refreshSession} = useSessionApi()
   const control = Dialog.useDialogContext()
   const fetchDid = useFetchDid()
-  const queryClient = useQueryClient()
 
   const {
     mutate: changeHandle,
@@ -323,11 +314,6 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
     isSuccess,
   } = useUpdateHandleMutation({
     onSuccess: () => {
-      if (currentAccount) {
-        queryClient.invalidateQueries({
-          queryKey: RQKEY_PROFILE(currentAccount.did),
-        })
-      }
       refreshSession().then(() => control.close())
     },
   })
