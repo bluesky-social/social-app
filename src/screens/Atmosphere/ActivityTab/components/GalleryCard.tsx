@@ -21,14 +21,13 @@ import {useAtmosphereLike} from '#/components/atmosphere/likes'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Gallery from '#/components/Gallery'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
   Heart2_Stroke2_Corner0_Rounded as HeartIcon,
 } from '#/components/icons/Heart2'
 import {getAspectRatio} from '#/components/images/Gallery/utils'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {type app, social} from '#/lexicons'
@@ -51,8 +50,8 @@ type GalleryImage = ReturnType<typeof getGalleryImages>[number]
 
 /**
  * A Grain gallery: its photos, a favorite button with known favoriters, and
- * its title, description and date. Everything but the buttons opens the
- * gallery on Grain, in the app when it's installed.
+ * its title, description and date. The photos and title open the gallery on
+ * Grain, in the app when it's installed.
  */
 export function GalleryCard({
   content: {view},
@@ -61,7 +60,6 @@ export function GalleryCard({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const {state: interacted, onIn, onOut} = useInteractionState()
   const logPress = useLogContentPress()
   const sendFeedback = useAtmosphereFeedback()
   const images = getGalleryImages(view)
@@ -70,7 +68,7 @@ export function GalleryCard({
   // `toActivityRows` already turns galleries without these into warnings.
   if (images.length === 0 || !author) return null
 
-  const linkProps: PhotoLinkProps = {
+  const linkProps: GalleryLinkProps = {
     to: view.uri,
     preferNativeApp: true,
     accessibilityHint: '',
@@ -78,10 +76,6 @@ export function GalleryCard({
       logPress('external')
       sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
     },
-    onHoverIn: onIn,
-    onHoverOut: onOut,
-    onFocus: onIn,
-    onBlur: onOut,
   }
 
   return (
@@ -93,9 +87,7 @@ export function GalleryCard({
         a.rounded_lg,
         a.border,
         t.atoms.bg,
-        interacted
-          ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
-          : t.atoms.border_contrast_low,
+        t.atoms.border_contrast_low,
       ]}>
       {images.length === 1 ? (
         <SinglePhoto image={images[0]} linkProps={linkProps} />
@@ -104,7 +96,7 @@ export function GalleryCard({
       )}
       <View style={[a.flex_row, a.align_center, a.gap_md, a.px_md, a.pt_sm]}>
         <FavoriteButton view={view} />
-        <KnownFavoriters view={view} interacted={interacted} />
+        <KnownFavoriters view={view} />
         <View style={a.flex_1} />
         <AtmosphereCardMenu
           inline
@@ -114,29 +106,21 @@ export function GalleryCard({
           author={author}
         />
       </View>
-      <Link
-        {...linkProps}
-        testID="activityGalleryCardLink"
-        label={l({
-          message: `Open gallery: ${view.title}`,
-          comment:
-            'Accessibility label for a link that opens a photo gallery. {title} is the gallery title, written by its author.',
-        })}
-        style={[
-          a.flex_col,
-          a.align_stretch,
-          a.gap_sm,
-          a.px_md,
-          a.pt_xs,
-          a.pb_md,
-        ]}>
+      <View style={[a.gap_sm, a.px_md, a.pt_xs, a.pb_md]}>
         {!!view.title && (
-          <Text
+          <InlineLinkText
+            {...linkProps}
+            testID="activityGalleryCardTitle"
+            label={l({
+              message: `Open gallery: ${view.title}`,
+              comment:
+                'Accessibility label for a link that opens a photo gallery. {title} is the gallery title, written by its author.',
+            })}
             emoji
             numberOfLines={2}
-            style={[a.text_md, a.font_bold, a.leading_snug]}>
+            style={[a.text_md, a.font_bold, a.leading_snug, t.atoms.text]}>
             {view.title}
-          </Text>
+          </InlineLinkText>
         )}
         {!!view.description.trim() && (
           <Text
@@ -147,21 +131,17 @@ export function GalleryCard({
           </Text>
         )}
         <MetaLine view={view} />
-      </Link>
+      </View>
     </View>
   )
 }
 
-/** What every link in the card shares: they all open the gallery. */
-type PhotoLinkProps = {
+/** What the card's links share: the photos and title all open the gallery. */
+type GalleryLinkProps = {
   to: string
   preferNativeApp: boolean
   accessibilityHint: string
   onPress: () => void
-  onHoverIn: () => void
-  onHoverOut: () => void
-  onFocus: () => void
-  onBlur: () => void
 }
 
 function usePhotoLabel(total: number) {
@@ -185,7 +165,7 @@ function SinglePhoto({
   linkProps,
 }: {
   image: GalleryImage
-  linkProps: PhotoLinkProps
+  linkProps: GalleryLinkProps
 }) {
   const t = useTheme()
   const getLabel = usePhotoLabel(1)
@@ -218,7 +198,7 @@ function PhotoCarousel({
   linkProps,
 }: {
   images: GalleryImage[]
-  linkProps: PhotoLinkProps
+  linkProps: GalleryLinkProps
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -259,10 +239,7 @@ function PhotoCarousel({
                   label={getLabel(image, index)}
                   ref={focusRef}
                   tabIndex={tabIndex}
-                  onFocus={() => {
-                    onFocus()
-                    linkProps.onFocus()
-                  }}
+                  onFocus={onFocus}
                   style={{
                     width: photoWidths[index],
                     height,
@@ -462,15 +439,7 @@ function FavoriteButton({view}: {view: app.bsky.embed.external.ViewGallery}) {
 }
 
 /** Avatars of people the viewer follows who favorited the gallery. */
-function KnownFavoriters({
-  view,
-  interacted,
-}: {
-  view: app.bsky.embed.external.ViewGallery
-  /** Whether the card is hovered or focused, to match its background. */
-  interacted: boolean
-}) {
-  const t = useTheme()
+function KnownFavoriters({view}: {view: app.bsky.embed.external.ViewGallery}) {
   const moderationOpts = useModerationOpts()
   const {currentAccount} = useSession()
 
@@ -484,16 +453,7 @@ function KnownFavoriters({
 
   return (
     <View accessible={false} pointerEvents="none">
-      <AvatarStack
-        profiles={profiles.slice(0, 3)}
-        size={20}
-        overlap={6}
-        backgroundColor={
-          interacted
-            ? t.atoms.bg_contrast_25.backgroundColor
-            : t.atoms.bg.backgroundColor
-        }
-      />
+      <AvatarStack profiles={profiles.slice(0, 3)} size={20} overlap={6} />
     </View>
   )
 }
