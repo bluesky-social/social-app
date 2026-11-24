@@ -3,7 +3,6 @@ import type http from 'node:http'
 
 import express from 'express'
 import promBundle from 'express-prom-bundle'
-import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
 import {Registry} from 'prom-client'
 
 import {type Config} from './config.js'
@@ -17,7 +16,6 @@ export * from './logger.js'
 export class CardService {
   public server?: http.Server
   public metricsServer?: http.Server
-  private terminator?: HttpTerminator
   private stopMetrics?: () => Promise<void>
   private draining = false
   private shutdown?: Promise<void>
@@ -84,10 +82,6 @@ export class CardService {
     // Start main application server
     this.server = this.app.listen(this.ctx.cfg.service.port)
     this.server.keepAliveTimeout = 90000
-    this.terminator = createHttpTerminator({
-      server: this.server,
-      gracefulTerminationTimeout: 15000, // 15s timeout for in-flight requests
-    })
     await events.once(this.server, 'listening')
 
     if (serveMetrics) {
@@ -114,29 +108,15 @@ export class CardService {
 
     const shutdownPromises = []
     const server = this.server
-    const closingListener = server?.listening === true
-
-    if (closingListener) {
+    if (server?.listening) {
       shutdownPromises.push(
         new Promise<void>((resolve, reject) => {
-          server.close(err => (err ? reject(err) : resolve()))
-        }),
-      )
-    }
-
-    if (this.terminator) {
-      shutdownPromises.push(
-        this.terminator.terminate().catch(err => {
-          /* http-terminator closes the listener again after draining sockets. */
-          if (
-            closingListener &&
-            err instanceof Error &&
-            'code' in err &&
-            err.code === 'ERR_SERVER_NOT_RUNNING'
-          ) {
-            return
-          }
-          throw err
+          const deadline = setTimeout(() => server.closeAllConnections(), 15000)
+          server.close(err => {
+            clearTimeout(deadline)
+            if (err) reject(err)
+            else resolve()
+          })
         }),
       )
     }
