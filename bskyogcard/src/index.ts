@@ -23,6 +23,7 @@ export class CardService {
   public app: express.Application
   public ctx: AppContext
   readonly registry: Registry
+  onFatalError?: () => void
 
   constructor(app: express.Application, ctx: AppContext, registry: Registry) {
     this.app = app
@@ -63,9 +64,9 @@ export class CardService {
     app.use(metricsMiddleware)
 
     app = routes(ctx, app)
-    app.use(errorHandler)
-
-    return new CardService(app, ctx, registry)
+    const service = new CardService(app, ctx, registry)
+    app.use(errorHandler(() => service.onFatalError?.()))
+    return service
   }
 
   async start({serveMetrics = true} = {}) {

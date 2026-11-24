@@ -8,7 +8,21 @@ import {
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
 
-export type Handler = (req: Request, res: Response) => Awaited<void>
+export type RenderErrorContext = {
+  stage: 'satori' | 'resvg'
+  starterPackUri: string
+  title: string
+  imageCount: number
+  version?: string
+  fonts: {name: string; weight?: number; sha256: string}[]
+}
+
+type HandlerResponse = Response<
+  unknown,
+  {renderErrorContext?: () => RenderErrorContext}
+>
+
+export type Handler = (req: Request, res: HandlerResponse) => Awaited<void>
 
 export const handler = (runHandler: Handler): RequestHandler => {
   return async (req, res, next) => {
@@ -32,12 +46,31 @@ export function originVerifyMiddleware(ctx: AppContext): RequestHandler {
   }
 }
 
-export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  httpLogger.error({err}, 'request error')
-  if (res.headersSent) {
-    return next(err)
+/** Logs request failures and reports WASM traps to the process owner. */
+export function errorHandler(onFatalError?: () => void): ErrorRequestHandler {
+  return (err, req, res: HandlerResponse, next) => {
+    const restartRequired = err instanceof WebAssembly.RuntimeError
+    let render: RenderErrorContext | undefined
+    let renderContextError: string | undefined
+    try {
+      render = res.locals.renderErrorContext?.()
+    } catch (contextError) {
+      renderContextError =
+        contextError instanceof Error
+          ? contextError.message
+          : 'Unknown render diagnostics failure'
+    }
+    httpLogger.error(
+      {err, render, renderContextError, restartRequired},
+      'request error',
+    )
+    /* A trapped renderer can remain broken even while /_health passes. */
+    if (restartRequired) onFatalError?.()
+    if (res.headersSent) {
+      return next(err)
+    }
+    return res.status(500).end('server error')
   }
-  return res.status(500).end('server error')
 }
 
 export async function getImage(url: string) {
