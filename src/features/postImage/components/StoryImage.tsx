@@ -30,8 +30,10 @@ import {STORY_HEIGHT, STORY_WIDTH, type StorySky} from '../const'
 import {getQuotedPostView} from '../useCanSharePostImage'
 
 /*
- * Sizes come from the design's 1080x1920 story template (the one our ads use),
- * divided by three, since the story is laid out at 360x640 and captured at 3x.
+ * The layout comes from the design's 1080x1920 story template (the one our ads
+ * use). Its graphics (card, avatar, logo) are its sizes divided by three, since
+ * the story is laid out at 360x640 and captured at 3x. Text and spacing use
+ * ALF's sizes, which are close.
  */
 
 /** The ad's card colors, used on the day sky. */
@@ -87,6 +89,15 @@ const FILL_WIDTH_SCALE = (STORY_WIDTH - SAFE_SIDE * 2) / CARD_WIDTH
 const LOGO_WIDTH = STORY_WIDTH * 0.3
 const LOGO_HEIGHT = LOGO_WIDTH * (17 / 64)
 const LOGO_GAP = Math.max(LOGO_HEIGHT * 1.1, 56 / 3)
+/**
+ * How narrow a post's photos or link card can get to make room. Past this,
+ * the whole card shrinks instead.
+ */
+const MIN_MEDIA_SCALE = 0.5
+/** Lines of text kept when the post also has media or a quote. */
+const MAX_LINES_WITH_EMBED = 6
+/** Lines of a quoted post's text. */
+const MAX_QUOTE_LINES = 4
 
 const SKIES: Record<
   StorySky,
@@ -158,10 +169,33 @@ export function StoryImage({
   const safeBottom = heavy ? SAFE_BOTTOM_HEAVY : SAFE_BOTTOM
   const available = STORY_HEIGHT - SAFE_TOP - safeBottom
   /*
-   * Content that's still too tall for the space shrinks as a whole, so nothing
-   * gets cut off.
+   * A post that's too tall for the space first narrows its media, which keeps
+   * its aspect ratio and so gets shorter, rather than shrinking all its text.
+   * Whatever's still too tall then shrinks as a whole, so nothing gets cut
+   * off.
    */
   const [groupHeight, setGroupHeight] = useState(0)
+  const [media, setMedia] = useState({height: 0, fullHeight: 0})
+  /** The tallest the group can be at full scale. */
+  const maxGroupHeight = available / FILL_WIDTH_SCALE
+  /** Everything but the media, which doesn't change as the media narrows. */
+  const restHeight = groupHeight - media.height
+  const mediaScale =
+    media.fullHeight > 0 && groupHeight > 0
+      ? Math.min(
+          1,
+          Math.max(
+            MIN_MEDIA_SCALE,
+            (maxGroupHeight - restHeight) / media.fullHeight,
+          ),
+        )
+      : 1
+  const onMediaLayout = (height: number) =>
+    setMedia(prev => ({
+      height,
+      // Measured before any narrowing, then kept
+      fullHeight: prev.fullHeight || height,
+    }))
   const fit =
     groupHeight > 0
       ? Math.min(FILL_WIDTH_SCALE, available / groupHeight)
@@ -191,7 +225,14 @@ export function StoryImage({
           style={[a.align_center, {transform: [{scale: fit}]}]}>
           {/* Light by day, dark at night, whatever the app's own theme */}
           <ThemeProvider theme={sky === 'night' ? 'dim' : 'light'}>
-            <StoryCard post={post} text={text} record={record} sky={sky} />
+            <StoryCard
+              post={post}
+              text={text}
+              record={record}
+              sky={sky}
+              mediaScale={mediaScale}
+              onMediaLayout={onMediaLayout}
+            />
           </ThemeProvider>
           <Logo sky={sky} />
         </View>
@@ -341,11 +382,17 @@ function StoryCard({
   text,
   record,
   sky,
+  mediaScale,
+  onMediaLayout,
 }: {
   post: app.bsky.feed.defs.PostView
   text: string
   record: app.bsky.feed.post.Main | undefined
   sky: StorySky
+  /** How wide the media is drawn, as a share of the card's width. */
+  mediaScale: number
+  /** Called with the media's height whenever it's laid out. */
+  onMediaLayout: (height: number) => void
 }) {
   const c = useCardColors(sky)
   const {i18n} = useLingui()
@@ -360,16 +407,9 @@ function StoryCard({
   )
   const verification = useSimpleVerificationState({profile: post.author})
   const richText = new RichTextAPI({text, facets: record?.facets})
-  const quoted = getQuotedPost(post)
+  const {media, quoted} = getStoryEmbed(post)
   // Short posts get bigger type, like the ad
-  const fontSize =
-    (text.length < 100
-      ? 44
-      : text.length < 160
-        ? 42
-        : text.length < 260
-          ? 40
-          : 38) / 3
+  const textSize = text.length < 160 ? a.text_md : a.text_sm
 
   const stats = [
     {key: 'like', icon: LikeIcon, count: post.likeCount ?? 0},
@@ -399,7 +439,9 @@ function StoryCard({
         style={[
           a.flex_row,
           a.align_center,
-          {gap: 22 / 3, marginBottom: 28 / 3, paddingRight: 88 / 3},
+          a.gap_sm,
+          a.mb_sm,
+          {paddingRight: 88 / 3},
         ]}>
         <UserAvatar
           avatar={post.author.avatar}
@@ -412,10 +454,7 @@ function StoryCard({
             <Text
               emoji
               numberOfLines={1}
-              style={[
-                a.font_bold,
-                {flexShrink: 1, fontSize: 37 / 3, color: c.text},
-              ]}>
+              style={[a.flex_shrink, a.text_sm, a.font_bold, {color: c.text}]}>
               {displayName}
             </Text>
             {/*
@@ -431,7 +470,7 @@ function StoryCard({
               </View>
             )}
           </View>
-          <Text numberOfLines={1} style={{fontSize: 31 / 3, color: c.muted}}>
+          <Text numberOfLines={1} style={[a.text_xs, {color: c.muted}]}>
             {sanitizeHandle(post.author.handle, '@')}
           </Text>
         </View>
@@ -441,24 +480,28 @@ function StoryCard({
         <RichText
           value={richText}
           disableLinks
-          style={{fontSize, lineHeight: fontSize * 1.4, color: c.text}}
+          numberOfLines={media || quoted ? MAX_LINES_WITH_EMBED : undefined}
+          style={[textSize, a.leading_snug, {color: c.text}]}
         />
       ) : null}
 
-      {quoted ? (
-        <StoryQuote quoted={quoted} fontSize={fontSize * 0.9} colors={c} />
-      ) : post.embed ? (
-        <View style={[{marginTop: 8}]}>
-          <Embed
-            embed={forStoryImage(post.embed)}
-            moderation={moderation}
-            viewContext={PostEmbedViewContext.Feed}
-            allowNestedQuotes={false}
-          />
+      {media ? (
+        <View
+          style={[a.mt_sm, a.align_center]}
+          onLayout={e => onMediaLayout(e.nativeEvent.layout.height)}>
+          <View style={{width: `${mediaScale * 100}%`}}>
+            <Embed
+              embed={forStoryImage(media)}
+              moderation={moderation}
+              viewContext={PostEmbedViewContext.Feed}
+              allowNestedQuotes={false}
+            />
+          </View>
         </View>
       ) : null}
+      {quoted ? <StoryQuote quoted={quoted} colors={c} /> : null}
 
-      <Text style={{marginTop: 28 / 3, fontSize: 28 / 3, color: c.muted}}>
+      <Text style={[a.mt_sm, a.text_2xs, {color: c.muted}]}>
         {i18n.date(new Date(post.indexedAt), {dateStyle: 'long'})}
       </Text>
 
@@ -467,27 +510,28 @@ function StoryCard({
         style={[
           a.flex_row,
           a.align_center,
+          a.gap_md,
+          a.mt_xs,
           {
-            marginTop: 14 / 3,
             paddingTop: 6,
             borderTopWidth: 1,
             borderTopColor: c.hairline,
-            gap: 44 / 3,
           },
         ]}>
         {stats.map(({key, icon: Icon, count}) => (
-          <View key={key} style={[a.flex_row, a.align_center, {gap: 4}]}>
+          <View key={key} style={[a.flex_row, a.align_center, a.gap_xs]}>
             <Icon width={44 / 3} fill={c.text} />
-            <Text style={[a.font_semi_bold, {fontSize: 27 / 3, color: c.text}]}>
+            <Text style={[a.text_2xs, a.font_semi_bold, {color: c.text}]}>
               {formatCount(i18n, count)}
             </Text>
           </View>
         ))}
         <Text
           style={[
+            a.text_2xs,
             a.font_medium,
             // The date's size, the counts' color
-            {marginLeft: 'auto', fontSize: 28 / 3, color: c.text},
+            {marginLeft: 'auto', color: c.text},
           ]}>
           bsky.app
         </Text>
@@ -525,12 +569,6 @@ function forStoryImage(
             },
           ]
         : [],
-    }
-  }
-  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
-    return {
-      ...embed,
-      media: forStoryImage(embed.media) as typeof embed.media,
     }
   }
   return embed
@@ -579,22 +617,11 @@ function getImageUrls(post: app.bsky.feed.defs.PostView): string[] {
       if (embed.external.thumb) urls.push(embed.external.thumb)
     }
   }
-  const addQuote = (record: unknown) => {
-    if (!bsky.isType(app.bsky.embed.record.viewRecord, record)) return
-    addAvatar(record.author.avatar)
-    record.embeds?.forEach(addMedia)
-  }
-
   addAvatar(post.author.avatar)
-  const embed = post.embed
-  if (bsky.isType(app.bsky.embed.record.view, embed)) {
-    addQuote(embed.record)
-  } else if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
-    addMedia(embed.media)
-    addQuote(embed.record.record)
-  } else {
-    addMedia(embed)
-  }
+  const {media, quoted} = getStoryEmbed(post)
+  addMedia(media)
+  // A quote is drawn as its author and text, without its own media
+  addAvatar(quoted?.author.avatar)
   return urls
 }
 
@@ -605,25 +632,36 @@ type QuotedPost = {
   view: app.bsky.feed.defs.PostView
 }
 
-/** A plain quoted post (not one with media), drawn like the ad's. */
-function getQuotedPost(
-  post: app.bsky.feed.defs.PostView,
-): QuotedPost | undefined {
+/**
+ * Splits the post's embed into what the story draws: its media (photos,
+ * video, link card) with the app's embed, and a quoted post as the ad's quote
+ * card. Anything else quoted, like a feed, counts as media.
+ */
+function getStoryEmbed(post: app.bsky.feed.defs.PostView): {
+  media?: NonNullable<app.bsky.feed.defs.PostView['embed']>
+  quoted?: QuotedPost
+} {
   const embed = post.embed
-  if (!embed || !bsky.isType(app.bsky.embed.record.view, embed)) return
+  if (!embed) return {}
   const view = getQuotedPostView(post)
-  if (!view) return
-  const value = view.record as {text?: string}
-  return {author: view.author, text: value.text ?? '', view}
+  const value = view?.record as {text?: string} | undefined
+  const quoted = view
+    ? {author: view.author, text: value?.text ?? '', view}
+    : undefined
+  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
+    return {media: embed.media, quoted}
+  }
+  if (bsky.isType(app.bsky.embed.record.view, embed)) {
+    return quoted ? {quoted} : {media: embed}
+  }
+  return {media: embed}
 }
 
 function StoryQuote({
   quoted,
-  fontSize,
   colors: c,
 }: {
   quoted: QuotedPost
-  fontSize: number
   colors: CardColors
 }) {
   const moderationOpts = useModerationOpts()
@@ -638,16 +676,18 @@ function StoryQuote({
   )
   return (
     <View
-      style={{
-        marginTop: 26 / 3,
-        paddingVertical: 8,
-        paddingHorizontal: 28 / 3,
-        borderWidth: 1,
-        borderColor: c.hairline,
-        borderRadius: 14,
-        borderCurve: 'continuous',
-      }}>
-      <View style={[a.flex_row, a.align_center, {gap: 4, marginBottom: 4}]}>
+      style={[
+        a.mt_sm,
+        a.py_sm,
+        a.px_sm,
+        {
+          borderWidth: 1,
+          borderColor: c.hairline,
+          borderRadius: 14,
+          borderCurve: 'continuous',
+        },
+      ]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs, a.mb_xs]}>
         <UserAvatar
           avatar={quoted.author.avatar}
           size={40 / 3}
@@ -657,19 +697,19 @@ function StoryQuote({
         <Text
           emoji
           numberOfLines={1}
-          style={[
-            a.font_bold,
-            {flexShrink: 1, fontSize: 28 / 3, color: c.text},
-          ]}>
+          style={[a.flex_shrink, a.text_2xs, a.font_bold, {color: c.text}]}>
           {name}
         </Text>
         <Text
           numberOfLines={1}
-          style={{flexShrink: 1, fontSize: 28 / 3, color: c.muted}}>
+          style={[a.flex_shrink, a.text_2xs, {color: c.muted}]}>
           {sanitizeHandle(quoted.author.handle, '@')}
         </Text>
       </View>
-      <Text emoji style={{fontSize, lineHeight: fontSize * 1.4, color: c.text}}>
+      <Text
+        emoji
+        numberOfLines={MAX_QUOTE_LINES}
+        style={[a.text_sm, a.leading_snug, {color: c.text}]}>
         {quoted.text}
       </Text>
     </View>
