@@ -54,12 +54,14 @@ describe('createPlaybackDurationTracker', () => {
         segmentIndex: 0,
         durationMs: 1_000,
         endReason: 'paused',
+        loop: 0,
       },
       {
         playbackSessionId: 'session',
         segmentIndex: 1,
         durationMs: 500,
         endReason: 'deactivated',
+        loop: 0,
       },
     ])
   })
@@ -76,6 +78,88 @@ describe('createPlaybackDurationTracker', () => {
     tracker.setPlaying(false)
 
     expect(segments[0]?.durationMs).toBe(1_000)
+  })
+
+  it('splits segments at each loop and numbers the loops', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    // A 3 second video looping twice, observed once a second.
+    for (let second = 1; second <= 8; second++) {
+      time = second * 1_000
+      tracker.observeProgress(second % 3)
+    }
+    tracker.setPlaying(false)
+
+    expect(
+      segments.map(({loop, durationMs, endReason}) => [
+        loop,
+        durationMs,
+        endReason,
+      ]),
+    ).toEqual([
+      [0, 3_000, 'looped'],
+      [1, 3_000, 'looped'],
+      [2, 2_000, 'paused'],
+    ])
+    expect(segments.map(segment => segment.segmentIndex)).toEqual([0, 1, 2])
+  })
+
+  it('counts a replay after the video ends as a new loop', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.flush('ended')
+    // The user presses play again from the start.
+    tracker.observeProgress(0.2)
+    time = 2_000
+    tracker.observeProgress(1)
+    tracker.setPlaying(false)
+
+    expect(segments.map(({loop, endReason}) => [loop, endReason])).toEqual([
+      [0, 'ended'],
+      [1, 'paused'],
+    ])
+  })
+
+  it('does not count a seek within the video as a loop', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(10)
+    time = 1_000
+    tracker.observeProgress(5)
+    time = 2_000
+    tracker.observeProgress(6)
+    tracker.setPlaying(false)
+
+    expect(segments).toEqual([
+      expect.objectContaining({durationMs: 2_000, loop: 0}),
+    ])
+  })
+
+  it('splits without losing time between observations', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.split('muteChanged')
+    time = 2_000
+    tracker.observeProgress(2)
+    tracker.setPlaying(false)
+
+    expect(
+      segments.map(({durationMs, endReason}) => [durationMs, endReason]),
+    ).toEqual([
+      [1_000, 'muteChanged'],
+      [1_000, 'paused'],
+    ])
   })
 
   it('does not count stalled playback or a suspended timer gap', () => {
@@ -125,12 +209,14 @@ describe('createPlaybackDurationTracker', () => {
         segmentIndex: 0,
         durationMs: 30_000,
         endReason: 'checkpoint',
+        loop: 0,
       },
       {
         playbackSessionId: 'session',
         segmentIndex: 1,
         durationMs: 2_000,
         endReason: 'paused',
+        loop: 0,
       },
     ])
   })

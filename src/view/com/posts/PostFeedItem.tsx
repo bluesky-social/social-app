@@ -10,7 +10,6 @@ import {type FeedPostNumbering} from '#/lib/api/feed-manip'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {type VideoFeedFeedbackAttribution} from '#/lib/media/video/feedFeedback'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {
@@ -443,7 +442,6 @@ let FeedItemInner = ({
               post={post}
               additionalPostAlerts={additionalPostAlerts}
               feedDescriptor={feedDescriptor}
-              videoFeedbackAttribution={{item: post.uri, feedContext, reqId}}
             />
             <PostControls
               post={post}
@@ -479,7 +477,6 @@ let PostContent = ({
   onOpenEmbed,
   additionalPostAlerts,
   feedDescriptor,
-  videoFeedbackAttribution,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
@@ -490,7 +487,6 @@ let PostContent = ({
   postNumbering: FeedPostNumbering | undefined
   additionalPostAlerts?: AppModerationCause[]
   feedDescriptor?: string
-  videoFeedbackAttribution: VideoFeedFeedbackAttribution
 }): React.ReactNode => {
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
@@ -567,7 +563,6 @@ let PostContent = ({
             viewContext={PostEmbedViewContext.Feed}
             post={post}
             feedDescriptor={feedDescriptor}
-            videoFeedbackAttribution={videoFeedbackAttribution}
           />
         </View>
       ) : null}

@@ -51,7 +51,6 @@ import {
   getSourceLoadDurationSeconds,
   getVideoMediaKey,
   sendVideoWatchSegment,
-  type VideoFeedFeedbackAttribution,
 } from '#/lib/media/video/feedFeedback'
 import {
   createPlaybackTelemetry,
@@ -111,11 +110,27 @@ import {
   useFeedFeedback,
   useFeedFeedbackContext,
   useFeedItemFeedback,
+  useVideoWatchBinding,
 } from '#/features/feedFeedback'
 import {usePostFeedQuery as useFollowingV2PostFeedQuery} from '#/features/followingV2/home/queries/postFeed'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
+
+/**
+ * Players whose next play was started by the user rather than by becoming the
+ * active item, for video watch feedback's `autoplay`.
+ */
+const userStartedPlayers = new WeakSet<VideoPlayer>()
+
+function markUserStartedPlayback(player: VideoPlayer) {
+  userStartedPlayers.add(player)
+}
+
+/** Whether the user started this play, clearing the mark. */
+function consumeUserStartedPlayback(player: VideoPlayer) {
+  return userStartedPlayers.delete(player)
+}
 
 function createThreeVideoPlayers(
   sources?: [string, string, string],
@@ -610,7 +625,6 @@ let VideoItem = ({
               embed={embed}
               post={post}
               active={active}
-              feedbackAttribution={{item: post.uri, feedContext, reqId}}
             />
           )}
           {moderation && (
@@ -650,13 +664,11 @@ function VideoItemInner({
   embed,
   post,
   active,
-  feedbackAttribution,
 }: {
   player: VideoPlayer
   embed: app.bsky.embed.video.View
   post: app.bsky.feed.defs.PostView
   active: boolean
-  feedbackAttribution: VideoFeedFeedbackAttribution
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
@@ -664,13 +676,15 @@ function VideoItemInner({
     ReportDialogMetadataContext.useReportDialogMetadataContext()
   const ax = useAnalytics()
   const playbackStartTrackedRef = useRef(false)
-  const {sendVideoWatch} = useFeedFeedbackContext()
+  const videoWatchBinding = useVideoWatchBinding()
   const videoDurationSeconds = useRef<number | undefined>(undefined)
   const [durationTracker] = useState(() => {
     const tracker = createBoundPlaybackDurationTracker({
       enabled: embed.presentation !== 'gif',
-      binding: {attribution: feedbackAttribution, sendVideoWatch},
-      onSegment: (segment, binding) => {
+      binding: videoWatchBinding,
+      // There's no fullscreen mode here, and the active item plays by itself.
+      mode: {muted: player.muted, fullscreen: false, autoplay: true},
+      onSegment: (segment, binding, mode) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post.uri,
@@ -681,6 +695,7 @@ function VideoItemInner({
         sendVideoWatchSegment({
           binding,
           segment,
+          mode,
           context: 'immersiveFeed',
           videoDurationSeconds: videoDurationSeconds.current,
         })
@@ -699,8 +714,8 @@ function VideoItemInner({
   }, [active, durationTracker])
 
   useEffect(() => {
-    durationTracker.rebind({attribution: feedbackAttribution, sendVideoWatch})
-  }, [durationTracker, feedbackAttribution, sendVideoWatch])
+    durationTracker.rebind(videoWatchBinding)
+  }, [durationTracker, videoWatchBinding])
 
   useEffect(() => {
     return () => durationTracker.flush('unmounted')
@@ -748,7 +763,14 @@ function VideoItemInner({
   })
 
   useEventListener(player, 'playingChange', evt => {
+    if (evt.isPlaying) {
+      durationTracker.setMode({autoplay: !consumeUserStartedPlayback(player)})
+    }
     durationTracker.setPlaying(evt.isPlaying)
+  })
+
+  useEventListener(player, 'mutedChange', evt => {
+    durationTracker.setMode({muted: evt.muted})
   })
 
   /*
@@ -989,6 +1011,7 @@ function Overlay({
   }))
 
   const onPressShow = useCallback(() => {
+    if (player) markUserStartedPlayback(player)
     player?.play()
   }, [player])
 
@@ -1299,6 +1322,7 @@ function PlayPauseTapArea({
       if (player.playing) {
         player.pause()
       } else {
+        markUserStartedPlayback(player)
         player.play()
       }
     } catch (err) {

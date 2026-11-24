@@ -1,3 +1,4 @@
+import {type VideoWatchMode} from '#/lib/media/video/feedFeedback'
 import {type app} from '#/lexicons'
 
 export type VideoEmbedInnerWebProps = {
@@ -12,6 +13,11 @@ export type VideoEmbedInnerWebProps = {
    * metadata loads (and Infinity for live streams).
    */
   onPlaybackProgress: (progressSeconds: number, durationSeconds: number) => void
+  /**
+   * Called before `onPlaybackStateChange('playing')` with the full mode, and
+   * again whenever muting or fullscreen changes.
+   */
+  onPlaybackModeChange: (mode: Partial<VideoWatchMode>) => void
   onPlaybackStateChange: (state: 'playing' | 'paused' | 'buffering') => void
   onPlaybackEnd: () => void
 }

@@ -13,11 +13,11 @@ import throttle from 'lodash.throttle'
 import {PROD_FEEDS, STAGING_FEEDS, TRENDING_DID} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
-  type FeedFeedbackInteraction,
   isFinalVideoWatchSegment,
   isVideoWatchInteraction,
-  VIDEO_WATCH_EVENT,
+  type VideoWatchBinding,
   type VideoWatchInteraction,
+  type VideoWatchPayload,
 } from '#/lib/media/video/feedFeedback'
 import {type FeedSourceInfo, isFeedSourceFeedInfo} from '#/state/queries/feed'
 import {
@@ -67,6 +67,11 @@ export type UnspeccedInteractionPayload =
   | {type: 'unmuteAuthor'}
   /** `reason` is the report option the user picked. */
   | {type: 'report'; reason?: string}
+  /**
+   * A segment of video watch time. Off behind `FeedVideoWatchEnable`; see
+   * `src/lib/media/video/feedFeedback.md`.
+   */
+  | VideoWatchPayload
 
 /**
  * An `interactionUnspecced` event about `item`, the post the action was taken
@@ -103,9 +108,9 @@ export type StateContext = {
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: app.bsky.feed.defs.Interaction) => void
   /**
-   * Private, provisional video watch feedback. Only provided by
-   * `useFeedFeedback`, and gated there behind `FeedVideoWatchEnable` and
-   * official Discover/Trending feeds.
+   * Video watch feedback. Only provided by `useFeedFeedback`, and gated there
+   * behind `FeedVideoWatchEnable` and the signed-in session. Use
+   * `useVideoWatchBinding` rather than reading this directly.
    */
   sendVideoWatch?: (interaction: VideoWatchInteraction) => void
   feedDescriptor: FeedDescriptor | undefined
@@ -428,6 +433,22 @@ export function useFeedItemFeedback() {
   return {item, feedDescriptor, send, sendUnspecced}
 }
 
+/**
+ * Where a video player should send its watch feedback: the feed item it's
+ * inside of, through this feed's queue. Quoted videos inherit the outer feed
+ * item. Outside a feed item, `attribution` is undefined and nothing is sent.
+ */
+export function useVideoWatchBinding(): VideoWatchBinding {
+  const {sendVideoWatch} = useFeedFeedbackContext()
+  const item = useContext(feedItemContext)
+  return {
+    sendVideoWatch,
+    attribution: item?.uri
+      ? {item: item.uri, feedContext: item.feedContext, reqId: item.reqId}
+      : undefined,
+  }
+}
+
 // TODO
 // We will introduce a permissions framework for 3p feeds to
 // take advantage of the feed feedback API. Until that's in
@@ -443,20 +464,15 @@ export function isTrendingFeed(feed?: FeedDescriptor) {
 
 function isInteractionAllowed(
   feed: FeedDescriptor,
-  interaction: FeedFeedbackInteraction,
+  interaction: app.bsky.feed.defs.Interaction,
   isVideoWatchAllowed: () => boolean,
 ) {
-  const isOfficialFeed = isDiscoverFeed(feed) || isTrendingFeed(feed)
-  if (interaction.event === VIDEO_WATCH_EVENT) {
-    // Private and provisional: never sent to third-party feeds.
-    return (
-      isOfficialFeed &&
-      isVideoWatchInteraction(interaction) &&
-      isVideoWatchAllowed()
-    )
-  }
   if (!interaction.event) {
     return false
+  }
+  const isOfficialFeed = isDiscoverFeed(feed) || isTrendingFeed(feed)
+  if (isVideoWatchInteraction(interaction)) {
+    return isOfficialFeed && isVideoWatchAllowed()
   }
   return (
     isOfficialFeed || THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction.event)
@@ -464,40 +480,32 @@ function isInteractionAllowed(
 }
 
 /**
- * Dedup key within a batch. Video watch segments also include their session
- * and index so repeated copies of one segment collapse but distinct segments
- * survive.
+ * Dedup key within a batch. The payload is part of it, so distinct video watch
+ * segments (by session and index) are all kept.
  */
-function toKey(interaction: FeedFeedbackInteraction): string {
-  const key: unknown[] = [
+function toKey(interaction: app.bsky.feed.defs.Interaction): string {
+  return JSON.stringify([
     interaction.item,
     interaction.event,
     interaction.feedContext ?? '',
     interaction.reqId ?? '',
     interaction.payload ?? null,
-  ]
-  if (isVideoWatchInteraction(interaction)) {
-    key.push(
-      interaction.videoWatch.playbackSessionId,
-      interaction.videoWatch.segmentIndex,
-    )
-  }
-  return JSON.stringify(key)
+  ])
 }
 
 function createFeedbackQueue({
   isAllowed,
   send,
 }: {
-  isAllowed: (interaction: FeedFeedbackInteraction) => boolean
-  send: (interactions: FeedFeedbackInteraction[]) => void
+  isAllowed: (interaction: app.bsky.feed.defs.Interaction) => boolean
+  send: (interactions: app.bsky.feed.defs.Interaction[]) => void
 }) {
   /*
    * Keyed by `toKey` so the same interaction is only sent once per batch.
    * Re-adding a key moves it to the end, so a toggle like save, unsave, save
    * arrives as unsave then save, and the last event is the current state.
    */
-  const pending = new Map<string, FeedFeedbackInteraction>()
+  const pending = new Map<string, app.bsky.feed.defs.Interaction>()
   let attached = true
 
   const sendNow = () => {
@@ -519,7 +527,7 @@ function createFeedbackQueue({
   return {
     isAllowed,
     enqueue(
-      interaction: FeedFeedbackInteraction,
+      interaction: app.bsky.feed.defs.Interaction,
       {immediate = false}: {immediate?: boolean} = {},
     ) {
       const key = toKey(interaction)
@@ -558,7 +566,7 @@ function createAggregatedStats(): AggregatedStats {
 
 function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
-  interactions: FeedFeedbackInteraction[],
+  interactions: app.bsky.feed.defs.Interaction[],
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {

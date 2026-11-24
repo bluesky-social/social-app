@@ -4,6 +4,12 @@ export const PLAYBACK_START_THRESHOLD_SECONDS = 0.05
 export const MIN_PLAYBACK_DURATION_SEGMENT_MS = 250
 export const MAX_PLAYBACK_PROGRESS_GAP_MS = 2_500
 export const PLAYBACK_DURATION_CHECKPOINT_MS = 30_000
+/**
+ * A jump back to within this many seconds of the start counts as a new loop.
+ * Generous enough for the native embed, whose progress ticks once a second in
+ * whole seconds.
+ */
+export const LOOP_RESTART_WINDOW_SECONDS = 1.5
 
 /**
  * A small positive threshold distinguishes rendered playback from metadata
@@ -26,12 +32,23 @@ export type PlaybackDurationEndReason =
   | 'ended'
   | 'error'
   | 'unmounted'
+  /** Playback went back to the start, so the next segment is a new loop. */
+  | 'looped'
+  /** The surface split the segment because its playback state changed. */
+  | 'muteChanged'
+  | 'fullscreenChanged'
 
 export type PlaybackDurationSegment = {
   playbackSessionId: string
   segmentIndex: number
   durationMs: number
   endReason: PlaybackDurationEndReason
+  /**
+   * Which time through the video this segment is: 0 for the first watch, 1
+   * for the second, and so on. Loops, replays and seeking back to the start
+   * all start a new loop.
+   */
+  loop: number
 }
 
 export type PlaybackDurationTracker = ReturnType<
@@ -63,6 +80,12 @@ export function createPlaybackDurationTracker({
   let lastObservedAt: number | undefined
   let accumulatedMs = 0
   let segmentIndex = 0
+  let loop = 0
+  /**
+   * Last position seen in this session. Unlike `lastPosition`, this survives
+   * pauses, so a replay after the video ends still counts as a new loop.
+   */
+  let lastSessionPosition: number | undefined
 
   const eligible = () =>
     enabled && active && playing && foreground && !buffering
@@ -72,8 +95,8 @@ export function createPlaybackDurationTracker({
     lastObservedAt = undefined
   }
 
-  const flush = (endReason: PlaybackDurationEndReason) => {
-    resetObservation()
+  /** Emits the accumulated time, without touching the observation state. */
+  const emit = (endReason: PlaybackDurationEndReason) => {
     const durationMs = Math.round(accumulatedMs)
     accumulatedMs = 0
     if (durationMs < MIN_PLAYBACK_DURATION_SEGMENT_MS) return
@@ -82,7 +105,13 @@ export function createPlaybackDurationTracker({
       segmentIndex: segmentIndex++,
       durationMs,
       endReason,
+      loop,
     })
+  }
+
+  const flush = (endReason: PlaybackDurationEndReason) => {
+    resetObservation()
+    emit(endReason)
   }
 
   const transition = (
@@ -110,13 +139,22 @@ export function createPlaybackDurationTracker({
         const elapsed = observedAt - lastObservedAt
         if (elapsed > 0 && elapsed <= MAX_PLAYBACK_PROGRESS_GAP_MS) {
           accumulatedMs += elapsed
-          if (accumulatedMs >= PLAYBACK_DURATION_CHECKPOINT_MS) {
-            flush('checkpoint')
-          }
         }
+      }
+      const looped =
+        lastSessionPosition !== undefined &&
+        positionSeconds < lastSessionPosition &&
+        positionSeconds <= LOOP_RESTART_WINDOW_SECONDS
+      if (looped) {
+        // Time up to the wrap belongs to the loop that just finished.
+        emit('looped')
+        loop++
+      } else if (accumulatedMs >= PLAYBACK_DURATION_CHECKPOINT_MS) {
+        emit('checkpoint')
       }
       lastPosition = positionSeconds
       lastObservedAt = observedAt
+      lastSessionPosition = positionSeconds
     },
     setActive(value: boolean) {
       transition(() => (active = value), 'deactivated')
@@ -131,5 +169,12 @@ export function createPlaybackDurationTracker({
       transition(() => (buffering = value), 'buffering')
     },
     flush,
+    /**
+     * Ends the current segment without interrupting playback tracking, e.g.
+     * because the surface's playback state changed.
+     */
+    split(endReason: PlaybackDurationEndReason) {
+      emit(endReason)
+    },
   }
 }

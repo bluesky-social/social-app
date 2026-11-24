@@ -4,6 +4,7 @@ import {
   createBoundPlaybackDurationTracker,
   getSourceLoadDurationSeconds,
   type VideoWatchBinding,
+  type VideoWatchMode,
 } from '../feedFeedback'
 
 const segment: PlaybackDurationSegment = {
@@ -11,7 +12,9 @@ const segment: PlaybackDurationSegment = {
   segmentIndex: 0,
   durationMs: 1200,
   endReason: 'paused',
+  loop: 1,
 }
+const mode = {muted: true, fullscreen: false, autoplay: true}
 const attribution = {
   item: 'at://did:plc:a/app.bsky.feed.post/1',
   feedContext: 'ctx|with|pipes',
@@ -30,31 +33,38 @@ describe('buildVideoWatchInteraction', () => {
     const interaction = buildVideoWatchInteraction({
       attribution,
       segment,
+      mode,
       context: 'embed',
       videoDurationSeconds,
     })
-    expect('videoDurationMs' in interaction.videoWatch).toBe(false)
+    expect('videoDurationMs' in interaction.payload).toBe(false)
     expect(JSON.stringify(interaction)).not.toContain('videoDurationMs')
   })
 
-  it('includes rounded length and the segment identity', () => {
+  it('sends an unspecced event with the rounded length, loop and mode', () => {
     expect(
       buildVideoWatchInteraction({
         attribution,
         segment,
+        mode,
         context: 'immersiveFeed',
         videoDurationSeconds: 12.3456,
       }),
     ).toEqual({
       item: attribution.item,
-      event: 'app.bsky.feed.defs#interactionVideoWatch',
+      event: 'app.bsky.feed.defs#interactionUnspecced',
       feedContext: 'ctx|with|pipes',
       reqId: 'req-1',
-      videoWatch: {
+      payload: {
+        type: 'videoWatch',
         durationMs: 1200,
         videoDurationMs: 12346,
         playbackSessionId: 'session',
         segmentIndex: 0,
+        loop: 1,
+        muted: true,
+        fullscreen: false,
+        autoplay: true,
         context: 'immersiveFeed',
         endReason: 'paused',
       },
@@ -93,7 +103,7 @@ describe('getSourceLoadDurationSeconds', () => {
 
 describe('createBoundPlaybackDurationTracker', () => {
   let time = 0
-  let calls: [PlaybackDurationSegment, VideoWatchBinding][]
+  let calls: [PlaybackDurationSegment, VideoWatchBinding, VideoWatchMode][]
 
   beforeEach(() => {
     time = 0
@@ -118,7 +128,9 @@ describe('createBoundPlaybackDurationTracker', () => {
       enabled: true,
       now: () => time,
       binding: first,
-      onSegment: (s, binding) => calls.push([s, binding]),
+      mode,
+      onSegment: (s, binding, segmentMode) =>
+        calls.push([s, binding, segmentMode]),
     })
     tracker.setActive(true)
     tracker.setPlaying(true)
@@ -160,7 +172,9 @@ describe('createBoundPlaybackDurationTracker', () => {
       enabled: true,
       now: () => time,
       binding: {attribution, sendVideoWatch: jest.fn()},
-      onSegment: (s, binding) => calls.push([s, binding]),
+      mode,
+      onSegment: (s, binding, segmentMode) =>
+        calls.push([s, binding, segmentMode]),
     })
     tracker.setActive(true)
     tracker.setPlaying(true)
@@ -174,7 +188,9 @@ describe('createBoundPlaybackDurationTracker', () => {
       enabled: true,
       now: () => time,
       binding: {attribution},
-      onSegment: (s, binding) => calls.push([s, binding]),
+      mode,
+      onSegment: (s, binding, segmentMode) =>
+        calls.push([s, binding, segmentMode]),
     })
     tracker.setActive(true)
     tracker.setPlaying(false)
@@ -182,5 +198,42 @@ describe('createBoundPlaybackDurationTracker', () => {
     playFor(tracker, 1000)
     tracker.flush('unmounted')
     expect(calls).toHaveLength(0)
+  })
+
+  it('splits on mute and fullscreen changes and tags each segment', () => {
+    const tracker = createBoundPlaybackDurationTracker({
+      enabled: true,
+      now: () => time,
+      binding: {attribution},
+      mode,
+      onSegment: (s, binding, segmentMode) =>
+        calls.push([s, binding, segmentMode]),
+    })
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    playFor(tracker, 1000)
+    // Unchanged values don't split.
+    tracker.setMode({muted: true, fullscreen: false, autoplay: true})
+    tracker.setMode({muted: false})
+    playFor(tracker, 2000)
+    tracker.setMode({fullscreen: true})
+    playFor(tracker, 1500)
+    tracker.setPlaying(false)
+    // The next play was started by the user.
+    tracker.setMode({autoplay: false})
+    tracker.setPlaying(true)
+    playFor(tracker, 500)
+    tracker.flush('unmounted')
+
+    expect(calls.map(([s, , m]) => [s.durationMs, s.endReason, m])).toEqual([
+      [1000, 'muteChanged', {muted: true, fullscreen: false, autoplay: true}],
+      [
+        2000,
+        'fullscreenChanged',
+        {muted: false, fullscreen: false, autoplay: true},
+      ],
+      [1500, 'paused', {muted: false, fullscreen: true, autoplay: true}],
+      [500, 'unmounted', {muted: false, fullscreen: true, autoplay: false}],
+    ])
   })
 })

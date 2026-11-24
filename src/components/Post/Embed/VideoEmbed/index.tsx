@@ -10,7 +10,6 @@ import {
   createBoundPlaybackDurationTracker,
   getVideoMediaKey,
   sendVideoWatchSegment,
-  type VideoFeedFeedbackAttribution,
 } from '#/lib/media/video/feedFeedback'
 import {
   createPlaybackTelemetry,
@@ -23,7 +22,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
-import {useFeedFeedbackContext} from '#/features/feedFeedback'
+import {useVideoWatchBinding} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {GifPresentationControls} from './GifPresentationControls'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
@@ -32,11 +31,9 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 interface Props {
   embed: app.bsky.embed.video.View
   post?: app.bsky.feed.defs.PostView
-  /** Explicit feed attribution; without it no watch feedback is sent. */
-  feedbackAttribution?: VideoFeedFeedbackAttribution
 }
 
-export function VideoEmbed({embed, post, feedbackAttribution}: Props) {
+export function VideoEmbed({embed, post}: Props) {
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -67,7 +64,6 @@ export function VideoEmbed({embed, post, feedbackAttribution}: Props) {
         key={getVideoMediaKey({postUri: post?.uri, playlist: embed.playlist})}
         embed={embed}
         post={post}
-        feedbackAttribution={feedbackAttribution}
       />
     </ErrorBoundary>
   )
@@ -85,10 +81,12 @@ export function VideoEmbed({embed, post, feedbackAttribution}: Props) {
   )
 }
 
-function InnerWrapper({embed, post, feedbackAttribution}: Props) {
+function InnerWrapper({embed, post}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const {sendVideoWatch} = useFeedFeedbackContext()
+  const videoWatchBinding = useVideoWatchBinding()
+  /** Unknown until the player reports it. */
+  const videoDurationSeconds = useRef<number | undefined>(undefined)
   const ref = useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
@@ -108,8 +106,10 @@ function InnerWrapper({embed, post, feedbackAttribution}: Props) {
   const [durationTracker] = useState(() => {
     const tracker = createBoundPlaybackDurationTracker({
       enabled: embed.presentation !== 'gif',
-      binding: {attribution: feedbackAttribution, sendVideoWatch},
-      onSegment: (segment, binding) => {
+      binding: videoWatchBinding,
+      // The player reports its real mode before playback starts.
+      mode: {muted: true, fullscreen: false, autoplay: true},
+      onSegment: (segment, binding, mode) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post?.uri,
@@ -117,8 +117,13 @@ function InnerWrapper({embed, post, feedbackAttribution}: Props) {
           context: 'embed',
           presentation: embed.presentation === 'gif' ? 'gif' : 'video',
         })
-        // The native player only reports remaining time, so length is unknown.
-        sendVideoWatchSegment({binding, segment, context: 'embed'})
+        sendVideoWatchSegment({
+          binding,
+          segment,
+          mode,
+          context: 'embed',
+          videoDurationSeconds: videoDurationSeconds.current,
+        })
       },
     })
     tracker.setForeground(getCurrentState() === 'active')
@@ -128,8 +133,8 @@ function InnerWrapper({embed, post, feedbackAttribution}: Props) {
     durationTracker.setForeground(state === 'active')
   })
   useEffect(() => {
-    durationTracker.rebind({attribution: feedbackAttribution, sendVideoWatch})
-  }, [durationTracker, feedbackAttribution, sendVideoWatch])
+    durationTracker.rebind(videoWatchBinding)
+  }, [durationTracker, videoWatchBinding])
   useEffect(() => {
     return () => {
       telemetryRef.current?.deactivated()
@@ -200,8 +205,14 @@ function InnerWrapper({embed, post, feedbackAttribution}: Props) {
             autoplay,
           })
         }}
-        onPlaybackProgress={progressSeconds => {
+        onPlaybackProgress={(progressSeconds, durationSeconds) => {
+          if (durationSeconds !== undefined) {
+            videoDurationSeconds.current = durationSeconds
+          }
           durationTracker.observeProgress(progressSeconds)
+        }}
+        onPlaybackModeChange={mode => {
+          durationTracker.setMode(mode)
         }}
         onError={error => {
           durationTracker.flush('error')

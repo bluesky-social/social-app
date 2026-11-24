@@ -15,7 +15,6 @@ import {
   createBoundPlaybackDurationTracker,
   getVideoMediaKey,
   sendVideoWatchSegment,
-  type VideoFeedFeedbackAttribution,
 } from '#/lib/media/video/feedFeedback'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
@@ -30,7 +29,7 @@ import {
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
 import {useAnalytics} from '#/analytics'
-import {useFeedFeedbackContext} from '#/features/feedFeedback'
+import {useVideoWatchBinding} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
@@ -47,8 +46,6 @@ const MIN_CARD_WIDTH = 280
 type VideoEmbedProps = {
   embed: app.bsky.embed.video.View
   post?: app.bsky.feed.defs.PostView
-  /** Explicit feed attribution; without it no watch feedback is sent. */
-  feedbackAttribution?: VideoFeedFeedbackAttribution
 }
 
 export function VideoEmbed(props: VideoEmbedProps) {
@@ -64,7 +61,7 @@ export function VideoEmbed(props: VideoEmbedProps) {
   )
 }
 
-function VideoEmbedInner({embed, post, feedbackAttribution}: VideoEmbedProps) {
+function VideoEmbedInner({embed, post}: VideoEmbedProps) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {
@@ -80,7 +77,7 @@ function VideoEmbedInner({embed, post, feedbackAttribution}: VideoEmbedProps) {
   const impressionTrackedRef = useRef(false)
   const playbackStartTrackedRef = useRef(false)
   const ax = useAnalytics()
-  const {sendVideoWatch} = useFeedFeedbackContext()
+  const videoWatchBinding = useVideoWatchBinding()
   const videoDurationSeconds = useRef<number | undefined>(undefined)
 
   const isGif = embed.presentation === 'gif'
@@ -89,8 +86,10 @@ function VideoEmbedInner({embed, post, feedbackAttribution}: VideoEmbedProps) {
   const [durationTracker] = useState(() => {
     const tracker = createBoundPlaybackDurationTracker({
       enabled: !isGif,
-      binding: {attribution: feedbackAttribution, sendVideoWatch},
-      onSegment: (segment, binding) => {
+      binding: videoWatchBinding,
+      // The player reports its real mode before playback starts.
+      mode: {muted: true, fullscreen: false, autoplay: true},
+      onSegment: (segment, binding, mode) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post?.uri,
@@ -101,6 +100,7 @@ function VideoEmbedInner({embed, post, feedbackAttribution}: VideoEmbedProps) {
         sendVideoWatchSegment({
           binding,
           segment,
+          mode,
           context: 'embed',
           videoDurationSeconds: videoDurationSeconds.current,
         })
@@ -119,8 +119,8 @@ function VideoEmbedInner({embed, post, feedbackAttribution}: VideoEmbedProps) {
   }, [active, durationTracker, onScreen])
 
   useEffect(() => {
-    durationTracker.rebind({attribution: feedbackAttribution, sendVideoWatch})
-  }, [durationTracker, feedbackAttribution, sendVideoWatch])
+    durationTracker.rebind(videoWatchBinding)
+  }, [durationTracker, videoWatchBinding])
 
   useEffect(() => {
     return () => durationTracker.flush('unmounted')
@@ -280,6 +280,9 @@ function VideoEmbedInner({embed, post, feedbackAttribution}: VideoEmbedProps) {
             onPlaybackProgress={(progressSeconds, durationSeconds) => {
               videoDurationSeconds.current = durationSeconds
               durationTracker.observeProgress(progressSeconds)
+            }}
+            onPlaybackModeChange={mode => {
+              durationTracker.setMode(mode)
             }}
             onPlaybackStateChange={state => {
               durationTracker.setBuffering(state === 'buffering')

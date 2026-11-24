@@ -154,11 +154,7 @@ function MediaEmbed({
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
-          <VideoEmbed
-            embed={embed.view}
-            post={rest.post}
-            feedbackAttribution={rest.videoFeedbackAttribution}
-          />
+          <VideoEmbed embed={embed.view} post={rest.post} />
         </ContentHider>
       )
     }
@@ -313,7 +309,6 @@ export function QuoteEmbed({
   isWithinQuote: parentIsWithinQuote,
   allowNestedQuotes: parentAllowNestedQuotes,
   viewContext,
-  videoFeedbackAttribution,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
   viewContext?: PostEmbedViewContext
@@ -411,8 +406,6 @@ export function QuoteEmbed({
           // The photo embed belongs to the quoted post, so attribute its
           // analytics to the quoted post rather than the parent.
           post={quote}
-          // Feed feedback still belongs to the outer recommended item.
-          videoFeedbackAttribution={videoFeedbackAttribution}
         />
       )}
     </ReportDialogMetadataContext.Provider>

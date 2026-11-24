@@ -8,18 +8,12 @@ import {
   type PlaybackDurationSegment,
 } from './analytics'
 
-/**
- * PROVISIONAL: not yet part of the published `app.bsky.feed.defs` lexicon.
- * See `feedFeedback.md` before changing the shape or enabling the flag.
- */
-export const VIDEO_WATCH_EVENT = 'app.bsky.feed.defs#interactionVideoWatch'
-
 export type VideoWatchContext = 'embed' | 'immersiveFeed'
 
 /**
- * Feed attribution for video watch feedback. Only feed surfaces that render a
- * recommended item set this, and it is passed through quote embeds unchanged
- * so watch time is attributed to the recommended (outer) item.
+ * Feed attribution for video watch feedback: the recommended feed item the
+ * video was shown in. For a quoted video that's the outer post, not the quoted
+ * one.
  */
 export type VideoFeedFeedbackAttribution = {
   /** URI of the recommended feed item, not necessarily the post owning the media. */
@@ -28,36 +22,55 @@ export type VideoFeedFeedbackAttribution = {
   reqId?: string
 }
 
-export type VideoWatchPayload = {
+/**
+ * How the video was playing. A change to `muted` or `fullscreen` ends the
+ * current segment, so each segment has one value for each. `autoplay` only
+ * changes when playback (re)starts, which already starts a new segment.
+ */
+export type VideoWatchMode = {
+  muted: boolean
+  /**
+   * The player's own fullscreen mode. The immersive video feed has none, so
+   * it's always false there; `context` already says it was immersive.
+   */
+  fullscreen: boolean
+  /** Playback started without the user pressing play. */
+  autoplay: boolean
+}
+
+/**
+ * The `payload` of an `interactionUnspecced` video watch event. See
+ * `feedFeedback.md` for what each field means downstream.
+ */
+export type VideoWatchPayload = VideoWatchMode & {
+  type: 'videoWatch'
   /** Watch time in this segment only (a delta, not a running total). */
   durationMs: number
   /** Authoritative video length. Absent when unknown, never zero or estimated. */
   videoDurationMs?: number
   playbackSessionId: string
   segmentIndex: number
+  /** 0 for the first time through the video, 1 for the second, and so on. */
+  loop: number
   context: VideoWatchContext
   endReason: PlaybackDurationEndReason
 }
 
-/**
- * Local additive extension of `app.bsky.feed.defs#interaction`. The lex
- * client serializes JSON bodies as-is, so `videoWatch` reaches the feed
- * generator without a schema change.
- */
 export type VideoWatchInteraction = app.bsky.feed.defs.Interaction & {
   item: AtUriString
-  event: typeof VIDEO_WATCH_EVENT
-  videoWatch: VideoWatchPayload
+  event: 'app.bsky.feed.defs#interactionUnspecced'
+  payload: VideoWatchPayload
 }
 
-/** Anything the feed feedback queue can send. */
-export type FeedFeedbackInteraction =
-  app.bsky.feed.defs.Interaction | VideoWatchInteraction
-
 export function isVideoWatchInteraction(
-  interaction: FeedFeedbackInteraction,
+  interaction: app.bsky.feed.defs.Interaction,
 ): interaction is VideoWatchInteraction {
-  return interaction.event === VIDEO_WATCH_EVENT && 'videoWatch' in interaction
+  return (
+    interaction.event === 'app.bsky.feed.defs#interactionUnspecced' &&
+    typeof interaction.payload === 'object' &&
+    interaction.payload !== null &&
+    (interaction.payload as {type?: unknown}).type === 'videoWatch'
+  )
 }
 
 /**
@@ -75,32 +88,39 @@ export function toVideoDurationMs(seconds: number | undefined) {
 export function buildVideoWatchInteraction({
   attribution,
   segment,
+  mode,
   context,
   videoDurationSeconds,
 }: {
   attribution: VideoFeedFeedbackAttribution
   segment: PlaybackDurationSegment
+  mode: VideoWatchMode
   context: VideoWatchContext
   videoDurationSeconds?: number
 }): VideoWatchInteraction {
-  const videoWatch: VideoWatchPayload = {
+  const payload: VideoWatchPayload = {
+    type: 'videoWatch',
     durationMs: segment.durationMs,
     playbackSessionId: segment.playbackSessionId,
     segmentIndex: segment.segmentIndex,
+    loop: segment.loop,
+    muted: mode.muted,
+    fullscreen: mode.fullscreen,
+    autoplay: mode.autoplay,
     context,
     endReason: segment.endReason,
   }
   const videoDurationMs = toVideoDurationMs(videoDurationSeconds)
   // Leave the key off entirely when unknown so it's absent in the JSON body.
   if (videoDurationMs !== undefined) {
-    videoWatch.videoDurationMs = videoDurationMs
+    payload.videoDurationMs = videoDurationMs
   }
   return {
     item: attribution.item,
-    event: VIDEO_WATCH_EVENT,
+    event: 'app.bsky.feed.defs#interactionUnspecced',
     feedContext: attribution.feedContext,
     reqId: attribution.reqId,
-    videoWatch,
+    payload,
   }
 }
 
@@ -130,7 +150,7 @@ export function getSourceLoadDurationSeconds(
  * after the feed's own lifecycle flush, so they are sent immediately.
  */
 export function isFinalVideoWatchSegment(interaction: VideoWatchInteraction) {
-  const {endReason} = interaction.videoWatch
+  const {endReason} = interaction.payload
   return endReason === 'backgrounded' || endReason === 'unmounted'
 }
 
@@ -170,17 +190,18 @@ function isSameBinding(a: VideoWatchBinding, b: VideoWatchBinding) {
 
 /**
  * Sends a segment as watch feedback through the binding it was recorded
- * under. Without explicit attribution nothing is sent: attribution is never
- * inferred from the ambient feed.
+ * under. Without a feed item to attribute it to, nothing is sent.
  */
 export function sendVideoWatchSegment({
   binding,
   segment,
+  mode,
   context,
   videoDurationSeconds,
 }: {
   binding: VideoWatchBinding
   segment: PlaybackDurationSegment
+  mode: VideoWatchMode
   context: VideoWatchContext
   videoDurationSeconds?: number
 }) {
@@ -189,6 +210,7 @@ export function sendVideoWatchSegment({
     buildVideoWatchInteraction({
       attribution: binding.attribution,
       segment,
+      mode,
       context,
       videoDurationSeconds,
     }),
@@ -197,22 +219,26 @@ export function sendVideoWatchSegment({
 
 /**
  * Wraps the playback duration tracker so each session is bound to one
- * attribution and feed sender. When either changes (e.g. a refetch hands the
- * same post a new reqId, or the feed's client changes) the player keeps
- * playing, but the old session is flushed through the OLD binding and a new
- * session starts with the last known eligibility state, so segments never mix
- * requests or feeds.
+ * attribution and feed sender, and each segment to one playback mode.
+ *
+ * When the binding changes (e.g. a refetch hands the same post a new reqId,
+ * or the feed's client changes) the player keeps playing, but the old session
+ * is flushed through the OLD binding and a new session starts with the last
+ * known eligibility state, so segments never mix requests or feeds.
  */
 export function createBoundPlaybackDurationTracker({
   binding,
+  mode: initialMode,
   onSegment,
   enabled,
   now,
 }: {
   binding: VideoWatchBinding
+  mode: VideoWatchMode
   onSegment: (
     segment: PlaybackDurationSegment,
     binding: VideoWatchBinding,
+    mode: VideoWatchMode,
   ) => void
   enabled: boolean
   now?: () => number
@@ -224,6 +250,7 @@ export function createBoundPlaybackDurationTracker({
     foreground: true,
     buffering: false,
   }
+  const mode = {...initialMode}
   let currentBinding = binding
   let tracker = create()
 
@@ -232,7 +259,8 @@ export function createBoundPlaybackDurationTracker({
     return createPlaybackDurationTracker({
       enabled,
       now,
-      onSegment: segment => onSegment(segment, sessionBinding),
+      // Segments are emitted before the mode changes, so this is its mode.
+      onSegment: segment => onSegment(segment, sessionBinding, {...mode}),
     })
   }
 
@@ -255,6 +283,19 @@ export function createBoundPlaybackDurationTracker({
     setBuffering(value: boolean) {
       inputs.buffering = value
       tracker.setBuffering(value)
+    },
+    setMode({muted, fullscreen, autoplay}: Partial<VideoWatchMode>) {
+      if (muted !== undefined && muted !== mode.muted) {
+        tracker.split('muteChanged')
+        mode.muted = muted
+      }
+      if (fullscreen !== undefined && fullscreen !== mode.fullscreen) {
+        tracker.split('fullscreenChanged')
+        mode.fullscreen = fullscreen
+      }
+      if (autoplay !== undefined) {
+        mode.autoplay = autoplay
+      }
     },
     flush(endReason: PlaybackDurationEndReason) {
       tracker.flush(endReason)

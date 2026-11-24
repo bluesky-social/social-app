@@ -19,8 +19,12 @@ jest.mock(
   }),
 )
 const mockSendVideoWatch = jest.fn<void, [VideoWatchInteraction]>()
+const OUTER = 'at://did:plc:outer/app.bsky.feed.post/outer' as const
 jest.mock('#/features/feedFeedback', () => ({
-  useFeedFeedbackContext: () => ({sendVideoWatch: mockSendVideoWatch}),
+  useVideoWatchBinding: () => ({
+    attribution: {item: OUTER, feedContext: 'ctx', reqId: 'req'},
+    sendVideoWatch: mockSendVideoWatch,
+  }),
 }))
 jest.mock('../ActiveVideoWebContext', () => ({
   useActiveVideoWeb: () => ({
@@ -71,7 +75,6 @@ const post = {
   uri: 'at://did:plc:quoted/app.bsky.feed.post/media',
   author: {did: 'did:plc:quoted'},
 } as unknown as app.bsky.feed.defs.PostView
-const OUTER = 'at://did:plc:outer/app.bsky.feed.post/outer' as const
 
 let time = 0
 beforeEach(() => {
@@ -97,17 +100,18 @@ beforeEach(() => {
   } as unknown as typeof IntersectionObserver
 })
 
-it('includes the media element length in watch feedback', () => {
+it('includes the media element length and mode in watch feedback', () => {
   const view = render(
-    <VideoEmbed
-      embed={embed}
-      post={post}
-      feedbackAttribution={{item: OUTER, feedContext: 'ctx', reqId: 'req'}}
-    />,
+    <VideoEmbed embed={embed} post={post} />,
     // The observers need a node to observe.
     {createNodeMock: () => ({})},
   )
   act(() => {
+    mockInner.onPlaybackModeChange({
+      autoplay: false,
+      muted: false,
+      fullscreen: false,
+    })
     mockInner.onPlaybackStateChange('playing')
     mockInner.onPlaybackProgress(0, Number.NaN) // metadata not loaded yet
     time += 1000
@@ -120,10 +124,16 @@ it('includes the media element length in watch feedback', () => {
     item: OUTER,
     feedContext: 'ctx',
     reqId: 'req',
-    videoWatch: {
+    event: 'app.bsky.feed.defs#interactionUnspecced',
+    payload: {
+      type: 'videoWatch',
       durationMs: 1000,
       videoDurationMs: 42250,
       endReason: 'unmounted',
+      loop: 0,
+      autoplay: false,
+      muted: false,
+      fullscreen: false,
     },
   })
 })

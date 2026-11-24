@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {hasPlaybackStarted} from '#/lib/media/video/analytics'
+import {type VideoWatchMode} from '#/lib/media/video/feedFeedback'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
@@ -29,6 +30,7 @@ export function VideoEmbedInnerNative({
   setIsActive,
   onPlaybackStart,
   onPlaybackProgress,
+  onPlaybackModeChange,
   onError,
 }: {
   ref: React.Ref<{togglePlayback: () => void}>
@@ -37,7 +39,19 @@ export function VideoEmbedInnerNative({
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void
   onPlaybackStart: (autoplay: boolean) => void
-  onPlaybackProgress: (progressSeconds: number) => void
+  /**
+   * `durationSeconds` is the video's length, or undefined until the player
+   * knows it.
+   */
+  onPlaybackProgress: (
+    progressSeconds: number,
+    durationSeconds: number | undefined,
+  ) => void
+  /**
+   * Called before `setStatus('playing')` with the full mode, and again
+   * whenever muting or fullscreen changes.
+   */
+  onPlaybackModeChange?: (mode: Partial<VideoWatchMode>) => void
   /**
    * Called with the native error message before the component throws to the
    * surrounding error boundary.
@@ -53,15 +67,20 @@ export function VideoEmbedInnerNative({
   const maxTimeRemainingSeconds = useRef(0)
   const playbackStartTrackedRef = useRef(false)
 
+  /** Set when the user presses play, so the next play isn't autoplay. */
+  const userStartedPlaybackRef = useRef(false)
+  const fullscreenRef = useRef(false)
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(0)
   const [error, setError] = useState<string>()
 
-  useImperativeHandle(ref, () => ({
-    togglePlayback: () => {
-      videoRef.current?.togglePlayback()
-    },
-  }))
+  const togglePlayback = () => {
+    if (!isPlaying) userStartedPlaybackRef.current = true
+    videoRef.current?.togglePlayback()
+  }
+
+  useImperativeHandle(ref, () => ({togglePlayback}))
 
   if (error) {
     throw new Error(error)
@@ -69,13 +88,16 @@ export function VideoEmbedInnerNative({
 
   const isGif = embed.presentation === 'gif'
   const autoplay = !autoplayDisabled && !isWithinMessage
+  const beginMuted = isGif || (autoplayDisabled ? false : muted)
+  /** The player's muted state, which starts at `beginMuted`. */
+  const mutedRef = useRef(beginMuted)
 
   return (
     <View style={[a.flex_1, a.relative]}>
       <BlueskyVideoView
         url={embed.playlist}
         autoplay={autoplay}
-        beginMuted={isGif || (autoplayDisabled ? false : muted)}
+        beginMuted={beginMuted}
         style={[a.rounded_sm]}
         onActiveChange={e => {
           setIsActive(e.nativeEvent.isActive)
@@ -84,16 +106,35 @@ export function VideoEmbedInnerNative({
           setIsLoading(e.nativeEvent.isLoading)
         }}
         onMutedChange={e => {
+          mutedRef.current = e.nativeEvent.isMuted
+          onPlaybackModeChange?.({muted: e.nativeEvent.isMuted})
           if (!isGif) {
             setMuted(e.nativeEvent.isMuted)
           }
         }}
+        onFullscreenChange={e => {
+          fullscreenRef.current = e.nativeEvent.isFullscreen
+          onPlaybackModeChange?.({fullscreen: e.nativeEvent.isFullscreen})
+        }}
         onStatusChange={e => {
+          if (e.nativeEvent.status === 'playing') {
+            onPlaybackModeChange?.({
+              autoplay: !userStartedPlaybackRef.current,
+              muted: mutedRef.current,
+              fullscreen: fullscreenRef.current,
+            })
+            userStartedPlaybackRef.current = false
+          }
           setStatus(e.nativeEvent.status)
           setIsPlaying(e.nativeEvent.status === 'playing')
         }}
         onTimeRemainingChange={e => {
           const {timeRemaining} = e.nativeEvent
+          /*
+           * TODO: drop the cast once @bsky.app/video reports `duration`
+           * (bluesky-social/bluesky-video#69). Until then it's undefined.
+           */
+          const {duration} = e.nativeEvent as {duration?: number}
           setTimeRemaining(timeRemaining)
           if (Number.isFinite(timeRemaining) && timeRemaining >= 0) {
             maxTimeRemainingSeconds.current = Math.max(
@@ -111,6 +152,7 @@ export function VideoEmbedInnerNative({
             }
             onPlaybackProgress(
               Math.max(0, maxTimeRemainingSeconds.current - timeRemaining),
+              duration,
             )
             if (!isGif && reportDialogMetadata) {
               reportDialogMetadata.current.videoTimestampSeconds = Math.max(
@@ -130,9 +172,7 @@ export function VideoEmbedInnerNative({
       />
       {isGif ? (
         <GifPresentationControls
-          onPress={() => {
-            videoRef.current?.togglePlayback()
-          }}
+          onPress={togglePlayback}
           isPlaying={isPlaying}
           isLoading={false}
           altText={embed.alt}
@@ -146,9 +186,7 @@ export function VideoEmbedInnerNative({
             toggleMuted={() => {
               videoRef.current?.toggleMuted()
             }}
-            togglePlayback={() => {
-              videoRef.current?.togglePlayback()
-            }}
+            togglePlayback={togglePlayback}
             isPlaying={isPlaying}
             timeRemaining={timeRemaining}
           />

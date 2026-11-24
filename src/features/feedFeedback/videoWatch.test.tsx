@@ -109,7 +109,7 @@ const ITEM = 'at://did:plc:author/app.bsky.feed.post/outer' as const
 
 function watch(
   segmentIndex: number,
-  endReason: VideoWatchInteraction['videoWatch']['endReason'] = 'paused',
+  endReason: VideoWatchInteraction['payload']['endReason'] = 'paused',
 ) {
   return buildVideoWatchInteraction({
     attribution: {item: ITEM, feedContext: 'a|b|c', reqId: 'req-1'},
@@ -118,7 +118,9 @@ function watch(
       segmentIndex,
       durationMs: 1500,
       endReason,
+      loop: 0,
     },
+    mode: {muted: true, fullscreen: false, autoplay: true},
     context: 'embed',
     videoDurationSeconds: 30,
   })
@@ -187,15 +189,23 @@ it('sends the watch payload intact through the lex client, batched and deduped',
     interactions: [seen, like, watch(0), watch(1)],
   })
   expect(
-    (request.body.interactions[2] as VideoWatchInteraction).videoWatch,
+    (request.body.interactions[2] as VideoWatchInteraction).payload,
   ).toEqual({
+    type: 'videoWatch',
     durationMs: 1500,
     videoDurationMs: 30000,
     playbackSessionId: 'session-1',
     segmentIndex: 0,
+    loop: 0,
+    muted: true,
+    fullscreen: false,
+    autoplay: true,
     context: 'embed',
     endReason: 'paused',
   })
+  expect((request.body.interactions[2] as VideoWatchInteraction).event).toBe(
+    'app.bsky.feed.defs#interactionUnspecced',
+  )
 
   // Watch time is not counted as engagement.
   expect(mockMetric).toHaveBeenCalledWith('feed:seen', {
@@ -218,6 +228,21 @@ it('drops watch feedback when the flag is off', async () => {
   act(() => {
     result.current.sendInteraction({...seen})
     result.current.sendVideoWatch(watch(0, 'unmounted'))
+  })
+  await settle(10e3)
+
+  expect(requests.map(r => r.body.interactions)).toEqual([[seen]])
+})
+
+it('gates watch feedback on the flag even through sendInteraction', async () => {
+  const {client, requests} = makeClient()
+  mockClient = client
+  mockFeatureEnabled.mockReturnValue(false)
+  const {result} = render(DISCOVER)
+
+  act(() => {
+    result.current.sendInteraction({...seen})
+    result.current.sendInteraction(watch(0))
   })
   await settle(10e3)
 

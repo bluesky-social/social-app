@@ -74,6 +74,7 @@ function Player({
         lastKnownTime={{current: undefined}}
         onPlaybackStart={() => {}}
         onPlaybackProgress={onPlaybackProgress}
+        onPlaybackModeChange={() => {}}
         onPlaybackStateChange={() => {}}
         onPlaybackEnd={() => {}}
       />
