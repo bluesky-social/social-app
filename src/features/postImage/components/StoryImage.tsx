@@ -30,8 +30,8 @@ import {STORY_HEIGHT, STORY_WIDTH, type StorySky} from '../const'
 import {getQuotedPostView} from '../useCanSharePostImage'
 
 /*
- * Sizes are the ad generator's (bluesky-ad-generator-2) divided by three, so
- * the two match.
+ * Sizes come from the design's 1080x1920 story template (the one our ads use),
+ * divided by three, since the story is laid out at 360x640 and captured at 3x.
  */
 
 /** The ad's card colors, used on the day sky. */

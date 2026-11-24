@@ -6,12 +6,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {InstagramStory} from '@bsky.app/expo-bluesky-swiss-army'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {Asset, requestPermissionsAsync} from '#/lib/media/media-library'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -261,7 +261,13 @@ function PostImage({
           })
           return 'noPermission'
         }
-        await saveToLibraryAsync(await makeImage())
+        const uri = await makeImage()
+        try {
+          // Copies the file into Photos, so ours can go
+          await Asset.create(uri)
+        } finally {
+          releaseCapturedView(uri)
+        }
         Toast.show(l`Image saved to your photos`, {type: 'success'})
         return 'done'
       },
