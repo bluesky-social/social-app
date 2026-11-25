@@ -15,6 +15,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
+import {CombinedTab} from './CombinedTab'
 import {AtmosphereExploreTab} from './ExploreTab'
 import {AtmosphereForYouTab} from './ForYouTab'
 import {AtmosphereMetricsScope} from './metrics/context'
@@ -24,7 +25,13 @@ import {useTabMetrics} from './metrics/useTabMetrics'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
 /** In pager order, matching the sections below. */
-const TABS: AtmosphereTab[] = ['discover', 'following', 'explore', 'apps']
+const TABS: AtmosphereTab[] = [
+  'discover',
+  'following',
+  'explore',
+  'apps',
+  'combined',
+]
 const APPS_TAB_INDEX = TABS.indexOf('apps')
 
 export function AtmosphereScreen({}: Props) {
@@ -58,6 +65,7 @@ function AtmosphereScreenInner() {
       ),
     },
     {title: l`Apps`, component: <AtmosphereAppsTab />},
+    {title: l`Combined`, component: <CombinedTab />},
   ]
 
   return (

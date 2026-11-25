@@ -5,9 +5,11 @@
 /**
  * The Atmosphere screen's tabs, in pager order. `'discover'` and `'following'`
  * are the For You and Activity tabs; the values are kept so event data stays
- * continuous with what was logged before the tabs were renamed.
+ * continuous with what was logged before the tabs were renamed. `'combined'`
+ * is Activity with For You mixed in, in development.
  */
-export type AtmosphereTab = 'discover' | 'following' | 'explore' | 'apps'
+export type AtmosphereTab =
+  'discover' | 'following' | 'explore' | 'apps' | 'combined'
 
 /**
  * Where in Atmosphere an event happened:

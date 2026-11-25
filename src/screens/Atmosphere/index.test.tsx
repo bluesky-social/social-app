@@ -85,6 +85,10 @@ jest.mock('./AppsTab', () => {
   const {View} = jest.requireActual('react-native')
   return {AtmosphereAppsTab: () => <View testID="atmosphereAppsTab" />}
 })
+jest.mock('./CombinedTab', () => {
+  const {View} = jest.requireActual('react-native')
+  return {CombinedTab: () => <View testID="combinedTab" />}
+})
 jest.mock('#/view/com/pager/Pager', () => {
   const React = jest.requireActual<typeof import('react')>('react')
   const {View} =
@@ -223,7 +227,7 @@ describe('AtmosphereScreen', () => {
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['For You', 'Activity', 'Explore', 'Apps'])
+    ).toEqual(['For You', 'Activity', 'Explore', 'Apps', 'Combined'])
     expect(
       screen.getByRole('tab', {name: 'For You'}).props.accessibilityState,
     ).toEqual({selected: true})
