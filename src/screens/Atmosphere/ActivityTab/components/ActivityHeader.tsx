@@ -24,6 +24,12 @@ import {place, site, social} from '#/lexicons'
 import {type ActivityCardRow} from '../rows'
 import {ActivitySentence} from './ActivitySentence'
 
+const AVATAR_SIZE = 32
+const AVATAR_GAP = a.gap_md.gap
+
+/** Lines content under the header up with its text, past the avatar. */
+export const ACTIVITY_CONTENT_INDENT = AVATAR_SIZE + AVATAR_GAP
+
 export function ActivityHeader({row}: {row: ActivityCardRow}) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -49,10 +55,10 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
   }
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_md]}>
+    <View style={[a.flex_row, a.align_center, {gap: AVATAR_GAP}]}>
       <PreviewableUserAvatar
         type="user"
-        size={32}
+        size={AVATAR_SIZE}
         profile={actor}
         moderation={moderation?.ui('avatar')}
         onBeforePress={logProfilePress}

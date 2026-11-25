@@ -27,7 +27,7 @@ import {
   type ActivityRow as ActivityRowModel,
 } from '../rows'
 import {ActivityContentHider} from './ActivityContentHider'
-import {ActivityHeader} from './ActivityHeader'
+import {ACTIVITY_CONTENT_INDENT, ActivityHeader} from './ActivityHeader'
 import {GalleryCard} from './GalleryCard'
 import {LivestreamCard} from './LivestreamCard'
 
@@ -63,27 +63,29 @@ function ActivityCard({
   return (
     <>
       <ActivityHeader row={row} />
-      <ActivityContentHider moderation={row.moderation}>
-        <AtmosphereContentItem
-          item={getContentMetricContextProps(
-            row.content.type,
-            row.content.view,
-            {
-              position,
-              activityReferrerCollection: row.collection,
-              activityReferrerGrouping: row.grouping,
-            },
-          )}>
-          <ActivityContentCard
-            content={row.content}
-            recommenders={row.related.find(
-              related =>
-                related.collection === site.standard.graph.recommend.$type,
-            )}
-          />
-        </AtmosphereContentItem>
-      </ActivityContentHider>
-      <ViewAllLink row={row} />
+      <View style={[a.gap_md, {paddingLeft: ACTIVITY_CONTENT_INDENT}]}>
+        <ActivityContentHider moderation={row.moderation}>
+          <AtmosphereContentItem
+            item={getContentMetricContextProps(
+              row.content.type,
+              row.content.view,
+              {
+                position,
+                activityReferrerCollection: row.collection,
+                activityReferrerGrouping: row.grouping,
+              },
+            )}>
+            <ActivityContentCard
+              content={row.content}
+              recommenders={row.related.find(
+                related =>
+                  related.collection === site.standard.graph.recommend.$type,
+              )}
+            />
+          </AtmosphereContentItem>
+        </ActivityContentHider>
+        <ViewAllLink row={row} />
+      </View>
     </>
   )
 }
