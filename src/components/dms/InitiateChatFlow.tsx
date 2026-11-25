@@ -296,6 +296,7 @@ export function InitiateChatFlow({
         showRecentConvos &&
         !!onSelectExistingChat &&
         chatState === ChatState.NEW_CHAT,
+      isPeopleLoading: isPlaceholderData,
     })
   /*
    * Wait for both people and group chats before showing search results, so

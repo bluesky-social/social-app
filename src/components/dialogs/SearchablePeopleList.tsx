@@ -118,6 +118,7 @@ export function SearchablePeopleList({
     useGroupChatSearch({
       searchText,
       enabled: !!showRecentConvos && !renderProfileCard,
+      isPeopleLoading: isPlaceholderData,
     })
   /*
    * Wait for both people and group chats before showing search results, so

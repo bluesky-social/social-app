@@ -1,3 +1,5 @@
+import {useState} from 'react'
+
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
@@ -18,12 +20,24 @@ const GROUP_CHAT_SEARCH_LIMIT = 100
 export function useGroupChatSearch({
   searchText,
   enabled,
+  isPeopleLoading,
 }: {
   searchText: string
   enabled: boolean
+  /**
+   * True while the people search for `searchText` loads and the previous
+   * search's people are still on screen. The groups keep matching that
+   * previous search until it's done, so groups and people change together
+   * instead of the groups jumping ahead with every keystroke.
+   */
+  isPeopleLoading: boolean
 }): {groups: ConvoWithDetails[]; isLoading: boolean} {
   const {currentAccount} = useSession()
-  const query = searchText.trim().toLocaleLowerCase()
+  const [matchedText, setMatchedText] = useState(searchText)
+  if (!isPeopleLoading && matchedText !== searchText) {
+    setMatchedText(searchText)
+  }
+  const query = matchedText.trim().toLocaleLowerCase()
   /*
    * The recent chats the chat search lists already load. When there's no next
    * page it holds every chat, so it's searched instead of fetching the group
@@ -36,7 +50,8 @@ export function useGroupChatSearch({
   })
   const recentIsComplete = !!recent && !recent.pages.at(-1)?.cursor
   const {data: allGroups, isLoading} = useListConvosQuery({
-    enabled: enabled && query.length > 0 && !recentIsComplete,
+    // Starts on the first keystroke, alongside the people search
+    enabled: enabled && searchText.trim().length > 0 && !recentIsComplete,
     status: 'accepted',
     lockStatus: 'unlocked',
     kind: 'group',
