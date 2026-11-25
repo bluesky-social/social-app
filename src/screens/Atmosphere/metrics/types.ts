@@ -44,8 +44,8 @@ export type AtmosphereAppMetricContext = AtmosphereMetricContext & {
   /** 0-based, in Explore's featured apps or the Apps tab's filtered list. */
   position: number
   /**
-   * Whether the card shows social proof: people you follow who also follow the
-   * app's Bluesky profile.
+   * Whether the card shows social proof: the app's follower count and/or
+   * people you follow who also follow its Bluesky profile.
    */
   hasSocialProof: boolean
   /** Apps tab only: the category filter in use, e.g. `all`. */

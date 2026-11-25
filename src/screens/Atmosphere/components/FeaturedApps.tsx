@@ -39,7 +39,12 @@ export function FeaturedApps({
         testID="atmosphereAppsGallery"
         footer={<Gallery.PageDots testID="atmosphereAppsGallery-dots" />}>
         {apps.map((app, index) => {
-          const metric = getAppMetric({app, position: index})
+          const metric = {
+            ...getAppMetric({app, position: index}),
+            hasSocialProof:
+              app.profile?.followersCount != null ||
+              !!app.profile?.viewer?.knownFollowers?.followers.length,
+          }
           return (
             <Gallery.Item key={app.id} label={app.title}>
               {galleryFocus => (

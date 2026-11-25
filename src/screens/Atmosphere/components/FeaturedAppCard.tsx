@@ -1,13 +1,14 @@
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react/macro'
+import {Plural, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {type AppMetric} from '#/screens/Atmosphere/metrics/apps'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
-import {atoms as a, ThemeProvider, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {AvatarStack} from '#/components/AvatarStack'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
@@ -15,36 +16,11 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {useAtmosphereAppCategories} from './appCategories'
-import {AppKnownFollowers} from './AppKnownFollowers'
 
 const LOGO_SIZE = 56
-const BACKGROUND_BLUR_RADIUS = 50
 
-/**
- * Featured app card. Always renders in the opposite of the current theme so it
- * stands out from the surrounding Explore content. Only its links are
- * interactive.
- */
+/** Featured app card. Only its links are interactive. */
 export function FeaturedAppCard({
-  app,
-  metric,
-  galleryFocus,
-}: {
-  app: FeaturedApp
-  metric: AppMetric
-  galleryFocus?: ItemFocusProps
-}) {
-  const t = useTheme()
-
-  return (
-    <ThemeProvider theme={t.name === 'light' ? 'dark' : 'light'}>
-      <CardContent app={app} metric={metric} galleryFocus={galleryFocus} />
-    </ThemeProvider>
-  )
-}
-
-/** Separate from the card so its tokens come from the inverted theme. */
-function CardContent({
   app,
   metric,
   galleryFocus,
@@ -66,29 +42,21 @@ function CardContent({
   const categories = useAtmosphereAppCategories()
   const categoryLabel = categories.find(({key}) => key === app.category)?.label
   const profile = app.profile
+  const knownFollowers = profile?.viewer?.knownFollowers?.followers ?? []
   const {title} = app
-  const isLight = t.name === 'light'
   const subtitle = [app.url && toNiceDomain(app.url), categoryLabel]
     .filter(Boolean)
     .join(' · ')
 
   return (
     <View
-      style={[a.flex_grow, a.w_full, {borderRadius: 24}, a.overflow_hidden]}>
-      <Image
-        source={app.backgroundImage}
-        contentFit="cover"
-        blurRadius={BACKGROUND_BLUR_RADIUS}
-        style={StyleSheet.absoluteFill}
-        accessible={false}
-      />
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          t.atoms.bg,
-          {opacity: isLight ? 0.7 : 0.8},
-        ]}
-      />
+      style={[
+        a.flex_grow,
+        a.w_full,
+        a.overflow_hidden,
+        t.atoms.bg,
+        {borderRadius: 24},
+      ]}>
       <View style={[a.flex_grow, a.p_lg, a.gap_md]}>
         <Image
           source={app.backgroundImage}
@@ -139,7 +107,36 @@ function CardContent({
               {app.description}
             </Text>
           ) : undefined}
-          {profile ? <AppKnownFollowers profile={profile} /> : undefined}
+          {profile?.followersCount != null || knownFollowers.length > 0 ? (
+            <View
+              style={[
+                a.flex_row,
+                a.flex_shrink,
+                a.align_center,
+                {gap: 5},
+                knownFollowers.length > 0 && {marginLeft: -1},
+              ]}>
+              {knownFollowers.length > 0 ? (
+                <AvatarStack profiles={knownFollowers.slice(0, 3)} size={18} />
+              ) : undefined}
+              {profile?.followersCount != null ? (
+                <Text
+                  style={[
+                    a.flex_shrink,
+                    a.text_xs,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  <Plural
+                    value={profile.followersCount}
+                    one="# follower on Bluesky"
+                    other="# followers on Bluesky"
+                  />
+                </Text>
+              ) : undefined}
+            </View>
+          ) : undefined}
         </View>
         <View style={[a.flex_row, a.gap_sm, a.pt_xs, a.mt_auto]}>
           {app.url ? (
