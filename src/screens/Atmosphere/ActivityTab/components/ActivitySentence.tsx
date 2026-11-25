@@ -3,6 +3,7 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -154,13 +155,10 @@ function ContentCount({
           collection: row.collection,
         })
       }}
-      style={[
-        a.text_sm,
-        a.font_semi_bold,
-        a.leading_snug,
-        {color: t.palette.primary_500},
-      ]}>
+      style={[a.text_sm, a.font_semi_bold, a.leading_snug, t.atoms.text]}>
       {children}
+      {'\u00a0'}
+      <ArrowRightIcon size="xs" fill={t.atoms.text.color} />
     </InlineLinkText>
   )
 }

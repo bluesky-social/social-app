@@ -8,6 +8,7 @@ import {
   AtmosphereFeedbackProvider,
 } from '#/screens/Atmosphere/feedback'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {InlineLinkText} from '#/components/Link'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
@@ -55,7 +56,10 @@ jest.mock('#/alf', () => ({
   ),
   useAlf: () => ({fonts: {scaleMultiplier: 1}}),
   useTheme: () => ({
-    atoms: new Proxy({}, {get: () => ({})}),
+    atoms: new Proxy(
+      {text: {color: '#111'}},
+      {get: (target, key) => target[key as keyof typeof target] ?? {}},
+    ),
     palette: {primary_500: '#0085ff'},
   }),
 }))
@@ -149,6 +153,9 @@ jest.mock('#/lib/moderation/useModerationCauseDescription', () => ({
   useModerationCauseDescription: () => ({name: 'Content warning'}),
 }))
 jest.mock('#/components/icons/community/Grain', () => ({GrainMark: () => null}))
+jest.mock('#/components/icons/Arrow', () => ({
+  ArrowRight_Stroke2_Corner0_Rounded: jest.fn(() => null),
+}))
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => undefined,
 }))
@@ -293,6 +300,7 @@ describe('ActivityRow', () => {
       )
       expectHeader(`Danielle Yuhan and 2 others ${verb}`)
       expect(screen.queryByTestId('activityGroupLink')).toBeNull()
+      expect(ArrowRightIcon).not.toHaveBeenCalled()
       expect(screen.getAllByRole('link')).toHaveLength(1)
       expect(screen.getByRole('link', {name: 'Danielle Yuhan'})).toBeTruthy()
     },
@@ -356,7 +364,11 @@ describe('ActivityRow', () => {
       expectHeader(`Eric ${verb} 3 ${noun}`, appName)
       const link = screen.getByTestId('activityGroupLink')
       expect(link).toHaveTextContent(`3 ${noun}`)
-      expect(link).toHaveStyle({fontWeight: '600', color: '#0085ff'})
+      expect(link).toHaveStyle({fontWeight: '600', color: '#111'})
+      expect(jest.mocked(ArrowRightIcon).mock.calls[0]?.[0]).toMatchObject({
+        size: 'xs',
+        fill: '#111',
+      })
       expect(row.kind === 'card' && row.subjectUris).toHaveLength(3)
       expect(link.props.accessibilityValue).toEqual({
         text: makeActivityListLink(
@@ -377,6 +389,7 @@ describe('ActivityRow', () => {
       renderEntry(actorGroup({actor: eric, collection, view, count: 1}))
 
       expect(screen.queryByTestId('activityGroupLink')).toBeNull()
+      expect(ArrowRightIcon).not.toHaveBeenCalled()
       expect(screen.queryByText('View all')).toBeNull()
     },
   )
@@ -411,6 +424,7 @@ describe('ActivityRow', () => {
 
     expectHeader('Eric published 3 articles', 'Leaflet')
     expect(screen.queryByTestId('activityGroupLink')).toBeNull()
+    expect(ArrowRightIcon).not.toHaveBeenCalled()
   })
 
   it('logs one group-list event with the tab the count was pressed from', () => {
