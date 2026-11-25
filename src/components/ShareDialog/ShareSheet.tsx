@@ -160,7 +160,7 @@ export function ShareSheetOuter({
 
   const onSelectSearchedChat = (conversation: string) => {
     ax.metric('share:press:dmSelected', {uri, authorDid, subjectType})
-    // They have a chat now, so the next share shows the grid
+    // They have a chat now, so the next share shows placeholders while loading
     if (currentAccount) {
       account.set([currentAccount.did, 'shareSheetHasChats'], true)
     }
@@ -311,11 +311,9 @@ function ShareSheetBody({
  * for accounts without chats, keeping the sheet short. The chat search stays,
  * so they can still start one.
  *
- * The sheet can shrink once it's open, but it isn't built to grow. So the grid
- * only ever hides while the sheet is open, never appears. If the last open
- * found no chats, it starts hidden, and stays hidden even if chats load. If
- * not, it shows placeholders until the chats load, then hides if there are
- * none.
+ * Once the chats load, they decide. Until then, the last open decides whether
+ * to show placeholders: if it found no chats, the grid starts hidden and
+ * appears only if chats load.
  */
 function useShowChatGrid({enabled}: {enabled: boolean}) {
   const {currentAccount} = useSession()
@@ -333,7 +331,7 @@ function useShowChatGrid({enabled}: {enabled: boolean}) {
     }
   }, [did, hasChats])
 
-  return enabled && hadChats !== false && hasChats !== false
+  return enabled && (hasChats ?? hadChats !== false)
 }
 
 /**
