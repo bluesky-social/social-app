@@ -102,47 +102,6 @@ const noPublicationDocument = {
   publisher: undefined,
 } satisfies app.bsky.embed.external.ViewArticle
 
-/* Light and dark site themes, like the mock's peach and a night-mode blog. */
-const peachDocument = {
-  ...document,
-  image: undefined,
-  publisher: {
-    ...publication,
-    logo: undefined,
-    title: 'Atmosphere Notes',
-    theme: {
-      background: '#FDF0EC',
-      foreground: '#4A2A1F',
-      accent: '#E2562B',
-      accentForeground: '#FFFFFF',
-    },
-  },
-} satisfies app.bsky.embed.external.ViewArticle
-
-const nightDocument = {
-  ...document,
-  publisher: {
-    ...publication,
-    title: 'Night Shift',
-    theme: {
-      background: '#14161F',
-      foreground: '#E8E6F0',
-      accent: '#9B8CFF',
-      accentForeground: '#14161F',
-    },
-  },
-} satisfies app.bsky.embed.external.ViewArticle
-
-/* Gray on white is too faint to read, so the header stays unthemed. */
-const unreadableThemeDocument = {
-  ...document,
-  image: undefined,
-  publisher: {
-    ...publication,
-    theme: {background: '#FFFFFF', foreground: '#BBBBBB'},
-  },
-} satisfies app.bsky.embed.external.ViewArticle
-
 const leafletPublication = {
   ...publication,
   uri: 'https://fieldnotes.leaflet.pub',
@@ -170,21 +129,6 @@ export function SiteStandardStorybook() {
       <View style={[a.gap_md]}>
         <H2>Document, Leaflet publication</H2>
         <Document view={leafletDocument} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document, light publication theme</H2>
-        <Document view={peachDocument} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document, dark publication theme</H2>
-        <Document view={nightDocument} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document, unreadable publication theme</H2>
-        <Document view={unreadableThemeDocument} />
       </View>
 
       <View style={[a.gap_md]}>

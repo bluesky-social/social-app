@@ -41,12 +41,6 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 jest.mock('#/alf', () => ({atoms: new Proxy({}, {get: () => ({})})}))
-jest.mock(
-  '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider',
-  () => ({
-    AppThemeProvider: ({children}: {children: React.ReactNode}) => children,
-  }),
-)
 jest.mock('#/env', () => ({
   get IS_WEB() {
     return mockIsWeb

@@ -15,10 +15,6 @@ import {KnownLikers} from '#/components/atmosphere/KnownLikers'
 import {LikeButton} from '#/components/atmosphere/LikeButton'
 import {MetaLine} from '#/components/atmosphere/MetaLine'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
-import {
-  StandardSiteThemeProvider,
-  useHasPublicationTheme,
-} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {InlineLinkText, Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -57,18 +53,9 @@ type DocumentProps = ssTypes.PublicApiProps & {
 /**
  * An article card: its publication, image, title, details and description,
  * then a recommend button, known recommenders and a menu. Only the image and
- * title open the article, leaving the rest free for other actions. Takes on
- * the publication's colors when they're readable.
+ * title open the article, leaving the rest free for other actions.
  */
-export function Document(props: DocumentProps) {
-  return (
-    <StandardSiteThemeProvider view={props.view.publisher}>
-      <DocumentCard {...props} />
-    </StandardSiteThemeProvider>
-  )
-}
-
-function DocumentCard({
+export function Document({
   view,
   variant = 'default',
   recommenders,
@@ -239,7 +226,6 @@ function PublicationHeader({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const hasPublicationTheme = useHasPublicationTheme()
   const handle = author && sanitizeHandle(author.handle, '@')
   const publicationLabel = l({
     message: `Open publication: ${publication.title}`,
@@ -255,11 +241,7 @@ function PublicationHeader({
         a.gap_sm,
         a.px_md,
         a.py_sm,
-        /*
-         * A publication's own background can be any color, so its band needs
-         * a stronger step than the app's near-white to stand apart.
-         */
-        hasPublicationTheme ? t.atoms.bg_contrast_50 : t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_25,
       ]}>
       <Link
         testID="documentPublicationIcon"

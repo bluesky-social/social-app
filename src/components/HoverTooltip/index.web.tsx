@@ -20,20 +20,14 @@ export function HoverTooltip({
   children,
 }: {
   label: string
-  /**
-   * `primary` matches a primary-tinted control's hover, e.g. a like button,
-   * and follows any theme the control is in.
-   */
+  /** `primary` matches a primary-tinted control's hover, e.g. a like button. */
   color?: 'default' | 'primary'
   children: React.ReactNode
 }) {
   const t = useTheme()
   const style =
     color === 'primary'
-      ? /*
-         * Not the shared `primary` tooltip, whose `primary_600` text can fall
-         * short of AA under a publication's accent; `primary_700` is checked.
-         */
+      ? // The like button's hover colors, not the shared `primary` tooltip's.
         {surface: t.palette.primary_50, text: t.palette.primary_700}
       : getTooltipStyle(t, 'default')
   return (
