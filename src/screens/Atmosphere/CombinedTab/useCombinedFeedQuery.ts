@@ -33,7 +33,7 @@ import {
 import {type ForYouItem} from '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery'
 import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {mixCombinedPages} from './mix'
+import {mixCombinedPages, seededRandom} from './mix'
 
 const useCombinedFeedQueryRoot = 'useCombinedFeedQuery'
 
@@ -140,6 +140,8 @@ export function useCombinedFeedQuery() {
         ),
         recommendations: recommendedItems,
         isLastPage: !data.pages.at(-1)?.timeline.cursor,
+        // New spacing per recommendation batch, stable within it.
+        random: seededRandom(recommendations?.recIdStr ?? ''),
       })
       return {
         pages: mixed.pages,

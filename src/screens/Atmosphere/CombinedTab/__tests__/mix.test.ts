@@ -1,6 +1,6 @@
 import {type ActivityRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {type ForYouItem} from '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery'
-import {type CombinedRow, mixCombinedPages} from '../mix'
+import {type CombinedRow, mixCombinedPages, seededRandom} from '../mix'
 
 const activity = (uri: string) =>
   ({
@@ -27,53 +27,61 @@ const describeRows = (rows: CombinedRow[]) =>
   })
 
 const recommendations = ['r1', 'r2', 'r3', 'r4'].map(recommendation)
+/** Always the shortest gap, 3 activity rows. */
+const random = () => 0
 
 describe('mixCombinedPages', () => {
   it('mixes recommendations into activity, skipping ones already shown', () => {
     const {pages} = mixCombinedPages({
-      activityPages: [['a1', 'a2', 'r2', 'a3', 'a4', 'a5'].map(activity)],
+      activityPages: [['a1', 'a2', 'r2', 'a3', 'a4', 'a5', 'a6'].map(activity)],
       recommendations,
       isLastPage: false,
+      random,
     })
     expect(describeRows(pages[0])).toEqual([
       'a1',
       'a2',
-      'mixed:r1',
       'r2',
+      'mixed:r1',
       'a3',
       'a4',
       'a5',
       'mixed:r3',
+      'a6',
     ])
   })
 
   it('keeps earlier pages unchanged when another page loads', () => {
-    const first = [['a1', 'a2', 'a3'].map(activity)]
+    const first = [['a1', 'a2', 'a3', 'a4'].map(activity)]
     const before = mixCombinedPages({
       activityPages: first,
       recommendations,
       isLastPage: false,
+      random,
     })
     const after = mixCombinedPages({
-      activityPages: [...first, ['a4', 'a5', 'a6'].map(activity)],
+      activityPages: [...first, ['a5', 'a6', 'a7'].map(activity)],
       recommendations,
       isLastPage: false,
+      random,
     })
     expect(after.pages[0]).toEqual(before.pages[0])
-    expect(describeRows(after.pages[1])).toEqual(['a4', 'a5', 'a6', 'mixed:r2'])
+    expect(describeRows(after.pages[1])).toEqual(['a5', 'a6', 'mixed:r2', 'a7'])
   })
 
   it('follows the end of activity with the remaining recommendations', () => {
     const {pages, recommendedItems} = mixCombinedPages({
-      activityPages: [['a1', 'a2', 'a3'].map(activity)],
+      activityPages: [['a1', 'a2', 'a3', 'a4'].map(activity)],
       recommendations,
       isLastPage: true,
+      random,
     })
     expect(describeRows(pages[0])).toEqual([
       'a1',
       'a2',
-      'mixed:r1',
       'a3',
+      'mixed:r1',
+      'a4',
       'header:caughtUp',
       'tail:r2',
       'tail:r3',
@@ -87,6 +95,7 @@ describe('mixCombinedPages', () => {
       activityPages: [[]],
       recommendations: recommendations.slice(0, 2),
       isLastPage: true,
+      random,
     })
     expect(describeRows(pages[0])).toEqual(['header', 'tail:r1', 'tail:r2'])
   })
@@ -97,6 +106,7 @@ describe('mixCombinedPages', () => {
       recommendations: [],
       interstitials: [{key: 'photos', type: 'popularPhotos'}],
       isLastPage: false,
+      random,
     })
     expect(describeRows(pages[0])).toEqual([
       'a1',
@@ -105,5 +115,32 @@ describe('mixCombinedPages', () => {
       'interstitial:photos',
       'a4',
     ])
+  })
+
+  it('spaces recommendations 3 to 10 activity rows apart, repeatably', () => {
+    const mix = () =>
+      mixCombinedPages({
+        activityPages: [Array.from({length: 200}, (_, i) => activity(`a${i}`))],
+        recommendations: Array.from({length: 40}, (_, i) =>
+          recommendation(`r${i}`),
+        ),
+        isLastPage: false,
+        random: seededRandom('req'),
+      }).pages[0]
+    const rows = mix()
+    const gaps: number[] = []
+    let run = 0
+    for (const row of rows) {
+      if (row.kind === 'activity') run++
+      else if (row.kind === 'recommended') {
+        gaps.push(run)
+        run = 0
+      }
+    }
+    expect(gaps.length).toBeGreaterThan(15)
+    expect(Math.min(...gaps)).toBeGreaterThanOrEqual(3)
+    expect(Math.max(...gaps)).toBeLessThanOrEqual(10)
+    expect(new Set(gaps).size).toBeGreaterThan(3)
+    expect(mix()).toEqual(rows)
   })
 })

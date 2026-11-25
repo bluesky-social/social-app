@@ -1,10 +1,10 @@
 import {type ActivityRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {type ForYouItem} from '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery'
 
-/** Activity rows before the first mixed-in recommendation. */
-const FIRST_RECOMMENDATION_AFTER = 2
-/** Activity rows between mixed-in recommendations after the first. */
-const RECOMMENDATION_EVERY = 4
+/** Fewest activity rows before each mixed-in recommendation. */
+const MIN_RECOMMENDATION_GAP = 3
+/** Most activity rows before each mixed-in recommendation. */
+const MAX_RECOMMENDATION_GAP = 10
 /** Rows before the first interstitial. */
 const FIRST_INTERSTITIAL_AFTER = 3
 /** Rows between interstitials after the first. */
@@ -44,7 +44,8 @@ export type CombinedRow =
 
 /**
  * Mixes recommendations, and later interstitials, into the activity timeline.
- * Activity keeps its time order with a recommendation after every few rows.
+ * Activity keeps its time order, with a recommendation after a random 3 to 10
+ * rows.
  * Once activity runs out, the rest of the recommendations follow under a
  * header, so a viewer with little or no activity still gets a feed.
  *
@@ -56,6 +57,7 @@ export function mixCombinedPages({
   recommendations,
   interstitials = [],
   isLastPage,
+  random,
 }: {
   /** Each timeline page's rows, in order. */
   activityPages: ActivityRow[][]
@@ -65,6 +67,11 @@ export function mixCombinedPages({
   interstitials?: CombinedInterstitial[]
   /** Whether the last page ended the timeline. */
   isLastPage: boolean
+  /**
+   * Returns a number in [0, 1), like `Math.random`. Use `seededRandom` so the
+   * spacing stays put when the rows are recomputed or another page loads.
+   */
+  random: () => number
 }): {pages: CombinedRow[][]; recommendedItems: ForYouItem[]} {
   /** Content already shown as activity, which a recommendation would repeat. */
   const shownUris = new Set<string>()
@@ -73,6 +80,10 @@ export function mixCombinedPages({
   let nextInterstitial = 0
   let activitySinceRecommendation = 0
   let rowCount = 0
+  const nextGap = () =>
+    MIN_RECOMMENDATION_GAP +
+    Math.floor(random() * (MAX_RECOMMENDATION_GAP - MIN_RECOMMENDATION_GAP + 1))
+  let recommendationGap = nextGap()
 
   const takeRecommendation = () => {
     while (nextRecommendation < recommendations.length) {
@@ -118,14 +129,11 @@ export function mixCombinedPages({
     for (const row of activityRows) {
       push({kind: 'activity', key: `activity:${row.key}`, row})
       activitySinceRecommendation++
-      const due =
-        recommendedItems.length === 0
-          ? FIRST_RECOMMENDATION_AFTER
-          : RECOMMENDATION_EVERY
-      if (activitySinceRecommendation >= due) {
+      if (activitySinceRecommendation >= recommendationGap) {
         const item = takeRecommendation()
         if (item) pushRecommendation(item, true)
         activitySinceRecommendation = 0
+        recommendationGap = nextGap()
       }
     }
 
@@ -148,4 +156,22 @@ export function mixCombinedPages({
   })
 
   return {pages, recommendedItems}
+}
+
+/**
+ * A repeatable `random` for `mixCombinedPages`: the same seed, such as a
+ * recommendation request's ID, gives the same sequence (mulberry32).
+ */
+export function seededRandom(seed: string) {
+  let state = 0
+  for (let i = 0; i < seed.length; i++) {
+    state = Math.imul(state ^ seed.charCodeAt(i), 0x5bd1e995)
+    state ^= state >>> 15
+  }
+  return () => {
+    state = (state + 0x6d2b79f5) | 0
+    let t = Math.imul(state ^ (state >>> 15), 1 | state)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
 }
