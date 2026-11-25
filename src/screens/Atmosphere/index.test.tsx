@@ -222,16 +222,20 @@ describe('AtmosphereScreen', () => {
     expect(mockMetric).not.toHaveBeenCalled()
   })
 
-  it('defaults to For You and switches between tabs', () => {
+  it('defaults to Combined and switches between tabs', () => {
     const screen = renderScreen()
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['For You', 'Activity', 'Explore', 'Apps', 'Combined'])
+    ).toEqual(['Combined', 'For You', 'Activity', 'Explore', 'Apps'])
     expect(
-      screen.getByRole('tab', {name: 'For You'}).props.accessibilityState,
+      screen.getByRole('tab', {name: 'Combined'}).props.accessibilityState,
     ).toEqual({selected: true})
+    expect(screen.getByTestId('combinedTab')).toBeTruthy()
+
+    fireEvent.press(screen.getByRole('tab', {name: 'For You'}))
     expect(screen.getByTestId('atmosphereForYouTab')).toBeTruthy()
+    expect(screen.queryByTestId('combinedTab')).toBeNull()
 
     fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
     expect(screen.getByTestId('activityTab')).toBeTruthy()
@@ -253,7 +257,8 @@ describe('AtmosphereScreen', () => {
         .filter(([event]) => event === 'atmosphere:tab:displayed')
         .map(([, payload]) => payload),
     ).toEqual([
-      {tab: 'discover', reason: 'focus'},
+      {tab: 'combined', reason: 'focus'},
+      {tab: 'discover', previousTab: 'combined', reason: 'tap'},
       {tab: 'following', previousTab: 'discover', reason: 'tap'},
       {tab: 'explore', previousTab: 'following', reason: 'tap'},
       {tab: 'apps', previousTab: 'explore', reason: 'seeMoreApps'},
