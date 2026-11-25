@@ -15,98 +15,129 @@ describe('getSupportProvider', () => {
     expect(getSupportProvider('https://www.patreon.com/kat')?.name).toBe(
       'Patreon',
     )
+    expect(getSupportProvider('https://apoia.se/kat')?.name).toBe('Apoia.se')
   })
+  expect(getSupportProvider('https://catarse.com.br/kat')?.name).toBe('Catarse')
+})
+expect(getSupportProvider('https://livepix.gg/kat')?.name).toBe('LivePix')
 
-  it('matches account pages on subdomains or in the path', () => {
-    expect(getSupportProvider('https://kat.fanbox.cc')?.name).toBe(
-      'pixivFANBOX',
-    )
-    expect(getSupportProvider('https://www.fanbox.cc/@kat')?.name).toBe(
-      'pixivFANBOX',
-    )
-    expect(getSupportProvider('https://kat.booth.pm')?.name).toBe('BOOTH')
-    expect(getSupportProvider('https://skeb.jp/@kat')?.name).toBe('Skeb')
-    expect(getSupportProvider('https://www.givesendgo.com/kat')?.name).toBe(
-      'GiveSendGo',
-    )
-    expect(
-      getSupportProvider('https://www.backerkit.com/c/projects/kat/zine')?.name,
-    ).toBe('BackerKit')
-    expect(getSupportProvider('https://zine.backerkit.com')?.name).toBe(
-      'BackerKit',
-    )
-    expect(getSupportProvider('https://www.fanbox.cc')).toBe(undefined)
-  })
+it('matches account pages on subdomains or in the path', () => {
+  expect(getSupportProvider('https://kat.fanbox.cc')?.name).toBe('pixivFANBOX')
+  expect(getSupportProvider('https://www.fanbox.cc/@kat')?.name).toBe(
+    'pixivFANBOX',
+  )
+  expect(getSupportProvider('https://kat.booth.pm')?.name).toBe('BOOTH')
+  expect(getSupportProvider('https://skeb.jp/@kat')?.name).toBe('Skeb')
+  expect(getSupportProvider('https://www.givesendgo.com/kat')?.name).toBe(
+    'GiveSendGo',
+  )
+  expect(
+    getSupportProvider('https://www.backerkit.com/c/projects/kat/zine')?.name,
+  ).toBe('BackerKit')
+  expect(getSupportProvider('https://zine.backerkit.com')?.name).toBe(
+    'BackerKit',
+  )
+  expect(getSupportProvider('https://www.fanbox.cc')).toBe(undefined)
+})
 
-  it('does not match lookalike domains', () => {
-    expect(getSupportProvider('https://ko-fi.com.example.net/kat')).toBe(
-      undefined,
-    )
-    expect(getSupportProvider('https://notpatreon.com/kat')).toBe(undefined)
-  })
+it('does not match lookalike domains', () => {
+  expect(getSupportProvider('https://ko-fi.com.example.net/kat')).toBe(
+    undefined,
+  )
+  expect(getSupportProvider('https://notpatreon.com/kat')).toBe(undefined)
+  expect(getSupportProvider('https://catarse.me.attacker.com/projeto')).toBe(
+    undefined,
+  )
+  expect(getSupportProvider('https://notcatarse.me/projeto')).toBe(undefined)
+  expect(getSupportProvider('https://apoia.se.attacker.com/campanha')).toBe(
+    undefined,
+  )
+  expect(
+    getSupportProvider('https://kickante.com.br.attacker.com/campanha'),
+  ).toBe(undefined)
+  expect(getSupportProvider('https://livepix.gg.fake.net/criador')).toBe(
+    undefined,
+  )
+})
 
-  it('requires the path prefix for shared domains', () => {
-    expect(getSupportProvider('https://paypal.com/paypalme/kat')?.name).toBe(
-      'PayPal',
-    )
-    expect(getSupportProvider('https://paypal.com/signin')).toBe(undefined)
-    expect(getSupportProvider('https://github.com/sponsors/kat')?.name).toBe(
-      'GitHub Sponsors',
-    )
-    expect(
-      getSupportProvider('https://www.github.com/sponsors/kat')?.name,
-    ).toBe('GitHub Sponsors')
-    expect(getSupportProvider('https://github.com/kat')).toBe(undefined)
-    expect(getSupportProvider('https://github.com/sponsors/')).toBe(undefined)
-  })
+it('requires the path prefix for shared domains', () => {
+  expect(getSupportProvider('https://paypal.com/paypalme/kat')?.name).toBe(
+    'PayPal',
+  )
+  expect(getSupportProvider('https://paypal.com/signin')).toBe(undefined)
+  expect(getSupportProvider('https://github.com/sponsors/kat')?.name).toBe(
+    'GitHub Sponsors',
+  )
+  expect(getSupportProvider('https://www.github.com/sponsors/kat')?.name).toBe(
+    'GitHub Sponsors',
+  )
+  expect(getSupportProvider('https://github.com/kat')).toBe(undefined)
+  expect(getSupportProvider('https://github.com/sponsors/')).toBe(undefined)
+})
+expect(
+  getSupportProvider('https://www.kickante.com.br/vaquinha-online/kat')?.name,
+).toBe('Kickante')
+expect(
+  getSupportProvider('https://www.kickante.com.br/crowdfunding/kat')?.name,
+).toBe('Kickante')
 
-  it('never treats a bare provider homepage as a support link', () => {
-    expect(getSupportProvider('https://ko-fi.com')).toBe(undefined)
-    expect(getSupportProvider('https://www.patreon.com/')).toBe(undefined)
-    expect(getSupportProvider('https://paypal.com/paypalme/')).toBe(undefined)
-  })
+it('recognizes both numbered and text urls', () => {
+  expect(
+    getSupportProvider('https://www.vakinha.com.br/vaquinha/kat')?.name,
+  ).toBe('Vakinha')
+  expect(getSupportProvider('https://www.vakinha.com.br/1112019')?.name).toBe(
+    'Vakinha',
+  )
+})
 
-  it('only counts campaign and gallery pages for path-based providers', () => {
-    expect(
-      getSupportProvider('https://chuffed.org/project/save-the-reef')?.name,
-    ).toBe('Chuffed')
-    expect(getSupportProvider('https://chuffed.org/campaign/kat')?.name).toBe(
-      'Chuffed',
-    )
-    expect(getSupportProvider('https://chuffed.org/about')).toBe(undefined)
-    expect(
-      getSupportProvider('https://www.inprnt.com/gallery/kat/')?.name,
-    ).toBe('INPRNT')
-    expect(getSupportProvider('https://www.inprnt.com/browse/')).toBe(undefined)
-    expect(getSupportProvider('https://throne.com/kat')?.name).toBe('Throne')
-  })
+it('never treats a bare provider homepage as a support link', () => {
+  expect(getSupportProvider('https://ko-fi.com')).toBe(undefined)
+  expect(getSupportProvider('https://www.patreon.com/')).toBe(undefined)
+  expect(getSupportProvider('https://paypal.com/paypalme/')).toBe(undefined)
+  expect(getSupportProvider('https://apoia.se')).toBe(undefined)
+  expect(getSupportProvider('https://catarse.me')).toBe(undefined)
+  expect(getSupportProvider('https://catarse.com.br/')).toBe(undefined)
+  expect(getSupportProvider('https://kickante.com.br')).toBe(undefined)
+  expect(getSupportProvider('https://vakinha.com.br')).toBe(undefined)
+  expect(getSupportProvider('https://livepix.gg')).toBe(undefined)
+})
 
-  it('recognizes Substack publications and profiles', () => {
-    expect(getSupportProvider('https://kat.substack.com')?.name).toBe(
-      'Substack',
-    )
-    expect(getSupportProvider('https://substack.com/@kat')?.name).toBe(
-      'Substack',
-    )
-    expect(getSupportProvider('https://substack.com')).toBe(undefined)
-  })
+it('only counts campaign and gallery pages for path-based providers', () => {
+  expect(
+    getSupportProvider('https://chuffed.org/project/save-the-reef')?.name,
+  ).toBe('Chuffed')
+  expect(getSupportProvider('https://chuffed.org/campaign/kat')?.name).toBe(
+    'Chuffed',
+  )
+  expect(getSupportProvider('https://chuffed.org/about')).toBe(undefined)
+  expect(getSupportProvider('https://www.inprnt.com/gallery/kat/')?.name).toBe(
+    'INPRNT',
+  )
+  expect(getSupportProvider('https://www.inprnt.com/browse/')).toBe(undefined)
+  expect(getSupportProvider('https://throne.com/kat')?.name).toBe('Throne')
+})
 
-  it('recognizes accounts on a subdomain', () => {
-    expect(getSupportProvider('https://kat.itch.io')?.name).toBe('itch.io')
-    expect(getSupportProvider('https://kat.gumroad.com/')?.name).toBe('Gumroad')
-  })
+it('recognizes Substack publications and profiles', () => {
+  expect(getSupportProvider('https://kat.substack.com')?.name).toBe('Substack')
+  expect(getSupportProvider('https://substack.com/@kat')?.name).toBe('Substack')
+  expect(getSupportProvider('https://substack.com')).toBe(undefined)
+})
 
-  it('matches specific provider hosts', () => {
-    expect(getSupportProvider('https://buy.stripe.com/abc123')?.name).toBe(
-      'Stripe',
-    )
-    expect(getSupportProvider('https://stripe.com/pricing')).toBe(undefined)
-  })
+it('recognizes accounts on a subdomain', () => {
+  expect(getSupportProvider('https://kat.itch.io')?.name).toBe('itch.io')
+  expect(getSupportProvider('https://kat.gumroad.com/')?.name).toBe('Gumroad')
+})
 
-  it('ignores non-web and invalid URLs', () => {
-    expect(getSupportProvider('mailto:kat@ko-fi.com')).toBe(undefined)
-    expect(getSupportProvider('not a url')).toBe(undefined)
-  })
+it('matches specific provider hosts', () => {
+  expect(getSupportProvider('https://buy.stripe.com/abc123')?.name).toBe(
+    'Stripe',
+  )
+  expect(getSupportProvider('https://stripe.com/pricing')).toBe(undefined)
+})
+
+it('ignores non-web and invalid URLs', () => {
+  expect(getSupportProvider('mailto:kat@ko-fi.com')).toBe(undefined)
+  expect(getSupportProvider('not a url')).toBe(undefined)
 })
 
 describe('normalizeProfileLinkUrl', () => {
