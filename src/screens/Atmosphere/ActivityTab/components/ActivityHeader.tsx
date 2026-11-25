@@ -130,23 +130,36 @@ const INLINE_ICON_OFFSET = 1.5
 
 export function AppName({
   app,
+  color,
+  size = 'sm',
   children,
 }: {
   app: AtmosphereProvider
+  /** Defaults to the surrounding metadata's text color. */
+  color?: string
+  /**
+   * Must match the surrounding text, since `Text` applies its own default
+   * size rather than inheriting.
+   */
+  size?: 'xs' | 'sm'
   children: React.ReactNode
 }) {
   const t = useTheme()
+  const textColor = color ?? t.atoms.text_contrast_medium.color
   const {fonts} = useAlf()
   const nativeFontScale = useNativeFontScale()
-  const scaleMultiplier = fonts.scaleMultiplier * nativeFontScale
+  const textSize = size === 'xs' ? a.text_xs : a.text_sm
+  /** The icon and its offset are tuned for text_sm. */
+  const sizeRatio = textSize.fontSize / a.text_sm.fontSize
+  const scaleMultiplier = fonts.scaleMultiplier * nativeFontScale * sizeRatio
   /** Inline views do not inherit the surrounding text's font scaling. */
   const iconSize = PixelRatio.roundToNearestPixel(sizes.xs * scaleMultiplier)
 
   return (
-    <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
+    <Text style={[textSize, a.font_semi_bold, {color: textColor}]}>
       <app.Icon
         width={iconSize}
-        fill={t.atoms.text_contrast_medium.color}
+        fill={textColor}
         style={{
           transform: [{translateY: INLINE_ICON_OFFSET * scaleMultiplier}],
         }}

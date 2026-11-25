@@ -15,6 +15,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {getAtmosphereProvider} from '#/components/atmosphere/providers'
 import * as Gallery from '#/components/Gallery'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -25,10 +26,11 @@ const ITEM_WIDTH = 320
 const THUMBNAIL_WIDTH = 96
 /** Livestreams are `place.stream.livestream` records, so always Streamplace. */
 const STREAMPLACE = getAtmosphereProvider('stream.place')!
+const STREAMPLACE_GO_LIVE_URL = 'https://stream.place/live'
 
 /**
- * Streams live now, above the feed: one stretched across the row, or several
- * in a carousel.
+ * Streams live now, above the feed, in a carousel that ends with a "That's
+ * all" card.
  */
 export function LiveNowRow({livestreams}: {livestreams: Livestream[]}) {
   const {t: l} = useLingui()
@@ -36,50 +38,44 @@ export function LiveNowRow({livestreams}: {livestreams: Livestream[]}) {
 
   if (!livestreams.length) return null
 
+  const divider = [a.pr_md, a.border_r, t.atoms.border_contrast_low]
+
   return (
     <View
       testID="combinedLiveNowRow"
-      style={[
-        a.border_b,
-        t.atoms.border_contrast_low,
-        {backgroundColor: t.palette.primary_25},
-      ]}>
-      {livestreams.length === 1 ? (
+      style={[a.border_b, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
+      <Gallery.Bleed>
         <View style={[a.px_lg, a.py_lg]}>
-          <LiveNowItem livestream={livestreams[0]} position={0} />
+          <Gallery.Root stretch label={l`Live now`}>
+            {livestreams.map((livestream, index) => (
+              <Gallery.Item
+                key={livestream.view.uri}
+                label={livestream.view.title}>
+                {galleryFocus => (
+                  <View
+                    style={[
+                      a.justify_center,
+                      {width: ITEM_WIDTH},
+                      index > 0 && a.pl_md,
+                      divider,
+                    ]}>
+                    <LiveNowItem
+                      livestream={livestream}
+                      position={index}
+                      galleryFocus={galleryFocus}
+                    />
+                  </View>
+                )}
+              </Gallery.Item>
+            ))}
+            <Gallery.Item key="end" label={l`That’s all for now`}>
+              <View style={[a.flex_1, a.justify_center, a.pl_md]}>
+                <LiveNowEnd />
+              </View>
+            </Gallery.Item>
+          </Gallery.Root>
         </View>
-      ) : (
-        <Gallery.Bleed>
-          <View style={[a.px_lg, a.py_lg]}>
-            <Gallery.Root label={l`Live now`}>
-              {livestreams.map((livestream, index) => (
-                <Gallery.Item
-                  key={livestream.view.uri}
-                  label={livestream.view.title}>
-                  {galleryFocus => (
-                    <View
-                      style={[
-                        {width: ITEM_WIDTH},
-                        index > 0 && a.pl_md,
-                        index < livestreams.length - 1 && [
-                          a.pr_md,
-                          a.border_r,
-                          t.atoms.border_contrast_low,
-                        ],
-                      ]}>
-                      <LiveNowItem
-                        livestream={livestream}
-                        position={index}
-                        galleryFocus={galleryFocus}
-                      />
-                    </View>
-                  )}
-                </Gallery.Item>
-              ))}
-            </Gallery.Root>
-          </View>
-        </Gallery.Bleed>
-      )}
+      </Gallery.Bleed>
     </View>
   )
 }
@@ -189,10 +185,66 @@ function LiveNowItemInner({
               t.atoms.text_contrast_medium,
             ]}>
             <Trans comment='The app a livestream is on, e.g. "on Streamplace". The app name includes its icon.'>
-              on <AppName app={STREAMPLACE}>{STREAMPLACE.name}</AppName>
+              on{' '}
+              <AppName app={STREAMPLACE} size="xs">
+                {STREAMPLACE.name}
+              </AppName>
             </Trans>
           </Text>
         </View>
+      </View>
+    </View>
+  )
+}
+
+/** Closes the row, inviting people to stream themselves. */
+function LiveNowEnd() {
+  const {t: l} = useLingui()
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_row, a.align_center, a.gap_md]}>
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.rounded_md,
+          a.border,
+          t.atoms.border_contrast_medium,
+          {
+            width: 64,
+            aspectRatio: 1,
+            borderStyle: 'dashed',
+            borderWidth: 1,
+          },
+        ]}>
+        <PlusIcon size="md" fill={t.palette.primary_500} />
+      </View>
+      <View style={[a.flex_1, a.gap_2xs]}>
+        <Text
+          style={[
+            a.text_sm,
+            a.font_semi_bold,
+            a.leading_snug,
+            t.atoms.text_contrast_medium,
+          ]}>
+          <Trans comment="Shown after the last livestream in a row of streams that are live now">
+            That’s all for now!
+          </Trans>
+        </Text>
+        <InlineLinkText
+          to={STREAMPLACE_GO_LIVE_URL}
+          label={l`Go live on Streamplace`}
+          disableMismatchWarning
+          disableUnderline
+          style={[a.text_sm, a.leading_snug]}>
+          <Trans comment='Link to start a livestream, e.g. "Go live on Streamplace". The app name includes its icon.'>
+            Go live on <AppName app={STREAMPLACE}>{STREAMPLACE.name}</AppName>
+          </Trans>{' '}
+          →
+        </InlineLinkText>
       </View>
     </View>
   )
