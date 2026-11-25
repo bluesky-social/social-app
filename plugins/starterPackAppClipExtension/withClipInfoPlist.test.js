@@ -85,6 +85,17 @@ describe('App Clip orientations', () => {
     )
     expect(clip).not.toHaveProperty('UIBackgroundModes')
     expect(clip.UILaunchScreen).toEqual({})
+    expect(clip.UIApplicationSceneManifest).toEqual({
+      UIApplicationSupportsMultipleScenes: false,
+      UISceneConfigurations: {
+        UIWindowSceneSessionRoleApplication: [
+          {
+            UISceneConfigurationName: 'Default Configuration',
+            UISceneDelegateClassName: '$(PRODUCT_MODULE_NAME).SceneDelegate',
+          },
+        ],
+      },
+    })
     expect(clip.NSAppClip).toEqual({
       NSAppClipRequestEphemeralUserNotification: false,
       NSAppClipRequestLocationConfirmation: false,
