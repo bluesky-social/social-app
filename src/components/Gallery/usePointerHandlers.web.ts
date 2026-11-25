@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {ITEM_GAP} from '#/components/Gallery/const'
 import {isEditableTarget} from '#/components/Gallery/domUtils'
@@ -51,6 +51,8 @@ export function usePointerHandlers({
   itemCount,
   resetKey,
 }: NavigationHandlerArgs) {
+  const cancelRef = useRef<(() => void) | null>(null)
+
   useEffect(() => {
     if (itemCount <= 1) return
 
@@ -75,6 +77,17 @@ export function usePointerHandlers({
       overscrollX = 0
       el.style.transform = ''
     }
+
+    const cancel = () => {
+      stopTween?.()
+      stopTween = null
+      isMouseDown = false
+      isDragging = false
+      clearOverscroll()
+      el.style.cursor = 'grab'
+      el.style.userSelect = ''
+    }
+    cancelRef.current = cancel
 
     /*
      * We don't preventDefault on mousedown, since that would break focus and
@@ -319,10 +332,9 @@ export function usePointerHandlers({
       el.removeEventListener('wheel', onWheel)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
-      if (stopTween) stopTween()
-      clearOverscroll()
+      cancel()
+      cancelRef.current = null
       el.style.cursor = ''
-      el.style.userSelect = ''
     }
   }, [
     scrollRef,
@@ -333,4 +345,6 @@ export function usePointerHandlers({
     itemCount,
     resetKey,
   ])
+
+  return () => cancelRef.current?.()
 }

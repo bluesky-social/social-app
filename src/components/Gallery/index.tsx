@@ -102,14 +102,15 @@ export function Root({
   snapToItems?: boolean
   /**
    * Called when the user navigates to a different item: native swipes, and on
-   * web touch scrolling, mouse drags, arrow keys, and horizontal wheel or
-   * trackpad scrolling. Not called on mount, for `scrollIntoView`, when focus
-   * simply lands on an item, or when items are added, removed, or reordered.
+   * web touch scrolling, mouse drags, arrow keys, horizontal wheel or trackpad
+   * scrolling, and page-dot navigation that scrolls to a different navigation
+   * index. Not called on mount, for `scrollIntoView`, when focus simply lands on
+   * an item, or when items are added, removed, or reordered.
    */
   onIndexChange?: (index: number, previousIndex: number) => void
 }) {
   const {t: l} = useLingui()
-  const {screenReaderEnabled} = useA11y()
+  const {screenReaderEnabled, reduceMotionEnabled} = useA11y()
 
   const slides = flattenReactChildren(children).filter(isValidElement)
   const keys = slides.map(slide => String(slide.key))
@@ -341,7 +342,7 @@ export function Root({
     },
   )
 
-  useKeyboardHandlers({
+  const cancelKeyboardNavigation = useKeyboardHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -351,7 +352,7 @@ export function Root({
     resetKey: keysSignature,
   })
 
-  usePointerHandlers({
+  const cancelPointerNavigation = usePointerHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -361,7 +362,7 @@ export function Root({
     resetKey: keysSignature,
   })
 
-  useScrollNavigation({
+  const stopScrollNavigation = useScrollNavigation({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -369,6 +370,25 @@ export function Root({
     resetKey: keysSignature,
     onNavigate: setCurrentIndex,
   })
+
+  const revealIndex = (index: number) => {
+    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
+    cancelKeyboardNavigation()
+    cancelPointerNavigation()
+    stopScrollNavigation()
+    const current = getScrollNode()?.scrollLeft ?? 0
+    const next = Math.min(
+      getOffsetForIndex(itemWidthsRef.current, index),
+      getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
+    )
+    // Browser zoom can leave an aligned scroll offset a fraction of a pixel away.
+    const isAligned = Math.abs(next - current) < 1
+    /* An immediate scroll also stops an earlier smooth scroll at this offset. */
+    scrollTo({offset: next, animated: !isAligned && !reduceMotionEnabled})
+    if (isAligned) return
+    setCurrentIndex(index)
+    setFocusIndex(index)
+  }
 
   /*
    * Only count scrolls the user is doing. The rest are programmatic, or the
@@ -421,7 +441,13 @@ export function Root({
 
   return (
     <GalleryContext.Provider
-      value={{label, itemKeys: keys, activeIndex: pageIndex, endIndex}}>
+      value={{
+        label,
+        itemKeys: keys,
+        activeIndex: pageIndex,
+        endIndex,
+        revealIndex,
+      }}>
       <View style={a.w_full}>
         <View
           ref={contentRef}

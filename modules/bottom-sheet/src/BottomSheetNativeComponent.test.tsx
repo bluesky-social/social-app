@@ -17,7 +17,7 @@ import {BottomSheetOutlet, BottomSheetProvider} from './BottomSheetPortal'
 
 type NativeViewProps = Pick<
   BottomSheetViewProps,
-  'popover' | 'desiredContentHeight' | 'onPresentationSizeChange'
+  'popover' | 'contentScrollViewTag' | 'onPresentationSizeChange'
 > & {
   children: React.ReactElement<{
     style: StyleProp<ViewStyle>
@@ -30,7 +30,6 @@ type NativeViewProps = Pick<
 
 const mockNativeViewProps = jest.fn<void, [NativeViewProps]>()
 
-jest.mock('#/env', () => ({__esModule: true, IS_IPAD: false}))
 jest.mock('expo-modules-core', () => {
   const actual =
     jest.requireActual<typeof import('expo-modules-core')>('expo-modules-core')
@@ -96,7 +95,7 @@ it.each(['always', 'adaptive', 'never'] as const)(
       cornerRadius: 12,
       maxHeight: 240,
       popover,
-      desiredContentHeight: 400,
+      contentScrollViewTag: 42,
     })
 
     const nativeProps = lastNativeProps()
@@ -110,7 +109,7 @@ it.each(['always', 'adaptive', 'never'] as const)(
       right: 0,
     })
     expect(nativeProps).not.toHaveProperty('popover')
-    expect(nativeProps).not.toHaveProperty('desiredContentHeight')
+    expect(nativeProps).not.toHaveProperty('contentScrollViewTag')
     expect(contentStyle).toMatchObject({
       flex: 1,
       backgroundColor,
@@ -183,14 +182,14 @@ it('lets the iOS native presentation fill the surface while React content stays 
 })
 
 it.each(['always', 'adaptive', 'never', undefined] as const)(
-  'forwards iPhone %s presentation and constrains popover content to the native height',
+  'forwards iPhone %s presentation and constrains measured content to the native height',
   popover => {
     jest.replaceProperty(Platform, 'OS', 'ios')
-    renderOpenSheet({popover, desiredContentHeight: 400})
+    renderOpenSheet({popover, contentScrollViewTag: 42})
 
     const nativeProps = lastNativeProps()
     expect(nativeProps.popover).toBe(popover ?? 'never')
-    expect(nativeProps.desiredContentHeight).toBe(400)
+    expect(nativeProps.contentScrollViewTag).toBe(42)
 
     act(() =>
       nativeProps.onPresentationSizeChange?.({
@@ -204,11 +203,41 @@ it.each(['always', 'adaptive', 'never', undefined] as const)(
       } as BottomSheetPresentationSizeChangeEvent),
     )
 
-    const contentStyle = StyleSheet.flatten(
-      lastNativeProps().children.props.style,
+    const content = lastNativeProps().children
+    const contentStyle = StyleSheet.flatten(content.props.style)
+    expect(contentStyle?.maxHeight).toBe(180)
+
+    /*
+     * Measured sheet content is capped but not stretched, so it keeps its
+     * natural height when the sheet is taller. Popovers fill their frame.
+     */
+    const viewportStyle = StyleSheet.flatten(
+      content.props.children?.props.style,
     )
-    expect(contentStyle?.maxHeight).toBe(
-      popover === 'always' || popover === 'adaptive' ? 180 : undefined,
-    )
+    expect(viewportStyle?.maxHeight).toBe(180)
+    expect(viewportStyle?.flex).toBe(popover === 'always' ? 1 : undefined)
   },
 )
+
+it('leaves iPhone sheet content unconstrained without a measured scroll view', () => {
+  jest.replaceProperty(Platform, 'OS', 'ios')
+  renderOpenSheet({})
+
+  const nativeProps = lastNativeProps()
+  act(() =>
+    nativeProps.onPresentationSizeChange?.({
+      nativeEvent: {
+        width: 320,
+        height: 180,
+        isPopover: false,
+        safeAreaInsets: {top: 0, right: 0, bottom: 0, left: 0},
+        bottomOffset: 0,
+      },
+    } as BottomSheetPresentationSizeChangeEvent),
+  )
+
+  const contentStyle = StyleSheet.flatten(
+    lastNativeProps().children.props.style,
+  )
+  expect(contentStyle?.maxHeight).toBeUndefined()
+})

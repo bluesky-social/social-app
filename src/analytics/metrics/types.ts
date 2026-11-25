@@ -2053,7 +2053,7 @@ export type Events = {
   // === Video upload funnel (Frontend Spec section D) ===
   // Every event carries uploadId (client-generated UUID, ties one upload
   // session end-to-end) + engine (compression engine id, e.g.
-  // native:@bsky.app/video-compressor@0.2.0). jobId is added once the server
+  // native:@bsky.app/video-compressor@0.3.2). jobId is added once the server
   // returns it. Sizes / codecs / dimensions / timings only - never content.
   'video:upload:picked': {
     uploadId: string

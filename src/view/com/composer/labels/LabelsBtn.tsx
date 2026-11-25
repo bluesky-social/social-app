@@ -1,7 +1,5 @@
 import {Keyboard, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -18,7 +16,6 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 export function LabelsBtn({
   labels,
@@ -28,14 +25,14 @@ export function LabelsBtn({
   onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const hasLabel = labels.length > 0
 
   const updateAdultLabels = (newLabels: AdultSelfLabel[]) => {
     const newLabel = newLabels[newLabels.length - 1]
     const filtered = labels.filter(
-      l => !ADULT_CONTENT_LABELS.includes(l as AdultSelfLabel),
+      label => !ADULT_CONTENT_LABELS.includes(label as AdultSelfLabel),
     )
     onChange([...new Set([...filtered, newLabel].filter(Boolean))])
   }
@@ -43,7 +40,7 @@ export function LabelsBtn({
   const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
     const newLabel = newLabels[newLabels.length - 1]
     const filtered = labels.filter(
-      l => !OTHER_SELF_LABELS.includes(l as OtherSelfLabel),
+      label => !OTHER_SELF_LABELS.includes(label as OtherSelfLabel),
     )
     onChange([...new Set([...filtered, newLabel].filter(Boolean))])
   }
@@ -58,10 +55,8 @@ export function LabelsBtn({
           Keyboard.dismiss()
           control.open()
         }}
-        label={_(msg`Content warnings`)}
-        accessibilityHint={_(
-          msg`Opens a dialog to add a content warning to your post`,
-        )}>
+        label={l`Content warnings`}
+        accessibilityHint={l`Opens a dialog to add a content warning to your post`}>
         <ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
         <ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
           {labels.length > 0 ? (
@@ -94,20 +89,21 @@ function DialogInner({
   updateAdultLabels: (labels: AdultSelfLabel[]) => void
   updateOtherLabels: (labels: OtherSelfLabel[]) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
   const t = useTheme()
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Add a content warning`)}
-      style={[a.w_full, web({maxWidth: 500})]}>
-      <View style={[a.flex_1]}>
+      label={l`Add a content warning`}
+      style={[web({maxWidth: 400}), a.w_full]}>
+      <View style={[a.flex_1, a.gap_lg]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_semi_bold]}>
+          <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>Add a content warning</Trans>
           </Text>
-          <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+          <Text
+            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
               Please add any content warning labels that are applicable for the
               media you are posting.
@@ -115,118 +111,119 @@ function DialogInner({
           </Text>
         </View>
 
-        <View style={[a.my_md, a.gap_lg]}>
-          <View>
-            <View
-              style={[a.flex_row, a.align_center, a.justify_between, a.pb_sm]}>
-              <Text style={[a.font_semi_bold, a.text_lg]}>
-                <Trans>Adult Content</Trans>
-              </Text>
-            </View>
-            <View
-              style={[
-                a.p_md,
-                a.rounded_sm,
-                a.border,
-                t.atoms.border_contrast_medium,
-              ]}>
-              <Toggle.Group
-                label={_(msg`Adult Content labels`)}
-                values={labels}
-                onChange={values => {
-                  updateAdultLabels(values as AdultSelfLabel[])
-                }}>
-                <View style={[a.gap_sm]}>
-                  <Toggle.Item name="sexual" label={_(msg`Suggestive`)}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.text_md, a.font_medium]}>
+            <Trans>Adult Content</Trans>
+          </Text>
+          <Toggle.Group
+            label={l`Adult Content labels`}
+            values={labels}
+            onChange={values => {
+              updateAdultLabels(values as AdultSelfLabel[])
+            }}>
+            <Toggle.PanelGroup>
+              <Toggle.Item name="sexual" label={l`Suggestive`} hitSlop={0}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected} adjacent="trailing">
                     <Toggle.Checkbox />
-                    <Toggle.LabelText>
+                    <Toggle.PanelText>
                       <Trans>Suggestive</Trans>
-                    </Toggle.LabelText>
-                  </Toggle.Item>
-                  <Toggle.Item name="nudity" label={_(msg`Nudity`)}>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item name="nudity" label={l`Nudity`} hitSlop={0}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected} adjacent="both">
                     <Toggle.Checkbox />
-                    <Toggle.LabelText>
+                    <Toggle.PanelText>
                       <Trans>Nudity</Trans>
-                    </Toggle.LabelText>
-                  </Toggle.Item>
-                  <Toggle.Item name="porn" label={_(msg`Porn`)}>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item name="porn" label={l`Porn`} hitSlop={0}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected} adjacent="leading">
                     <Toggle.Checkbox />
-                    <Toggle.LabelText>
+                    <Toggle.PanelText>
                       <Trans>Adult</Trans>
-                    </Toggle.LabelText>
-                  </Toggle.Item>
-                </View>
-              </Toggle.Group>
-              {labels.includes('sexual') ||
-              labels.includes('nudity') ||
-              labels.includes('porn') ? (
-                <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                  {labels.includes('sexual') ? (
-                    <Trans>Pictures meant for adults.</Trans>
-                  ) : labels.includes('nudity') ? (
-                    <Trans>Artistic or non-erotic nudity.</Trans>
-                  ) : labels.includes('porn') ? (
-                    <Trans>Sexual activity or erotic nudity.</Trans>
-                  ) : (
-                    ''
-                  )}
-                </Text>
-              ) : null}
-            </View>
-          </View>
-          <View>
-            <View
-              style={[a.flex_row, a.align_center, a.justify_between, a.pb_sm]}>
-              <Text style={[a.font_semi_bold, a.text_lg]}>
-                <Trans>Other</Trans>
-              </Text>
-            </View>
-            <View
-              style={[
-                a.p_md,
-                a.rounded_sm,
-                a.border,
-                t.atoms.border_contrast_medium,
-              ]}>
-              <Toggle.Group
-                label={_(msg`Adult Content labels`)}
-                values={labels}
-                onChange={values => {
-                  updateOtherLabels(values as OtherSelfLabel[])
-                }}>
-                <Toggle.Item name="graphic-media" label={_(msg`Graphic Media`)}>
-                  <Toggle.Checkbox />
-                  <Toggle.LabelText>
-                    <Trans>Graphic Media</Trans>
-                  </Toggle.LabelText>
-                </Toggle.Item>
-              </Toggle.Group>
-              {labels.includes('graphic-media') ? (
-                <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                  <Trans>
-                    Media that may be disturbing or inappropriate for some
-                    audiences.
-                  </Trans>
-                </Text>
-              ) : null}
-            </View>
-          </View>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+            </Toggle.PanelGroup>
+          </Toggle.Group>
+          {labels.includes('sexual') ? (
+            <LabelDescriptionText>
+              <Trans>Pictures meant for adults.</Trans>
+            </LabelDescriptionText>
+          ) : labels.includes('nudity') ? (
+            <LabelDescriptionText>
+              <Trans>Artistic or non-erotic nudity.</Trans>
+            </LabelDescriptionText>
+          ) : labels.includes('porn') ? (
+            <LabelDescriptionText>
+              <Trans>Sexual activity or erotic nudity.</Trans>
+            </LabelDescriptionText>
+          ) : null}
         </View>
-      </View>
 
-      <View style={[a.mt_sm, web([a.flex_row, a.ml_auto])]}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.text_md, a.font_medium]}>
+            <Trans>Other</Trans>
+          </Text>
+          <Toggle.Group
+            label={l`Adult Content labels`}
+            values={labels}
+            onChange={values => {
+              updateOtherLabels(values as OtherSelfLabel[])
+            }}>
+            <Toggle.Item
+              name="graphic-media"
+              label={l`Graphic Media`}
+              hitSlop={0}>
+              {({selected}) => (
+                <Toggle.Panel active={selected}>
+                  <Toggle.Checkbox />
+                  <Toggle.PanelText>
+                    <Trans>Graphic Media</Trans>
+                  </Toggle.PanelText>
+                </Toggle.Panel>
+              )}
+            </Toggle.Item>
+          </Toggle.Group>
+          {labels.includes('graphic-media') ? (
+            <LabelDescriptionText>
+              <Trans>
+                Media that may be disturbing or inappropriate for some
+                audiences.
+              </Trans>
+            </LabelDescriptionText>
+          ) : null}
+        </View>
+
         <Button
-          label={_(msg`Done`)}
+          label={l`Done`}
           onPress={() => control.close()}
           color="primary"
-          size={IS_WEB ? 'small' : 'large'}
-          variant="solid"
+          size="large"
           testID="confirmBtn">
           <ButtonText>
             <Trans>Done</Trans>
           </ButtonText>
         </Button>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
+  )
+}
+
+function LabelDescriptionText({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  return (
+    <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+      {children}
+    </Text>
   )
 }

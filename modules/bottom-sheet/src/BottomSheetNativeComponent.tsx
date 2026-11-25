@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {IS_IPAD} from '#/env'
 import {
   type BottomSheetPresentationSizeChangeEvent,
   type BottomSheetState,
@@ -108,7 +107,7 @@ function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
   containerBackgroundColor,
-  desiredContentHeight,
+  contentScrollViewTag,
   maxHeight,
   onStateChange,
   onPresentationSizeChange,
@@ -129,15 +128,19 @@ function BottomSheetNativeComponentInner({
   const presentationHeight =
     Platform.OS === 'ios' ? presentationSize?.height : undefined
   const hasPresentedPopover = presentationSize?.isPopover === true
-  const usesReportedContentHeight =
-    (IS_IPAD || (Platform.OS === 'ios' && popover !== 'never')) &&
+  /*
+   * Content measured through its ScrollView can be capped at the presented
+   * height, since the cap doesn't change the measured height. It isn't
+   * stretched to fill the presentation, though: content shorter than the sheet
+   * keeps its natural height, so it doesn't follow the sheet around while it's
+   * dragged or resized.
+   */
+  const usesMeasuredContentHeight =
+    Platform.OS === 'ios' &&
     presentationHeight != null &&
-    desiredContentHeight != null
+    contentScrollViewTag != null
   const isHeightConstrained =
-    maxHeight != null ||
-    rest.fullHeight === true ||
-    hasPresentedPopover ||
-    usesReportedContentHeight
+    maxHeight != null || rest.fullHeight === true || hasPresentedPopover
   const viewportMaxHeight =
     maxHeight != null
       ? presentationHeight != null
@@ -150,7 +153,7 @@ function BottomSheetNativeComponentInner({
 
   const effectiveViewportMaxHeight =
     viewportMaxHeight ??
-    (usesReportedContentHeight ? presentationHeight : undefined)
+    (usesMeasuredContentHeight ? presentationHeight : undefined)
   const nativeContainerBackgroundColor =
     Platform.OS === 'ios'
       ? (containerBackgroundColor ?? backgroundColor)
@@ -161,7 +164,7 @@ function BottomSheetNativeComponentInner({
       {...rest}
       {...(Platform.OS === 'ios'
         ? {
-            desiredContentHeight,
+            contentScrollViewTag,
             popover,
             popoverWidth,
             onPresentationSizeChange,
@@ -217,18 +220,14 @@ function BottomSheetNativeComponentInner({
           },
         ]}>
         <View
-          style={
-            isHeightConstrained
-              ? [
-                  {flex: 1},
-                  effectiveViewportMaxHeight != null && {
-                    maxHeight: effectiveViewportMaxHeight,
-                  },
-                  // see the flexShrink note on the wrapper above
-                  Platform.OS === 'android' && {flexShrink: 1},
-                ]
-              : undefined
-          }>
+          style={[
+            isHeightConstrained && {flex: 1},
+            effectiveViewportMaxHeight != null && {
+              maxHeight: effectiveViewportMaxHeight,
+            },
+            // see the flexShrink note on the wrapper above
+            isHeightConstrained && Platform.OS === 'android' && {flexShrink: 1},
+          ]}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

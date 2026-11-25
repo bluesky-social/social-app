@@ -10,6 +10,8 @@ export const GalleryContext = createContext<{
    * already in view there, so navigating past it doesn't move anything.
    */
   endIndex: number
+  /** Left-aligns an item within the scroll bounds without selecting its dot. */
+  revealIndex: (index: number) => void
 } | null>(null)
 GalleryContext.displayName = 'GalleryContext'
 

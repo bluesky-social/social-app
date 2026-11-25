@@ -33,6 +33,16 @@ returns a partial snapshot as successful. Concurrent scrapes share one
 collection. Shutdown cancels collection, drains application requests, and
 force-kills workers still running after the 17-second cluster shutdown budget.
 
+A request that throws `WebAssembly.RuntimeError` initiates a graceful process
+shutdown with exit code `1`: the renderer may stay broken after a WASM trap.
+The process stops listening immediately and rejects subsequent requests on
+existing connections with `503` while in-flight requests drain. The cluster
+replaces that worker; single-process deployments rely on their process
+supervisor. Other request errors return `500` without initiating a
+shutdown. Starter-pack rendering failures include the pack URI, rendered title,
+rendering stage, image count, build version, and configured font names, weights,
+and SHA-256 hashes in the exception log. Font and image buffers are not logged.
+
 The middleware's synthetic `up` metric is disabled: use the scraper-generated
 `up` for target health, rather than counting one application `up` per worker.
 A failed scrape does not necessarily mean all application requests are failing.

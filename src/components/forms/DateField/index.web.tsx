@@ -11,12 +11,40 @@ import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components
 export * as utils from '#/components/forms/DateField/utils'
 export const LabelText = TextField.LabelText
 
-const InputBase = forwardRef<HTMLInputElement, TextInputProps>(
-  ({style, ...props}, ref) => {
+const InputBase = forwardRef<
+  HTMLInputElement,
+  TextInputProps &
+    Pick<React.InputHTMLAttributes<HTMLInputElement>, 'min' | 'max'>
+>(
+  (
+    {
+      accessibilityLabel,
+      accessibilityHint,
+      testID,
+      value,
+      onChange,
+      onFocus,
+      onBlur,
+      placeholder,
+      min,
+      max,
+      style,
+    },
+    ref,
+  ) => {
     return unstable_createElement('input', {
-      ...props,
       ref,
       type: 'date',
+      'aria-label': accessibilityLabel,
+      'aria-description': accessibilityHint,
+      testID,
+      value,
+      onChange,
+      onFocus,
+      onBlur,
+      placeholder,
+      min,
+      max,
       style: [
         StyleSheet.flatten(style),
         {

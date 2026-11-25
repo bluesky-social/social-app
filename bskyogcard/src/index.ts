@@ -3,7 +3,6 @@ import type http from 'node:http'
 
 import express from 'express'
 import promBundle from 'express-prom-bundle'
-import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
 import {Registry} from 'prom-client'
 
 import {type Config} from './config.js'
@@ -17,12 +16,14 @@ export * from './logger.js'
 export class CardService {
   public server?: http.Server
   public metricsServer?: http.Server
-  private terminator?: HttpTerminator
   private stopMetrics?: () => Promise<void>
+  private draining = false
+  private shutdown?: Promise<void>
 
   public app: express.Application
   public ctx: AppContext
   readonly registry: Registry
+  onFatalError?: () => void
 
   constructor(app: express.Application, ctx: AppContext, registry: Registry) {
     this.app = app
@@ -31,7 +32,7 @@ export class CardService {
   }
 
   static async create(cfg: Config, workerSlot = 0): Promise<CardService> {
-    let app = express()
+    const app = express()
 
     const ctx = await AppContext.fromConfig(cfg)
     const registry = new Registry()
@@ -62,20 +63,25 @@ export class CardService {
     })
     app.use(metricsMiddleware)
 
-    app = routes(ctx, app)
-    app.use(errorHandler)
-
-    return new CardService(app, ctx, registry)
+    const service = new CardService(app, ctx, registry)
+    app.use((_req, res, next) => {
+      if (service.draining) {
+        return res
+          .status(503)
+          .set('connection', 'close')
+          .end('service unavailable')
+      }
+      next()
+    })
+    routes(ctx, app)
+    app.use(errorHandler(() => service.onFatalError?.()))
+    return service
   }
 
   async start({serveMetrics = true} = {}) {
     // Start main application server
     this.server = this.app.listen(this.ctx.cfg.service.port)
     this.server.keepAliveTimeout = 90000
-    this.terminator = createHttpTerminator({
-      server: this.server,
-      gracefulTerminationTimeout: 15000, // 15s timeout for in-flight requests
-    })
     await events.once(this.server, 'listening')
 
     if (serveMetrics) {
@@ -89,15 +95,30 @@ export class CardService {
     }
   }
 
-  async destroy() {
+  destroy() {
+    this.shutdown ??= this.stop()
+    return this.shutdown
+  }
+
+  private async stop() {
+    this.draining = true
     const startTime = Date.now()
 
     this.ctx.abortController.abort()
 
     const shutdownPromises = []
-
-    if (this.terminator) {
-      shutdownPromises.push(this.terminator.terminate())
+    const server = this.server
+    if (server?.listening) {
+      shutdownPromises.push(
+        new Promise<void>((resolve, reject) => {
+          const deadline = setTimeout(() => server.closeAllConnections(), 15000)
+          server.close(err => {
+            clearTimeout(deadline)
+            if (err) reject(err)
+            else resolve()
+          })
+        }),
+      )
     }
 
     if (this.stopMetrics) {

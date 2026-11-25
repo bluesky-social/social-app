@@ -66,7 +66,7 @@ function PostSkeleton({index}: {index: number}) {
       <Skele.Row style={[a.align_start, {gap: 10}]}>
         <Skele.Circle size={AVATAR_SIZE} />
 
-        <Skele.Col style={[a.gap_xs]}>
+        <Skele.Col style={[a.flex_1, a.gap_xs]}>
           <Skele.Row style={[a.gap_sm]}>
             <Skele.Text style={[a.text_md, {width: name}]} />
             <Skele.Text blend style={[a.text_md, {width: handle}]} />

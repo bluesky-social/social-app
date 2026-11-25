@@ -101,10 +101,14 @@ zero or one item. Optional `style` and `testID` props configure the row. The
 active dot grows from 8 to 30 pixels wide over 200ms as the previous dot shrinks;
 reduced motion makes the change immediate. Colors follow the theme.
 
-Dots are read-only on every platform, with no buttons or extra tab stops.
-The row exposes a single translated position label to screen readers. Use
-the gallery's swipe, drag, trackpad, and arrow-key navigation to move between
-items.
+On web, each dot is a button that smoothly scrolls its corresponding item into
+left alignment, clamped to the scrollable range, without moving focus away from
+the button. Reduced motion makes scrolling immediate. If the gallery is already
+at that offset, it stops any earlier smooth scroll without reporting navigation.
+Buttons have translated destination labels, and the group label describes the
+current scroll position. Inactive dots darken slightly on hover.
+On iOS and Android the dots remain read-only, with a single translated position
+label and no buttons or extra tab stops.
 
 The active dot follows the actual scroll position, including at shared or
 clamped offsets, rather than a separately selected target item. This display
@@ -114,7 +118,9 @@ state is separate from `onIndexChange`, which follows the rules under
 ### Navigation callbacks
 
 `onIndexChange` reports native swiping, and on web mouse dragging, arrow keys,
-touch scrolling, and horizontal wheel or trackpad scrolling. For touch and
+touch scrolling, horizontal wheel or trackpad scrolling, and page-dot navigation
+that scrolls to a different navigation index. A dot press reports its destination
+once when that index changes. For touch and
 wheel scrolling, it reports each item that becomes the leading one while a
 finger scrolls the gallery, through its momentum, or during a horizontal wheel
 scroll (until scrolling is idle for 150ms). Taps and vertical wheels don't
@@ -274,8 +280,11 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
   the page dots example: releases should settle on slide boundaries or the
   content end. Turn it off to restore free scrolling.
 - Page dots: swipe/drag/trackpad scrolling updates the position indicator.
-  Dots are not buttons or extra tab stops on any platform. Reveal the last
-  card in Storybook and check the indicator follows the scroll position,
-  including when multiple cards fit. Check that reduced motion skips animation.
+  On native, dots are not buttons or extra tab stops. On web, click a dot or
+  activate it with Enter or Space: its card should align left, clamped to the
+  scrollable range, while focus stays on the button. Inactive dots darken on
+  hover. Reveal the last card in Storybook and check the indicator still follows
+  the scroll position, including when multiple cards fit. Check that reduced
+  motion skips both the scroll and dot-width animations.
 - Screen reader: items are reachable and labelled, and the image adapter shows
   its vertical list of images.

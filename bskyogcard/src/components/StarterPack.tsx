@@ -9,6 +9,18 @@ export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
 export const TILE_SIZE = STARTERPACK_HEIGHT / 3
 
+/** Returns the validated title used by both rendering and failure diagnostics. */
+export function getStarterPackTitle(
+  starterPack: AppBskyGraphDefs.StarterPackView,
+) {
+  return bsky.validate(
+    starterPack.record,
+    AppBskyGraphStarterpack.validateRecord,
+  )
+    ? starterPack.record.name || 'Starter Pack'
+    : 'Starter Pack'
+}
+
 const GRADIENT_TOP = '#0A7AFF'
 const GRADIENT_BOTTOM = '#59B9FF'
 const IMAGE_STROKE = '#359CFF'
@@ -18,12 +30,7 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = bsky.validate(
-    starterPack.record,
-    AppBskyGraphStarterpack.validateRecord,
-  )
-    ? starterPack.record
-    : null
+  const title = getStarterPackTitle(starterPack)
   const imagesArray = [...images.values()]
   const imageOfCreator = images.get(starterPack.creator.did)
   const imagesExceptCreator = [...images.entries()]
@@ -46,7 +53,7 @@ export function StarterPack(props: {
   } else {
     imagesAcross.push(...imagesExceptCreator.slice(0, 7))
   }
-  const isLongTitle = record ? record.name.length > 30 : false
+  const isLongTitle = title.length > 30
   return (
     <div
       style={{
@@ -145,7 +152,7 @@ export function StarterPack(props: {
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}>
-          {record?.name || 'Starter Pack'}
+          {title}
         </div>
         <div
           style={{

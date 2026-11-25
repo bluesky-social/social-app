@@ -5,6 +5,7 @@ import {envInt} from '@atproto/common'
 import {CardCluster} from './cluster.js'
 import {CardService, envToCfg, httpLogger, readEnv} from './index.js'
 import {serveWorkerMetrics} from './metrics.js'
+import {installShutdown} from './shutdown.js'
 
 async function main() {
   const cfg = envToCfg(readEnv())
@@ -27,6 +28,11 @@ async function main() {
   const stopMetrics = cluster.isWorker
     ? serveWorkerMetrics(card.registry)
     : () => {}
+  const shutdown = installShutdown(async () => {
+    stopMetrics()
+    await card.destroy()
+  })
+  card.onFatalError = () => shutdown(1)
   try {
     await card.start({serveMetrics: !cluster.isWorker})
   } catch (err) {
@@ -38,31 +44,6 @@ async function main() {
     {worker: workerSlot},
     `card service ${process.pid} is running`,
   )
-  installShutdown(async () => {
-    stopMetrics()
-    await card.destroy()
-  })
-}
-
-function installShutdown(destroy: () => Promise<void>) {
-  let stopping = false
-  const shutdown = () => {
-    if (stopping) return
-    stopping = true
-    void destroy().then(
-      () => {
-        httpLogger.info('card service is stopped')
-        if (cluster.isWorker) process.exit(0)
-      },
-      err => {
-        httpLogger.error({err}, 'card service shutdown failed')
-        process.exitCode = 1
-        if (cluster.isWorker) process.exit(1)
-      },
-    )
-  }
-  process.on('SIGTERM', shutdown)
-  process.on('SIGINT', shutdown)
 }
 
 main().catch(err => {
