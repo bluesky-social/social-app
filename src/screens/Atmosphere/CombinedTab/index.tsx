@@ -212,15 +212,28 @@ function RecommendedEyebrow() {
   const t = useTheme()
   return (
     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-      <SparkleIcon size="sm" style={t.atoms.text_contrast_medium} />
+      <SparkleIcon size="sm" style={{color: t.palette.primary_500}} />
       <Text
         style={[
+          a.flex_1,
           a.text_sm,
-          a.font_semi_bold,
           a.leading_snug,
           t.atoms.text_contrast_medium,
         ]}>
-        <Trans>Recommended for you</Trans>
+        <Text
+          style={[
+            a.text_sm,
+            a.font_semi_bold,
+            a.leading_snug,
+            {color: t.palette.primary_500},
+          ]}>
+          <Trans>Recommended for you</Trans>
+        </Text>
+        {' \u00b7 '}
+        {/* TODO: Use the reason the server gives, once it gives one. */}
+        <Trans comment="Why an item is recommended, after “Recommended for you”">
+          Popular with people you follow
+        </Trans>
       </Text>
     </View>
   )
@@ -237,8 +250,23 @@ function RecommendedRow({
   position: number
   feedback: AtmosphereFeedback | undefined
 }) {
+  const t = useTheme()
   return (
-    <View testID="combinedRecommendedRow" style={[a.gap_md, a.px_lg, a.py_md]}>
+    <View
+      testID="combinedRecommendedRow"
+      style={[
+        a.gap_md,
+        a.px_lg,
+        a.py_md,
+        // Mixed into activity, so set apart from it.
+        eyebrow && [
+          a.py_lg,
+          a.my_sm,
+          a.border_y,
+          t.atoms.border_contrast_low,
+          {backgroundColor: t.palette.primary_25},
+        ],
+      ]}>
       {eyebrow && <RecommendedEyebrow />}
       <ActivityContentHider moderation={moderation}>
         <AtmosphereContentItem
