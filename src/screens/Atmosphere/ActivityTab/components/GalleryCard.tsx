@@ -63,6 +63,7 @@ export function GalleryCard({
   const linkProps: GalleryLinkProps = {
     to: view.uri,
     preferNativeApp: true,
+    disableMismatchWarning: true,
     accessibilityHint: '',
     onPress: () => {
       logPress('external')
@@ -136,6 +137,8 @@ export function GalleryCard({
 type GalleryLinkProps = {
   to: string
   preferNativeApp: boolean
+  /** Titles are the gallery's own, not a claim about where it links. */
+  disableMismatchWarning: boolean
   accessibilityHint: string
   onPress: () => void
 }

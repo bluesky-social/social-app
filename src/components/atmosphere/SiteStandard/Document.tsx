@@ -87,6 +87,8 @@ function DocumentCard({
   const linkProps = {
     to: view.uri,
     shouldProxy: true,
+    // Titles are the article's own, not a claim about where it links.
+    disableMismatchWarning: true,
     accessibilityHint: '',
     onPress: () => {
       haptics.tap()
@@ -273,6 +275,7 @@ function PublicationHeader({
           testID="documentPublication"
           to={publication.uri}
           shouldProxy
+          disableMismatchWarning
           label={publicationLabel}
           emoji
           numberOfLines={1}
