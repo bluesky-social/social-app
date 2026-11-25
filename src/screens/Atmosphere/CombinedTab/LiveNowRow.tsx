@@ -145,7 +145,6 @@ function LiveNowItemInner({
           label={l`Open livestream: ${title}, live`}
           onPress={() => logPress('external')}
           disableMismatchWarning
-          disableUnderline
           emoji
           numberOfLines={2}
           style={[a.text_md, a.font_bold, a.leading_snug, t.atoms.text]}>
@@ -164,7 +163,6 @@ function LiveNowItemInner({
                   source: 'liveNowRow',
                 })
               }}
-              disableUnderline
               numberOfLines={1}
               style={[
                 a.flex_shrink,
