@@ -14,7 +14,7 @@ export type AtmosphereTab =
 /**
  * Where in Atmosphere an event happened:
  * - `tab`: one of the Atmosphere screen's tabs.
- * - `activityList`: the activity list opened from a card's "View all".
+ * - `activityList`: the activity list opened from a grouped content count.
  * - `photoDialog`: the photo dialog opened from a gallery card.
  * - `appDialog`: the details dialog opened from an Apps tab card.
  */

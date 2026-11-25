@@ -1,12 +1,10 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
-  useAtmosphereMetricContext,
   useLogContentPress,
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
@@ -16,10 +14,6 @@ import {
   type DocumentRecommenders,
 } from '#/components/atmosphere/SiteStandard/Document'
 import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
-import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {site} from '#/lexicons'
 import {
   type ActivityCardRow,
@@ -93,7 +87,6 @@ function ActivityCard({
           />
         </AtmosphereContentItem>
       </ActivityContentHider>
-      <ViewAllLink row={row} />
     </>
   )
 }
@@ -146,34 +139,4 @@ export function ActivityContentCard({
     case 'livestream':
       return <LivestreamCard content={content} />
   }
-}
-
-/** Opens what every activity in an actor group targets as a list. */
-function ViewAllLink({row}: {row: ActivityCardRow}) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const ax = useAnalytics()
-  const metricContext = useAtmosphereMetricContext()
-  const subjectUris = row.subjectUris
-  if (!subjectUris) return null
-  return (
-    <Link
-      testID="activityViewAll"
-      to={makeActivityListLink(subjectUris)}
-      label={l`View all activity`}
-      onPress={() => {
-        if (!metricContext) return
-        ax.metric('atmosphere:activity:viewAll', {
-          ...metricContext,
-          subjectCount: subjectUris.length,
-          collection: row.collection,
-        })
-      }}
-      style={[a.flex_row, a.align_center, a.gap_xs, a.self_start]}>
-      <Text style={[a.text_sm, a.font_medium, {color: t.palette.primary_500}]}>
-        <Trans>View all</Trans>
-      </Text>
-      <ArrowRightIcon size="sm" fill={t.palette.primary_500} />
-    </Link>
-  )
 }

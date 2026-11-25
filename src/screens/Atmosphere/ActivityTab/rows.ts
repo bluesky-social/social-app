@@ -73,7 +73,7 @@ export type ActivityCardRow = {
   grouping: 'single' | 'actorGroup' | 'subjectGroup'
   /**
    * What each activity in an actor group targets (the articles, not the
-   * recommends), newest first, for View all.
+   * recommends), newest first, for the linked content count.
    */
   subjectUris?: AtUriString[]
   indexedAt: string

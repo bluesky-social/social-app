@@ -8,6 +8,7 @@ import {
   AtmosphereFeedbackProvider,
 } from '#/screens/Atmosphere/feedback'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
+import {InlineLinkText} from '#/components/Link'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
 import {
@@ -37,7 +38,6 @@ import {
   subjectGroup,
 } from './fixtures'
 
-const mockLinkTo = jest.fn()
 const mockMetric = jest.fn()
 const mockDocumentCard = jest.fn()
 
@@ -49,11 +49,14 @@ jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))
 jest.mock('#/alf', () => ({
-  atoms: new Proxy({}, {get: () => ({})}),
+  atoms: new Proxy(
+    {font_semi_bold: {fontWeight: '600'}, text_sm: {fontSize: 14}},
+    {get: (target, key) => target[key as keyof typeof target] ?? {}},
+  ),
   useAlf: () => ({fonts: {scaleMultiplier: 1}}),
   useTheme: () => ({
     atoms: new Proxy({}, {get: () => ({})}),
-    palette: new Proxy({}, {get: () => '#000'}),
+    palette: {primary_500: '#0085ff'},
   }),
 }))
 jest.mock('#/components/Typography', () => {
@@ -64,29 +67,37 @@ jest.mock('#/components/Typography', () => {
 jest.mock('#/components/Link', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    InlineLinkText: ({children}: {children: React.ReactNode}) => (
-      <Text>{children}</Text>
-    ),
-    Link: ({
+  const MockLink = jest.fn(
+    ({
       children,
       to,
+      label,
       testID,
       onPress,
+      style,
     }: {
       children: React.ReactNode
       to: string
+      label: string
       testID?: string
       onPress?: () => void
+      style?: React.ComponentProps<typeof Text>['style']
     }) => {
-      mockLinkTo(to)
       return (
-        <Text testID={testID} onPress={onPress}>
+        <Text
+          testID={testID}
+          accessibilityRole="link"
+          accessibilityLabel={label}
+          accessibilityHint=""
+          accessibilityValue={{text: to}}
+          style={style}
+          onPress={onPress}>
           {children}
         </Text>
       )
     },
-  }
+  )
+  return {InlineLinkText: MockLink, Link: MockLink}
 })
 jest.mock('#/components/Admonition', () => {
   const {Text} =
@@ -197,12 +208,17 @@ function renderEntry(entry: TimelineEntry) {
 
 function expectHeader(sentence: string, app?: string) {
   expect(screen.getByText(sentence)).toBeTruthy()
+  expect(screen.queryByText('View all')).toBeNull()
   if (app) {
     expect(screen.getByText(app, {exact: false})).toBeTruthy()
   } else {
     expect(screen.getByText('1h')).toBeTruthy()
   }
 }
+
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 
 describe('ActivityRow', () => {
   it.each([true, false])(
@@ -259,22 +275,30 @@ describe('ActivityRow', () => {
         }),
       }),
     )
-    expect(screen.queryByTestId('activityViewAll')).toBeNull()
+    expect(screen.queryByTestId('activityGroupLink')).toBeNull()
   })
 
-  it('renders a subject group as "and N others"', () => {
-    renderEntry(
-      subjectGroup({
-        actors: [danielle, caelin, paul],
-        collection: NSID.recommend,
-        view: article('caelin.pckt.blog'),
-      }),
-    )
-    // Recommends can come from any app, so none is named.
-    expectHeader('Danielle Yuhan and 2 others recommended an article')
-  })
+  it.each([
+    [NSID.recommend, article('caelin.pckt.blog'), 'recommended an article'],
+    [NSID.subscription, publication(), 'subscribed to a publication'],
+  ])(
+    'keeps the people count noninteractive for %s',
+    (collection, view, verb) => {
+      renderEntry(
+        subjectGroup({
+          actors: [danielle, caelin, paul],
+          collection,
+          view,
+        }),
+      )
+      expectHeader(`Danielle Yuhan and 2 others ${verb}`)
+      expect(screen.queryByTestId('activityGroupLink')).toBeNull()
+      expect(screen.getAllByRole('link')).toHaveLength(1)
+      expect(screen.getByRole('link', {name: 'Danielle Yuhan'})).toBeTruthy()
+    },
+  )
 
-  it('links View all on a recommend group to the recommended articles', () => {
+  it('links the recommended article count to the articles, not recommends', () => {
     const row = rowOf(
       actorGroup({
         actor: eric,
@@ -285,10 +309,16 @@ describe('ActivityRow', () => {
     )
     renderRow(row)
     expectHeader('Eric recommended 16 articles')
-    expect(screen.getByTestId('activityViewAll')).toBeTruthy()
-    expect(mockLinkTo).toHaveBeenCalledWith(
-      makeActivityListLink(row.kind === 'card' ? (row.subjectUris ?? []) : []),
+    expect(screen.getByTestId('activityGroupLink')).toHaveTextContent(
+      '16 articles',
     )
+    expect(
+      screen.getByTestId('activityGroupLink').props.accessibilityValue,
+    ).toEqual({
+      text: makeActivityListLink(
+        row.kind === 'card' ? (row.subjectUris ?? []) : [],
+      ),
+    })
   })
 
   it('names the app of the newest article in a published group', () => {
@@ -303,24 +333,87 @@ describe('ActivityRow', () => {
     expectHeader('Eric published 3 articles', 'pckt')
   })
 
-  it('links View all to the group as an activity list', () => {
+  const contentGroups = [
+    [NSID.document, article(), 'published', 'articles', 'Leaflet'],
+    [NSID.recommend, article(), 'recommended', 'articles', undefined],
+    [
+      NSID.subscription,
+      publication(),
+      'subscribed to',
+      'publications',
+      undefined,
+    ],
+    [NSID.gallery, gallery(), 'posted', 'galleries', 'Grain'],
+    [NSID.livestream, livestream(), 'was live', 'times', 'Streamplace'],
+  ] as const
+
+  it.each(contentGroups)(
+    'links the %s count to the group with the default hover/focus underline',
+    (collection, view, verb, noun, appName) => {
+      const row = rowOf(actorGroup({actor: eric, collection, view, count: 3}))
+      renderRow(row)
+
+      expectHeader(`Eric ${verb} 3 ${noun}`, appName)
+      const link = screen.getByTestId('activityGroupLink')
+      expect(link).toHaveTextContent(`3 ${noun}`)
+      expect(link).toHaveStyle({fontWeight: '600', color: '#0085ff'})
+      expect(row.kind === 'card' && row.subjectUris).toHaveLength(3)
+      expect(link.props.accessibilityValue).toEqual({
+        text: makeActivityListLink(
+          row.kind === 'card' ? (row.subjectUris ?? []) : [],
+        ),
+      })
+      const props = jest
+        .mocked(InlineLinkText)
+        .mock.calls.find(([props]) => props.testID === 'activityGroupLink')?.[0]
+      expect(props).toBeDefined()
+      expect(props?.disableUnderline).not.toBe(true)
+    },
+  )
+
+  it.each(contentGroups)(
+    'does not link a single-item %s count',
+    (collection, view) => {
+      renderEntry(actorGroup({actor: eric, collection, view, count: 1}))
+
+      expect(screen.queryByTestId('activityGroupLink')).toBeNull()
+      expect(screen.queryByText('View all')).toBeNull()
+    },
+  )
+
+  it('keeps a link to grouped streams while the newest one is live', () => {
+    renderEntry(
+      actorGroup({
+        actor: camp,
+        collection: NSID.livestream,
+        view: livestream({active: true, endedAt: undefined}),
+        count: 3,
+      }),
+    )
+
+    expectHeader('pdx.atproto.camp is live · 3 livestreams', 'Streamplace')
+    expect(screen.getByTestId('activityGroupLink')).toHaveTextContent(
+      '3 livestreams',
+    )
+  })
+
+  it('does not create a broken link when a group has no subject URIs', () => {
     const row = rowOf(
       actorGroup({
         actor: eric,
         collection: NSID.document,
-        view: article('paul.pckt.blog'),
+        view: article(),
         count: 3,
       }),
     )
-    renderRow(row)
-    expect(screen.getByTestId('activityViewAll')).toBeTruthy()
-    expect(row.kind === 'card' && row.subjectUris).toHaveLength(3)
-    expect(mockLinkTo).toHaveBeenCalledWith(
-      makeActivityListLink(row.kind === 'card' ? (row.subjectUris ?? []) : []),
-    )
+    if (row.kind !== 'card') throw new Error('Expected a card')
+    renderRow({...row, subjectUris: undefined})
+
+    expectHeader('Eric published 3 articles', 'Leaflet')
+    expect(screen.queryByTestId('activityGroupLink')).toBeNull()
   })
 
-  it('logs one View all event with the tab it was opened from', () => {
+  it('logs one group-list event with the tab the count was pressed from', () => {
     mockMetric.mockClear()
     const row = rowOf(
       actorGroup({
@@ -338,7 +431,7 @@ describe('ActivityRow', () => {
       </I18nProvider>,
     )
 
-    fireEvent.press(screen.getByTestId('activityViewAll'))
+    fireEvent.press(screen.getByTestId('activityGroupLink'))
     expect(
       mockMetric.mock.calls.filter(
         ([name]) => name === 'atmosphere:activity:viewAll',

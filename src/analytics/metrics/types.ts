@@ -1690,7 +1690,7 @@ export type Events = {
     /** `report` only: the collection of the record being reported. */
     reportCollection?: string
   }
-  /** The user opened an activity group's "View all" list. */
+  /** The user opened an activity group's full list via its content count. */
   'atmosphere:activity:viewAll': AtmosphereMetricContext & {
     subjectCount: number
     collection: string

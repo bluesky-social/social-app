@@ -1,7 +1,11 @@
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
+import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
+import {atoms as a, useTheme} from '#/alf'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {place, site, social} from '#/lexicons'
 import {type ActivityCardRow} from '../rows'
 import {isLive} from './LivestreamCard'
@@ -27,9 +31,9 @@ export function ActivitySentence({
       return count > 1 ? (
         <Trans>
           {actor} published{' '}
-          <Strong>
+          <ContentCount row={row}>
             <Plural value={count} one="# article" other="# articles" />
-          </Strong>
+          </ContentCount>
         </Trans>
       ) : (
         <Trans>{actor} published an article</Trans>
@@ -50,9 +54,9 @@ export function ActivitySentence({
       return count > 1 ? (
         <Trans>
           {actor} recommended{' '}
-          <Strong>
+          <ContentCount row={row}>
             <Plural value={count} one="# article" other="# articles" />
-          </Strong>
+          </ContentCount>
         </Trans>
       ) : (
         <Trans>{actor} recommended an article</Trans>
@@ -73,9 +77,9 @@ export function ActivitySentence({
       return count > 1 ? (
         <Trans>
           {actor} subscribed to{' '}
-          <Strong>
+          <ContentCount row={row}>
             <Plural value={count} one="# publication" other="# publications" />
-          </Strong>
+          </ContentCount>
         </Trans>
       ) : (
         <Trans>{actor} subscribed to a publication</Trans>
@@ -85,9 +89,9 @@ export function ActivitySentence({
       return count > 1 ? (
         <Trans>
           {actor} posted{' '}
-          <Strong>
+          <ContentCount row={row}>
             <Plural value={count} one="# gallery" other="# galleries" />
-          </Strong>
+          </ContentCount>
         </Trans>
       ) : (
         <Trans>{actor} posted a gallery</Trans>
@@ -95,19 +99,70 @@ export function ActivitySentence({
 
     case place.stream.livestream.$type:
       if (row.content.type === 'livestream' && isLive(row.content.view)) {
-        return <Trans>{actor} is live</Trans>
+        return count > 1 ? (
+          <Trans>
+            {actor} is live ·{' '}
+            <ContentCount row={row}>
+              <Plural value={count} one="# livestream" other="# livestreams" />
+            </ContentCount>
+          </Trans>
+        ) : (
+          <Trans>{actor} is live</Trans>
+        )
       }
       return count > 1 ? (
         <Trans>
           {actor} was live{' '}
-          <Strong>
+          <ContentCount row={row}>
             <Plural value={count} one="# time" other="# times" />
-          </Strong>
+          </ContentCount>
         </Trans>
       ) : (
         <Trans>{actor} was live</Trans>
       )
   }
+}
+
+/** Opens the content in an actor group, not the people in a subject group. */
+function ContentCount({
+  row,
+  children,
+}: {
+  row: ActivityCardRow
+  children: React.ReactNode
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const {subjectUris} = row
+
+  if (row.grouping !== 'actorGroup' || !subjectUris?.length) {
+    return <Strong>{children}</Strong>
+  }
+
+  return (
+    <InlineLinkText
+      testID="activityGroupLink"
+      to={makeActivityListLink(subjectUris)}
+      label={l`View all activity`}
+      onPress={() => {
+        if (!metricContext) return
+        ax.metric('atmosphere:activity:viewAll', {
+          ...metricContext,
+          subjectCount: subjectUris.length,
+          collection: row.collection,
+        })
+      }}
+      style={[
+        a.text_sm,
+        a.font_semi_bold,
+        a.leading_snug,
+        {color: t.palette.primary_500},
+      ]}>
+      {children}
+    </InlineLinkText>
+  )
 }
 
 function Strong({children}: {children: React.ReactNode}) {

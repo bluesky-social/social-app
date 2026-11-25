@@ -178,8 +178,8 @@ export function item({
 }
 
 /**
- * Published documents are their own subjects; anything else targets one of
- * Paul's articles.
+ * Content records are their own subjects; graph records target Paul's
+ * articles or publications.
  */
 export function actorGroup({
   actor,
@@ -198,9 +198,11 @@ export function actorGroup({
       ref: strongRef(uri),
       indexedAt: INDEXED_AT,
       subject:
-        collection === NSID.document
-          ? uri
-          : recordUri(paul, NSID.document, String(i)),
+        collection === NSID.recommend
+          ? recordUri(paul, NSID.document, String(i))
+          : collection === NSID.subscription
+            ? recordUri(paul, 'site.standard.publication', String(i))
+            : uri,
     }
   })
   return {
