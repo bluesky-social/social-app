@@ -53,33 +53,41 @@ jest.mock('#/view/screens/NotFound', () => {
   const {View} = jest.requireActual('react-native')
   return {NotFoundScreen: () => <View testID="notFoundScreen" />}
 })
-jest.mock('./ExploreTab', () => {
-  const {Pressable, Text, View} = jest.requireActual('react-native')
+const mockOpenAboutDialog = jest.fn()
+jest.mock('#/components/Dialog', () => ({
+  useDialogControl: () => ({open: mockOpenAboutDialog}),
+}))
+jest.mock('#/screens/Atmosphere/components/AboutAtmosphereDialog', () => ({
+  AboutAtmosphereDialog: () => null,
+}))
+jest.mock('#/components/icons/CircleInfo', () => ({
+  CircleInfo_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/Button', () => {
+  const {Pressable} = jest.requireActual('react-native')
   return {
-    AtmosphereExploreTab: ({
-      onPressSeeMoreApps,
+    Button: ({
+      children,
+      label,
+      testID,
+      onPress,
     }: {
-      onPressSeeMoreApps?: () => void
+      children?: React.ReactNode
+      label: string
+      testID?: string
+      onPress?: () => void
     }) => (
-      <View testID="atmosphereExploreTab">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="See more apps"
-          accessibilityHint=""
-          onPress={onPressSeeMoreApps}>
-          <Text>See more</Text>
-        </Pressable>
-      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint=""
+        testID={testID}
+        onPress={onPress}>
+        {children}
+      </Pressable>
     ),
+    ButtonIcon: () => null,
   }
-})
-jest.mock('./ActivityTab', () => {
-  const {View} = jest.requireActual('react-native')
-  return {ActivityTab: () => <View testID="activityTab" />}
-})
-jest.mock('./ForYouTab', () => {
-  const {View} = jest.requireActual('react-native')
-  return {AtmosphereForYouTab: () => <View testID="atmosphereForYouTab" />}
 })
 jest.mock('./AppsTab', () => {
   const {View} = jest.requireActual('react-native')
@@ -184,7 +192,7 @@ jest.mock('#/components/Layout', () => {
       BackButton: () => null,
       Content: ({children}: ChildrenProps) => <>{children}</>,
       TitleText: ({children}: ChildrenProps) => <Text>{children}</Text>,
-      Slot: () => null,
+      Slot: ({children}: ChildrenProps) => <View>{children}</View>,
     },
   }
 })
@@ -210,6 +218,7 @@ function renderScreen() {
 beforeEach(() => {
   mockEnabled = true
   mockMetric.mockClear()
+  mockOpenAboutDialog.mockClear()
 })
 
 describe('AtmosphereScreen', () => {
@@ -222,31 +231,18 @@ describe('AtmosphereScreen', () => {
     expect(mockMetric).not.toHaveBeenCalled()
   })
 
-  it('defaults to Combined and switches between tabs', () => {
+  it('defaults to Explore and switches between tabs', () => {
     const screen = renderScreen()
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Combined', 'For You', 'Activity', 'Explore', 'Apps'])
+    ).toEqual(['Explore', 'Apps'])
     expect(
-      screen.getByRole('tab', {name: 'Combined'}).props.accessibilityState,
+      screen.getByRole('tab', {name: 'Explore'}).props.accessibilityState,
     ).toEqual({selected: true})
     expect(screen.getByTestId('combinedTab')).toBeTruthy()
 
-    fireEvent.press(screen.getByRole('tab', {name: 'For You'}))
-    expect(screen.getByTestId('atmosphereForYouTab')).toBeTruthy()
-    expect(screen.queryByTestId('combinedTab')).toBeNull()
-
-    fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
-    expect(screen.getByTestId('activityTab')).toBeTruthy()
-    expect(screen.queryByTestId('atmosphereForYouTab')).toBeNull()
-
-    fireEvent.press(screen.getByRole('tab', {name: 'Explore'}))
-    expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
-    expect(screen.queryByTestId('activityTab')).toBeNull()
-
-    // Explore's "See more apps" jumps to the Apps tab.
-    fireEvent.press(screen.getByRole('button', {name: 'See more apps'}))
+    fireEvent.press(screen.getByRole('tab', {name: 'Apps'}))
     expect(
       screen.getByRole('tab', {name: 'Apps'}).props.accessibilityState,
     ).toEqual({selected: true})
@@ -258,10 +254,15 @@ describe('AtmosphereScreen', () => {
         .map(([, payload]) => payload),
     ).toEqual([
       {tab: 'combined', reason: 'focus'},
-      {tab: 'discover', previousTab: 'combined', reason: 'tap'},
-      {tab: 'following', previousTab: 'discover', reason: 'tap'},
-      {tab: 'explore', previousTab: 'following', reason: 'tap'},
-      {tab: 'apps', previousTab: 'explore', reason: 'seeMoreApps'},
+      {tab: 'apps', previousTab: 'combined', reason: 'tap'},
     ])
+  })
+
+  it('opens the About Atmosphere dialog from the header info button', () => {
+    const screen = renderScreen()
+
+    fireEvent.press(screen.getByRole('button', {name: 'About the Atmosphere'}))
+    expect(mockOpenAboutDialog).toHaveBeenCalledTimes(1)
+    expect(mockMetric).toHaveBeenCalledWith('atmosphere:about:open', {})
   })
 })

@@ -87,6 +87,16 @@ jest.mock('#/view/com/util/error/ErrorMessage', () => {
   }
 })
 
+const mockExploreRefetch = jest.fn()
+jest.mock('#/screens/Atmosphere/data/useAtmosphereExploreQuery', () => ({
+  useAtmosphereExploreQuery: () => ({
+    data: undefined,
+    refetch: mockExploreRefetch,
+  }),
+}))
+jest.mock('#/screens/Atmosphere/components/FeaturedApps', () => ({
+  FeaturedApps: () => null,
+}))
 jest.mock('#/screens/Atmosphere/components/AppCard', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')

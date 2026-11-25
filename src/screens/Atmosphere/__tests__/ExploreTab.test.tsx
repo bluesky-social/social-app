@@ -98,12 +98,6 @@ jest.mock('#/view/com/util/error/ErrorMessage', () => {
   }
 })
 
-jest.mock('#/screens/Atmosphere/components/AtmosphereNux', () => {
-  const {Text} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {AtmosphereNux: () => <Text>nux</Text>}
-})
-
 function mockSection(name: string, prop: string) {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -122,17 +116,8 @@ function mockSection(name: string, prop: string) {
 jest.mock('#/screens/Atmosphere/components/FeaturedArticles', () => ({
   FeaturedArticles: mockSection('articles', 'articles'),
 }))
-jest.mock('#/screens/Atmosphere/components/FeaturedPublications', () => ({
-  FeaturedPublications: mockSection('publications', 'publications'),
-}))
-jest.mock('#/screens/Atmosphere/components/FeaturedApps', () => ({
-  FeaturedApps: mockSection('apps', 'apps'),
-}))
 jest.mock('#/screens/Atmosphere/components/FeaturedLivestreams', () => ({
   FeaturedLivestreams: mockSection('livestreams', 'livestreams'),
-}))
-jest.mock('#/screens/Atmosphere/components/FeaturedPhotos', () => ({
-  FeaturedPhotos: mockSection('photos', 'photos'),
 }))
 
 const defaultModerationOpts: ModerationOpts = {
@@ -221,7 +206,6 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
     expect(screen.getByTestId('loader')).toBeTruthy()
     expect(screen.getByLabelText('Loading Atmosphere content')).toBeTruthy()
-    expect(screen.queryByText('nux')).toBeNull()
   })
 
   it('shows a retryable error without raw error details on first load failure', () => {
@@ -242,9 +226,7 @@ describe('AtmosphereExploreTab', () => {
     setQuery({data})
     render(<AtmosphereExploreTab />)
 
-    expect(screen.getByText('nux')).toBeTruthy()
     expect(screen.getByText('articles:Live article')).toBeTruthy()
-    expect(screen.getByText('apps:Live app')).toBeTruthy()
     expect(screen.queryByText(/^livestreams:/)).toBeNull()
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(
@@ -255,7 +237,7 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByTestId('retry')).toBeNull()
   })
 
-  it('withholds moderated sections until preferences are ready without hiding other sections', () => {
+  it('withholds moderated sections until preferences are ready', () => {
     mockModerationOpts = undefined
     setQuery({data: exploreResponseFixture})
     render(<AtmosphereExploreTab />)
@@ -263,7 +245,6 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^articles:/)).toBeNull()
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(screen.queryByText(/^publications:/)).toBeNull()
-    expect(screen.getByText(/^apps:/)).toBeTruthy()
   })
 
   it('logs the first load once moderated sections can be counted', () => {
@@ -286,7 +267,7 @@ describe('AtmosphereExploreTab', () => {
     expect(loaded()).toEqual([
       [
         'atmosphere:content:loaded',
-        expect.objectContaining({state: 'populated', itemCount: 2}),
+        expect.objectContaining({state: 'populated', itemCount: 1}),
       ],
     ])
   })
@@ -305,7 +286,6 @@ describe('AtmosphereExploreTab', () => {
     }
     rerender(<AtmosphereExploreTab />)
     expect(screen.queryByText(/^articles:/)).toBeNull()
-    expect(screen.getByText('apps:Live app')).toBeTruthy()
     expect(refetch).not.toHaveBeenCalled()
 
     mockModerationOpts = defaultModerationOpts
@@ -341,17 +321,6 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/Sixth/)).toBeNull()
   })
 
-  it('renders apps after the intro banner and before articles', () => {
-    setQuery({data})
-    render(<AtmosphereExploreTab />)
-
-    expect(
-      screen
-        .getAllByText(/^(nux|apps:|articles:)/)
-        .map(node => node.props.children),
-    ).toEqual(['nux', 'apps:Live app', 'articles:Live article'])
-  })
-
   it('hides only articles when recommendations are empty', () => {
     const populated =
       app.bsky.unspecced.getAtmosphereExploreTab.$output.schema.parse({
@@ -363,50 +332,18 @@ describe('AtmosphereExploreTab', () => {
     render(<AtmosphereExploreTab />)
 
     expect(screen.queryByText(/^articles:/)).toBeNull()
-    expect(screen.getByText(/^photos:/)).toBeTruthy()
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
-    expect(screen.getByText(/^apps:/)).toBeTruthy()
   })
 
-  it('renders publications below photos', () => {
+  it('leaves publications to the Combined tab', () => {
     setQuery({data: exploreResponseFixture})
     render(<AtmosphereExploreTab />)
 
-    expect(
-      screen
-        .getAllByText(/^(articles|photos|publications):/)
-        .map(section => (section.props.children as string).split(':')[0]),
-    ).toEqual(['articles', 'photos', 'publications'])
-  })
-
-  it('renders publications from the response, even when articles are empty', () => {
-    setQuery({
-      data: {
-        ...exploreResponseFixture,
-        articles: {items: []},
-        photos: {items: []},
-        apps: [],
-      },
-    })
-    render(<AtmosphereExploreTab />)
-
-    expect(
-      screen.getByText(
-        `publications:${exploreResponseFixture.publications.items[0].view.title}`,
-      ),
-    ).toBeTruthy()
-    expect(screen.queryByText(/^articles:/)).toBeNull()
-  })
-
-  it('renders a publication-only response and hides empty publications', () => {
-    setQuery({data: {...exploreResponseFixture, publications: {items: []}}})
-    render(<AtmosphereExploreTab />)
-
-    expect(screen.queryByText(/^publications:/)).toBeNull()
     expect(screen.getByText(/^articles:/)).toBeTruthy()
+    expect(screen.queryByText(/^publications:/)).toBeNull()
   })
 
-  it('renders the NUX only for an empty response without a banner', () => {
+  it('renders no sections for an empty response', () => {
     setQuery({
       data: {
         articles: {items: []},
@@ -418,11 +355,8 @@ describe('AtmosphereExploreTab', () => {
     })
     render(<AtmosphereExploreTab />)
 
-    expect(screen.getByText('nux')).toBeTruthy()
     expect(screen.queryByText(/^banner:/)).toBeNull()
-    expect(
-      screen.queryByText(/^(articles|publications|apps|photos|livestreams):/),
-    ).toBeNull()
+    expect(screen.queryByText(/^(articles|livestreams):/)).toBeNull()
   })
 
   it('keeps cached content and offers retry when a background refetch fails', () => {
@@ -551,7 +485,7 @@ describe('Explore recommendation feedback', () => {
       expect(mockCall).not.toHaveBeenCalled()
 
       act(() => {
-        for (const section of ['articles', 'photos'] as const) {
+        for (const section of ['articles'] as const) {
           const send = mockFeedback[section]?.(
             sectionContent(section, response),
           )
@@ -562,100 +496,64 @@ describe('Explore recommendation feedback', () => {
       })
       flushFeedback()
       expect(mockCall.mock.calls).toEqual(
-        [
-          [DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles],
-          [GALLERY_URI, PHOTO_REQUEST, FEED_URIS.photos],
-        ].map(([item, reqId, feed]) => [
-          app.bsky.feed.sendInteractions,
-          {
-            feed,
-            interactions: [
-              'app.bsky.feed.defs#requestMore',
-              'app.bsky.feed.defs#requestLess',
-            ].map(event => ({
-              item,
-              reqId,
-              event,
-              viewContext: 'feed',
-            })),
-          },
-          {service: 'did:web:discover.bsky.app#bsky_fg'},
-        ]),
-      )
-    },
-  )
-
-  it.each(['articles', 'photos'] as const)(
-    'disables only %s when its feed URI is undefined',
-    section => {
-      const destination =
-        section === 'articles'
-          ? EXPLORE_ARTICLES_FEEDBACK
-          : EXPLORE_PHOTOS_FEEDBACK
-      destination.feedUri = undefined
-      const response = recommendations()
-      setQuery({data: response})
-      render(<AtmosphereExploreTab />)
-      expect(
-        mockFeedback[section]?.(sectionContent(section, response)),
-      ).toBeUndefined()
-
-      const other = section === 'articles' ? 'photos' : 'articles'
-      const send = mockFeedback[other]?.(sectionContent(other, response))
-      expect(send).toEqual(expect.any(Function))
-      act(() => send?.('app.bsky.feed.defs#requestMore'))
-      flushFeedback()
-      expect(mockCall).toHaveBeenCalledTimes(1)
-      expect(mockCall).toHaveBeenCalledWith(
-        app.bsky.feed.sendInteractions,
-        {
-          feed: FEED_URIS[other],
-          interactions: [
+        [[DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles]].map(
+          ([item, reqId, feed]) => [
+            app.bsky.feed.sendInteractions,
             {
-              item: other === 'articles' ? DOCUMENT_URI : GALLERY_URI,
-              reqId: response[other].recIdStr,
-              event: 'app.bsky.feed.defs#requestMore',
-              viewContext: 'feed',
+              feed,
+              interactions: [
+                'app.bsky.feed.defs#requestMore',
+                'app.bsky.feed.defs#requestLess',
+              ].map(event => ({
+                item,
+                reqId,
+                event,
+                viewContext: 'feed',
+              })),
             },
+            {service: 'did:web:discover.bsky.app#bsky_fg'},
           ],
-        },
-        {service: 'did:web:discover.bsky.app#bsky_fg'},
-      )
-      expect(DISCOVER_FEEDBACK.feedUri).toBe(
-        PROD_DEFAULT_FEED('atmosphere-activity'),
+        ),
       )
     },
   )
 
-  it.each(['articles', 'photos'] as const)(
-    'omits feedback for curated %s without disabling the other section',
-    section => {
-      const response = recommendations()
-      response[section].recIdStr = undefined
-      setQuery({data: response})
-      render(<AtmosphereExploreTab />)
-      expect(
-        mockFeedback[section]?.(sectionContent(section, response)),
-      ).toBeUndefined()
-      const other = section === 'articles' ? 'photos' : 'articles'
-      expect(mockFeedback[other]?.(sectionContent(other, response))).toEqual(
-        expect.any(Function),
-      )
-    },
-  )
+  it('disables article feedback when its feed URI is undefined', () => {
+    EXPLORE_ARTICLES_FEEDBACK.feedUri = undefined
+    const response = recommendations()
+    setQuery({data: response})
+    render(<AtmosphereExploreTab />)
+    expect(
+      mockFeedback.articles?.(sectionContent('articles', response)),
+    ).toBeUndefined()
+    flushFeedback()
+    expect(mockCall).not.toHaveBeenCalled()
+    expect(DISCOVER_FEEDBACK.feedUri).toBe(
+      PROD_DEFAULT_FEED('atmosphere-activity'),
+    )
+  })
+
+  it('omits feedback for curated articles', () => {
+    const response = recommendations()
+    response.articles.recIdStr = undefined
+    setQuery({data: response})
+    render(<AtmosphereExploreTab />)
+    expect(
+      mockFeedback.articles?.(sectionContent('articles', response)),
+    ).toBeUndefined()
+  })
 
   it.each(['signed out', 'missing record'])(
-    'omits both item scopes when %s',
+    'omits article feedback when %s',
     condition => {
       const response = recommendations()
       if (condition === 'signed out') mockHasSession = false
       else {
         response.articles.items[0].view.associatedRefs = []
-        response.photos.items[0].view.associatedRefs = []
       }
       setQuery({data: response})
       render(<AtmosphereExploreTab />)
-      for (const section of ['articles', 'photos'] as const) {
+      for (const section of ['articles'] as const) {
         expect(
           mockFeedback[section]?.(sectionContent(section, response)),
         ).toBeUndefined()
@@ -665,7 +563,7 @@ describe('Explore recommendation feedback', () => {
     },
   )
 
-  it('routes shares and item/author clicks with separate section attribution', () => {
+  it('routes shares and item/author clicks', () => {
     const response = recommendations()
     const events = [
       'app.bsky.feed.defs#interactionShare',
@@ -675,29 +573,28 @@ describe('Explore recommendation feedback', () => {
     setQuery({data: response})
     render(<AtmosphereExploreTab />)
     act(() => {
-      for (const section of ['articles', 'photos'] as const) {
+      for (const section of ['articles'] as const) {
         const send = mockFeedback[section]?.(sectionContent(section, response))
         for (const event of events) send?.(event)
       }
     })
     flushFeedback()
     expect(mockCall.mock.calls).toEqual(
-      [
-        [DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles],
-        [GALLERY_URI, PHOTO_REQUEST, FEED_URIS.photos],
-      ].map(([item, reqId, feed]) => [
-        app.bsky.feed.sendInteractions,
-        {
-          feed,
-          interactions: events.map(event => ({
-            item,
-            reqId,
-            event,
-            viewContext: 'feed',
-          })),
-        },
-        {service: 'did:web:discover.bsky.app#bsky_fg'},
-      ]),
+      [[DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles]].map(
+        ([item, reqId, feed]) => [
+          app.bsky.feed.sendInteractions,
+          {
+            feed,
+            interactions: events.map(event => ({
+              item,
+              reqId,
+              event,
+              viewContext: 'feed',
+            })),
+          },
+          {service: 'did:web:discover.bsky.app#bsky_fg'},
+        ],
+      ),
     )
   })
 
@@ -711,7 +608,7 @@ describe('Explore recommendation feedback', () => {
     render(<AtmosphereExploreTab />)
     expect(mockCall).not.toHaveBeenCalled()
     act(() => {
-      for (const section of ['articles', 'photos'] as const) {
+      for (const section of ['articles'] as const) {
         const send = mockFeedback[section]?.(sectionContent(section, response))
         send?.('app.bsky.feed.defs#interactionSeen')
         send?.('app.bsky.feed.defs#interactionUnspecced', payload)
@@ -719,31 +616,30 @@ describe('Explore recommendation feedback', () => {
     })
     flushFeedback()
     expect(mockCall.mock.calls).toEqual(
-      [
-        [DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles],
-        [GALLERY_URI, PHOTO_REQUEST, FEED_URIS.photos],
-      ].map(([item, reqId, feed]) => [
-        app.bsky.feed.sendInteractions,
-        {
-          feed,
-          interactions: [
-            {
-              item,
-              reqId,
-              event: 'app.bsky.feed.defs#interactionSeen',
-              viewContext: 'feed',
-            },
-            {
-              item,
-              reqId,
-              event: 'app.bsky.feed.defs#interactionUnspecced',
-              payload,
-              viewContext: 'feed',
-            },
-          ],
-        },
-        {service: 'did:web:discover.bsky.app#bsky_fg'},
-      ]),
+      [[DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles]].map(
+        ([item, reqId, feed]) => [
+          app.bsky.feed.sendInteractions,
+          {
+            feed,
+            interactions: [
+              {
+                item,
+                reqId,
+                event: 'app.bsky.feed.defs#interactionSeen',
+                viewContext: 'feed',
+              },
+              {
+                item,
+                reqId,
+                event: 'app.bsky.feed.defs#interactionUnspecced',
+                payload,
+                viewContext: 'feed',
+              },
+            ],
+          },
+          {service: 'did:web:discover.bsky.app#bsky_fg'},
+        ],
+      ),
     )
   })
 })

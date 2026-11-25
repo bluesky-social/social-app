@@ -68,7 +68,7 @@ describe('useTabMetrics', () => {
     })
   })
 
-  it('tells taps, swipes, and "See more" apart, once the pager settles', () => {
+  it('tells taps and swipes apart, once the pager settles', () => {
     const result = setup()
     mockMetric.mockClear()
 
@@ -95,16 +95,14 @@ describe('useTabMetrics', () => {
       reason: 'swipe',
     })
 
-    // Web reports "See more" as a tab press, too
     act(() => {
-      result.current.onSeeMoreApps(3)
       result.current.onTabPressed(3)
       result.current.onPageSelected(3)
     })
     expect(mockMetric).toHaveBeenLastCalledWith('atmosphere:tab:displayed', {
       tab: 'apps',
       previousTab: 'explore',
-      reason: 'seeMoreApps',
+      reason: 'tap',
     })
 
     // Reporting the same page again is not a switch

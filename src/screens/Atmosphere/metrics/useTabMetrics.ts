@@ -11,9 +11,7 @@ import {type Metrics} from '#/analytics/metrics'
 
 /**
  * Logs `atmosphere:tab:displayed` and `atmosphere:tab:duration` for the
- * Atmosphere pager. Wire the returned handlers to the pager, and call
- * `onSeeMoreApps` just before switching pages for Explore's "See more".
- * Also returns the tab in view and whether it's showing, for the tabs'
+ * Atmosphere pager. Wire the returned handlers to the pager. Also returns the tab in view and whether it's showing, for the tabs'
  * metrics scopes.
  */
 export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
@@ -24,7 +22,6 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
   /** When the tab in view came into view, while it's still in view. */
   const shownAt = useRef<number | undefined>(undefined)
   const [tabTaps] = useState(createTabTaps)
-  const [seeMoreTaps] = useState(createTabTaps)
   const [view, setView] = useState<{
     page: number
     isShowing: boolean
@@ -85,12 +82,9 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
       // Re-pressing the tab in view doesn't switch pages
       if (index !== page.current) tabTaps.tap(index)
     },
-    onSeeMoreApps: (index: number) => seeMoreTaps.tap(index),
     onPageSelected: (index: number) => {
       // Native also reports the page it starts on
       if (index === page.current) return
-      // Take both, so neither is left to mislabel a later swipe
-      const isSeeMore = seeMoreTaps.take(index)
       const isTap = tabTaps.take(index)
       stopShowing('switched')
       const previousTab = tabs[page.current]
@@ -99,7 +93,7 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
         {
           tab: tabs[index],
           previousTab,
-          reason: isSeeMore ? 'seeMoreApps' : isTap ? 'tap' : 'swipe',
+          reason: isTap ? 'tap' : 'swipe',
         },
         index,
       )

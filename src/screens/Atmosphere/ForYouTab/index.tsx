@@ -6,13 +6,9 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
 import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/ActivityContentHider'
-import {
-  ACTIVITY_CONTENT_INDENT,
-  ActivityHeader,
-} from '#/screens/Atmosphere/ActivityTab/components/ActivityHeader'
+import {ActivityHeader} from '#/screens/Atmosphere/ActivityTab/components/ActivityHeader'
 import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
-import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {
   type AtmosphereFeedback,
@@ -98,12 +94,7 @@ export function AtmosphereForYouTab() {
       onItemSeen={onItemSeen}
       refreshing={isRefreshing}
       onRefresh={() => void onRefresh()}
-      ListHeaderComponent={
-        <>
-          <AtmosphereNux style={a.pt_lg} />
-          {data && isError ? errorMessage : undefined}
-        </>
-      }
+      ListHeaderComponent={data && isError ? errorMessage : undefined}
       ListEmptyComponent={
         !data ? (
           isError ? (
@@ -168,18 +159,16 @@ function ForYouCard({
       testID="atmosphereForYouCard"
       style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row ? <ActivityHeader row={row} /> : null}
-      <View style={row && {paddingLeft: ACTIVITY_CONTENT_INDENT}}>
-        <ActivityContentHider moderation={moderation}>
-          <AtmosphereContentItem
-            item={getContentMetricContextProps(content.type, content.view, {
-              position,
-            })}>
-            <AtmosphereFeedbackProvider value={feedback}>
-              <ActivityContentCard content={content} />
-            </AtmosphereFeedbackProvider>
-          </AtmosphereContentItem>
-        </ActivityContentHider>
-      </View>
+      <ActivityContentHider moderation={moderation}>
+        <AtmosphereContentItem
+          item={getContentMetricContextProps(content.type, content.view, {
+            position,
+          })}>
+          <AtmosphereFeedbackProvider value={feedback}>
+            <ActivityContentCard content={content} />
+          </AtmosphereFeedbackProvider>
+        </AtmosphereContentItem>
+      </ActivityContentHider>
     </View>
   )
 }

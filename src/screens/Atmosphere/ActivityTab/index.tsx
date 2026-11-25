@@ -5,7 +5,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
-import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {useLogContentImpression} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
@@ -87,7 +86,6 @@ export function ActivityTab() {
       onRefresh={() => void onRefresh()}
       onEndReached={() => void onEndReached()}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<AtmosphereNux style={a.pt_lg} />}
       ListEmptyComponent={<EmptyState />}
       ListFooterComponent={
         <ListFooter

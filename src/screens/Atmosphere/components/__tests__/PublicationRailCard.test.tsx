@@ -2,9 +2,8 @@ import {Children} from 'react'
 import {View} from 'react-native'
 import {render, screen} from '@testing-library/react-native'
 
-import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {type app} from '#/lexicons'
-import {FeaturedPublications} from '../FeaturedPublications'
+import {PublicationRailCard} from '../PublicationRailCard'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
@@ -18,6 +17,7 @@ jest.mock('#/alf', () => {
       jest.requireActual<typeof import('#/alf/util/flatten')>(
         '#/alf/util/flatten',
       ).extractPadding,
+    utils: {alpha: (color: string) => color},
     useTheme: () => ({
       atoms: new Proxy(
         {},
@@ -51,13 +51,25 @@ jest.mock('#/components/Typography', () => {
 jest.mock('#/components/atmosphere/SiteStandard/StandardSiteMetaRow', () => ({
   StandardSiteMetaRow: () => null,
 }))
-jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
+jest.mock('../AtmosphereCardMenu', () => ({
   AtmosphereCardMenu: () => null,
+}))
+jest.mock('#/components/Button', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    ButtonText: ({children}: {children: React.ReactNode}) => (
+      <Text>{children}</Text>
+    ),
+  }
+})
+jest.mock('#/components/icons/Arrow', () => ({
+  ArrowTopRight_Stroke2_Corner0_Rounded: () => null,
 }))
 
 /*
  * A stand-in for Link that keeps the props under test on a single host
- * element and renders the card's render-prop children.
+ * element, and renders its children whether they're nodes or a render prop.
  */
 jest.mock('#/components/Link', () => {
   const {Pressable: HostPressable} =
@@ -68,7 +80,8 @@ jest.mock('#/components/Link', () => {
       label,
       to,
     }: {
-      children: (state: {pressed: boolean}) => React.ReactNode
+      children:
+        React.ReactNode | ((state: {pressed: boolean}) => React.ReactNode)
       label: string
       to: string
     }) => (
@@ -78,7 +91,7 @@ jest.mock('#/components/Link', () => {
         accessibilityLabel={label}
         accessibilityHint=""
         accessibilityValue={{text: to}}>
-        {children({pressed: false})}
+        {typeof children === 'function' ? children({pressed: false}) : children}
       </HostPressable>
     ),
   }
@@ -95,28 +108,40 @@ const publication: app.bsky.embed.external.ViewArticlePublication = {
   },
 }
 
-describe('FeaturedPublications', () => {
-  it('hands the original lexicon view to the card and links it to the publication', () => {
-    render(<FeaturedPublications publications={[publication]} />)
+function renderCard(view = publication) {
+  return render(<PublicationRailCard publication={view} width={220} />)
+}
 
-    expect(screen.UNSAFE_getByType(PublicationCard).props.view).toBe(
-      publication,
-    )
-    expect(screen.getByRole('link').props.accessibilityValue).toEqual({
-      text: 'https://example.com/pub',
-    })
+describe('PublicationRailCard', () => {
+  it('links its name and its button to the publication', () => {
+    renderCard()
+
+    expect(
+      screen.getAllByRole('link').map(link => link.props.accessibilityValue),
+    ).toEqual([
+      {text: 'https://example.com/pub'},
+      {text: 'https://example.com/pub'},
+    ])
     expect(screen.getByTestId('logo').props.children).toBe(
       'https://example.com/logo.png',
     )
+    expect(screen.getByText('Test publication')).toBeTruthy()
     expect(screen.getByText('A description')).toBeTruthy()
   })
 
+  it('names the app it is published with on the button, when known', () => {
+    renderCard({...publication, providerId: 'leaflet.pub'})
+    // The translation mock leaves placeholders as is
+    expect(screen.getByText(/^View on /)).toBeTruthy()
+  })
+
+  it('falls back to a generic button label for an unknown app', () => {
+    renderCard()
+    expect(screen.getByText('View publication')).toBeTruthy()
+  })
+
   it('does not render a raw text node for an empty description', () => {
-    render(
-      <FeaturedPublications
-        publications={[{...publication, description: ''}]}
-      />,
-    )
+    renderCard({...publication, description: ''})
 
     /*
      * Inspect the supplied children: the native test renderer can drop empty
@@ -130,14 +155,9 @@ describe('FeaturedPublications', () => {
   })
 
   it('falls back to an initial when there is no logo or theme', () => {
-    render(
-      <FeaturedPublications
-        publications={[{...publication, logo: undefined, theme: undefined}]}
-      />,
-    )
+    renderCard({...publication, logo: undefined, theme: undefined})
 
     expect(screen.queryByTestId('logo')).toBeNull()
     expect(screen.getByText('T')).toBeTruthy()
-    expect(screen.getAllByRole('link')).toHaveLength(1)
   })
 })

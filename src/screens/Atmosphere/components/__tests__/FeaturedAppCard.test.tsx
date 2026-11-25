@@ -10,6 +10,7 @@ jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
 }))
 jest.mock('expo-image', () => ({Image: () => null}))
+jest.mock('expo-linear-gradient', () => ({LinearGradient: () => null}))
 jest.mock('../AppKnownFollowers', () => ({AppKnownFollowers: () => null}))
 jest.mock('#/components/icons/Square', () => ({
   SquareArrowTopRight_Stroke2_Corner0_Rounded: () => null,

@@ -1,5 +1,6 @@
 import {StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
+import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -19,11 +20,19 @@ import {AppKnownFollowers} from './AppKnownFollowers'
 
 const LOGO_SIZE = 56
 const BACKGROUND_BLUR_RADIUS = 50
+const CARD_RADIUS = 24
+/** Darkens the blurred cover enough for white text on any image. */
+const SCRIM = 'rgba(0, 0, 0, 0.55)'
+/** A faint white sheen and edge that give the card its glassy look. */
+const SHEEN_TOP = 'rgba(255, 255, 255, 0.10)'
+const SHEEN_BOTTOM = 'rgba(255, 255, 255, 0)'
+const GLASS_BORDER = 'rgba(255, 255, 255, 0.14)'
+const GLASS_BUTTON = 'rgba(255, 255, 255, 0.14)'
 
 /**
- * Featured app card. Always renders in the opposite of the current theme so it
- * stands out from the surrounding Explore content. Only its links are
- * interactive.
+ * Featured app card: dark, frosted glass over the app's blurred cover image, in
+ * every app theme, so it stands out from the surrounding Explore content. Only
+ * its links are interactive.
  */
 export function FeaturedAppCard({
   app,
@@ -34,16 +43,14 @@ export function FeaturedAppCard({
   metric: AppMetric
   galleryFocus?: ItemFocusProps
 }) {
-  const t = useTheme()
-
   return (
-    <ThemeProvider theme={t.name === 'light' ? 'dark' : 'light'}>
+    <ThemeProvider theme="dark">
       <CardContent app={app} metric={metric} galleryFocus={galleryFocus} />
     </ThemeProvider>
   )
 }
 
-/** Separate from the card so its tokens come from the inverted theme. */
+/** Separate from the card so its tokens come from the dark theme. */
 function CardContent({
   app,
   metric,
@@ -67,14 +74,23 @@ function CardContent({
   const categoryLabel = categories.find(({key}) => key === app.category)?.label
   const profile = app.profile
   const {title} = app
-  const isLight = t.name === 'light'
   const subtitle = [app.url && toNiceDomain(app.url), categoryLabel]
     .filter(Boolean)
     .join(' · ')
 
   return (
     <View
-      style={[a.flex_grow, a.w_full, {borderRadius: 24}, a.overflow_hidden]}>
+      style={[
+        a.flex_grow,
+        a.w_full,
+        a.overflow_hidden,
+        t.atoms.bg,
+        {
+          borderRadius: CARD_RADIUS,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: GLASS_BORDER,
+        },
+      ]}>
       <Image
         source={app.backgroundImage}
         contentFit="cover"
@@ -82,12 +98,13 @@ function CardContent({
         style={StyleSheet.absoluteFill}
         accessible={false}
       />
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          t.atoms.bg,
-          {opacity: isLight ? 0.7 : 0.8},
-        ]}
+      <View style={[StyleSheet.absoluteFill, {backgroundColor: SCRIM}]} />
+      <LinearGradient
+        colors={[SHEEN_TOP, SHEEN_BOTTOM]}
+        start={{x: 0, y: 0}}
+        end={{x: 0.6, y: 0.6}}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
       <View style={[a.flex_grow, a.p_lg, a.gap_md]}>
         <Image
@@ -154,7 +171,7 @@ function CardContent({
               ref={galleryFocus?.focusRef}
               tabIndex={galleryFocus?.tabIndex}
               onFocus={galleryFocus?.onFocus}>
-              <ButtonText>{l`Website`}</ButtonText>
+              <ButtonText>{l`Visit site`}</ButtonText>
               <ButtonIcon icon={ExternalLinkIcon} />
             </Link>
           ) : undefined}
@@ -165,7 +182,11 @@ function CardContent({
               label={l`View ${title} profile`}
               size="small"
               color="secondary"
-              style={[a.flex_1, a.justify_center]}
+              style={[
+                a.flex_1,
+                a.justify_center,
+                {backgroundColor: GLASS_BUTTON},
+              ]}
               onPress={() => logPress('atmosphere:app:profilePressed')}
               ref={app.url ? undefined : galleryFocus?.focusRef}
               tabIndex={galleryFocus?.tabIndex}

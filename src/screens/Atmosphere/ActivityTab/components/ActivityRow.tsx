@@ -11,6 +11,7 @@ import {
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {useCardSurface} from '#/components/atmosphere/cardSurface'
 import {
   Document,
   type DocumentRecommenders,
@@ -27,7 +28,7 @@ import {
   type ActivityRow as ActivityRowModel,
 } from '../rows'
 import {ActivityContentHider} from './ActivityContentHider'
-import {ACTIVITY_CONTENT_INDENT, ActivityHeader} from './ActivityHeader'
+import {ActivityHeader} from './ActivityHeader'
 import {GalleryCard} from './GalleryCard'
 import {LivestreamCard} from './LivestreamCard'
 
@@ -39,11 +40,18 @@ export function ActivityRow({
   /** 0-based, in the list. */
   position: number
 }) {
-  const t = useTheme()
+  const surface = useCardSurface()
   return (
     <View
       testID={row.kind === 'card' ? 'activityRow' : 'activityWarningRow'}
-      style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
+      style={[
+        a.gap_md,
+        a.p_lg,
+        {
+          borderBottomWidth: surface.dividerWidth,
+          borderColor: surface.divider,
+        },
+      ]}>
       {row.kind === 'card' ? (
         <ActivityCard row={row} position={position} />
       ) : (
@@ -63,7 +71,7 @@ function ActivityCard({
   return (
     <>
       <ActivityHeader row={row} />
-      <View style={[a.gap_md, {paddingLeft: ACTIVITY_CONTENT_INDENT}]}>
+      <View style={a.gap_md}>
         <ActivityContentHider moderation={row.moderation}>
           <AtmosphereContentItem
             item={getContentMetricContextProps(

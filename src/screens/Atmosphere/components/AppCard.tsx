@@ -13,6 +13,7 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
+import {AppCategoryTag} from './AppCategoryTag'
 import {AppDialog} from './AppDialog'
 import {AppKnownFollowers} from './AppKnownFollowers'
 
@@ -84,19 +85,24 @@ export function AppCard({
                 </View>
               ) : undefined}
               <View style={[a.flex_1, a.gap_xs]}>
-                <Text numberOfLines={1}>
-                  <Text emoji style={[a.text_md, a.font_medium, t.atoms.text]}>
-                    {app.title}
-                  </Text>
-                  {app.url ? (
+                <View style={[a.flex_row, a.align_start, a.gap_sm]}>
+                  <Text numberOfLines={1} style={[a.flex_1]}>
                     <Text
                       emoji
-                      style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                      {' · '}
-                      {toNiceDomain(app.url)}
+                      style={[a.text_md, a.font_medium, t.atoms.text]}>
+                      {app.title}
                     </Text>
-                  ) : undefined}
-                </Text>
+                    {app.url ? (
+                      <Text
+                        emoji
+                        style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                        {' · '}
+                        {toNiceDomain(app.url)}
+                      </Text>
+                    ) : undefined}
+                  </Text>
+                  <AppCategoryTag category={app.category} />
+                </View>
                 {app.description ? (
                   <Text
                     emoji

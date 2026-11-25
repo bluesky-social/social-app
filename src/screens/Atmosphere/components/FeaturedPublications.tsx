@@ -8,9 +8,12 @@ import {
   useLogContentPress,
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
-import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
+import * as Gallery from '#/components/Gallery'
 import {type app} from '#/lexicons'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
+import {PublicationRailCard} from './PublicationRailCard'
+
+const CARD_WIDTH = 220
 
 export function FeaturedPublications({
   publications,
@@ -22,31 +25,51 @@ export function FeaturedPublications({
   if (!publications.length) return null
 
   return (
-    <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
-      <ExploreSectionHeader title={l`Featured publications`} />
-      {publications.map((publication, index) => (
-        <AtmosphereContentItem
-          key={publication.uri}
-          item={getContentMetricContextProps('publication', publication, {
-            section: 'publications',
-            position: index,
-          })}>
-          <Publication publication={publication} />
-        </AtmosphereContentItem>
-      ))}
-    </View>
+    <Gallery.Bleed>
+      <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+        <ExploreSectionHeader title={l`Featured publications`} />
+        <Gallery.Root
+          stretch
+          label={l`Featured publications`}
+          testID="atmospherePublicationsGallery">
+          {publications.map((publication, index) => (
+            <Gallery.Item key={publication.uri} label={publication.title}>
+              {galleryFocus => (
+                <View style={[a.flex_grow]}>
+                  <AtmosphereContentItem
+                    item={getContentMetricContextProps(
+                      'publication',
+                      publication,
+                      {section: 'publications', position: index},
+                    )}>
+                    <Publication
+                      publication={publication}
+                      galleryFocus={galleryFocus}
+                    />
+                  </AtmosphereContentItem>
+                </View>
+              )}
+            </Gallery.Item>
+          ))}
+        </Gallery.Root>
+      </View>
+    </Gallery.Bleed>
   )
 }
 
 function Publication({
   publication,
+  galleryFocus,
 }: {
   publication: app.bsky.embed.external.ViewArticlePublication
+  galleryFocus: Gallery.ItemFocusProps
 }) {
   const logPress = useLogContentPress()
   return (
-    <PublicationCard
-      view={publication}
+    <PublicationRailCard
+      publication={publication}
+      width={CARD_WIDTH}
+      galleryFocus={galleryFocus}
       onPressCallback={source => logPress('external', source)}
     />
   )

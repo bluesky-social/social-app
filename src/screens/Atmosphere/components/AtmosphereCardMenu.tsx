@@ -249,6 +249,8 @@ export function AtmosphereCardMenu({
               color="secondary"
               variant="ghost"
               hitSlop={8}
+              // Just the ellipsis, without the round button's fill
+              style={[a.bg_transparent]}
               tabIndex={galleryFocus?.tabIndex}
               onFocus={() => {
                 props.onFocus()

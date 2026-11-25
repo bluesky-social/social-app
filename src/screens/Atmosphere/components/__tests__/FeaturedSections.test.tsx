@@ -91,8 +91,8 @@ jest.mock('#/components/atmosphere/SiteStandard/Document', () => ({
 jest.mock('../LivestreamCard', () => ({
   LivestreamCard: mockCard('livestream', 'livestream'),
 }))
-jest.mock('#/components/atmosphere/SiteStandard/Publication', () => ({
-  PublicationCard: mockCard('publication', 'view'),
+jest.mock('../PublicationRailCard', () => ({
+  PublicationRailCard: mockCard('publication', 'publication'),
 }))
 jest.mock('../PhotoCard', () => ({PhotoCard: mockCard('photo', 'photo')}))
 
@@ -288,20 +288,19 @@ describe('FeaturedPhotos', () => {
 })
 
 describe('FeaturedPublications', () => {
-  it('renders publications as links without gallery focus', () => {
+  it('renders the header and one slide per publication in a labelled gallery', () => {
     render(<FeaturedPublications publications={publications} />)
 
     expect(screen.getByText('Featured publications')).toBeTruthy()
-    expect(screen.queryByTestId('atmospherePublicationsGallery')).toBeNull()
-    expect(slides()).toHaveLength(0)
-    expect(screen.getAllByRole('link').map(link => link.props.testID)).toEqual([
-      'publication-u1',
-      'publication-u2',
-    ])
-    for (const publication of publications) {
-      const testID = `publication-${publication.uri.split('/').at(-1)}`
-      expect(screen.getByTestId(testID).props.tabIndex).toBeUndefined()
-    }
+    expect(screen.getByTestId('atmospherePublicationsGallery')).toBeTruthy()
+    expect(slides()).toHaveLength(publications.length)
+  })
+
+  it('wires the gallery focus target to each card', () => {
+    render(<FeaturedPublications publications={publications} />)
+
+    expect(screen.getByTestId('publication-u1').props.tabIndex).toBe(0)
+    expect(screen.getByTestId('publication-u2').props.tabIndex).toBe(-1)
   })
 
   it('renders nothing, including the header, without publications', () => {

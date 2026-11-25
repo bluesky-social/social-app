@@ -12,9 +12,12 @@ import {
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {useCardSurface} from '#/components/atmosphere/cardSurface'
 import {KnownLikers} from '#/components/atmosphere/KnownLikers'
 import {LikeButton} from '#/components/atmosphere/LikeButton'
-import {MetaLine} from '#/components/atmosphere/MetaLine'
+import {getAtmosphereProvider} from '#/components/atmosphere/providers'
+import {SharePillButton} from '#/components/atmosphere/SharePillButton'
+import {AccentLinkButton} from '#/components/atmosphere/SiteStandard/AccentLinkButton'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Gallery from '#/components/Gallery'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
@@ -41,8 +44,8 @@ const OVERLAY_COLOR = 'rgba(0, 0, 0, 0.6)'
 type GalleryImage = ReturnType<typeof getGalleryImages>[number]
 
 /**
- * A Grain gallery: its photos, a favorite button with known favoriters, and
- * its title, description and date. The photos and title open the gallery on
+ * A Grain gallery: its photos, title and description, then favorite and
+ * share buttons, known favoriters, and a link to see it on Grain. The photos and title open the gallery on
  * Grain, in the app when it's installed.
  */
 export function GalleryCard({
@@ -56,6 +59,8 @@ export function GalleryCard({
   const sendFeedback = useAtmosphereFeedback()
   const images = getGalleryImages(view)
   const author = getAssociatedProfile(view.associatedProfiles)
+  const provider = getAtmosphereProvider(view.providerId)
+  const surface = useCardSurface()
 
   // `toActivityRows` already turns galleries without these into warnings.
   if (images.length === 0 || !author) return null
@@ -78,56 +83,85 @@ export function GalleryCard({
         a.w_full,
         a.overflow_hidden,
         a.rounded_lg,
-        a.border,
         t.atoms.bg,
-        t.atoms.border_contrast_low,
+        surface.style,
       ]}>
       {images.length === 1 ? (
         <SinglePhoto image={images[0]} linkProps={linkProps} />
       ) : (
         <PhotoCarousel images={images} linkProps={linkProps} />
       )}
-      <View style={[a.flex_row, a.align_center, a.gap_md, a.px_md, a.pt_sm]}>
-        <LikeButton
-          view={view}
-          kind="favorite"
-          testID="activityGalleryCardFavorite"
-        />
-        <KnownLikers view={view} />
-        <View style={a.flex_1} />
-        <AtmosphereCardMenu
-          inline
-          type="photo"
-          item={view}
-          reportableTypes={[social.grain.gallery.$type]}
-          author={author}
-        />
-      </View>
-      <View style={[a.px_md, a.pb_md, {paddingTop: 2, gap: 6}]}>
-        {!!view.title && (
-          <InlineLinkText
+      <View style={[a.px_md, a.pt_md, a.pb_md, a.gap_sm]}>
+        <View style={[a.flex_row, a.align_start, a.gap_sm]}>
+          <View style={[a.flex_1, {gap: 6}]}>
+            {!!view.title && (
+              <InlineLinkText
+                {...linkProps}
+                testID="activityGalleryCardTitle"
+                label={l({
+                  message: `Open gallery: ${view.title}`,
+                  comment:
+                    'Accessibility label for a link that opens a photo gallery. {title} is the gallery title, written by its author.',
+                })}
+                emoji
+                numberOfLines={2}
+                style={[a.text_lg, a.font_bold, a.leading_snug, t.atoms.text]}>
+                {view.title}
+              </InlineLinkText>
+            )}
+            {!!view.description.trim() && (
+              <Text
+                emoji
+                numberOfLines={3}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {view.description}
+              </Text>
+            )}
+          </View>
+          <AtmosphereCardMenu
+            inline
+            type="photo"
+            item={view}
+            reportableTypes={[social.grain.gallery.$type]}
+            author={author}
+          />
+        </View>
+        <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_xs]}>
+          <LikeButton
+            view={view}
+            kind="favorite"
+            icon="recommend"
+            appearance="pill"
+            testID="activityGalleryCardFavorite"
+          />
+          <SharePillButton
+            testID="activityGalleryCardShare"
+            label={l`Share gallery`}
+            url={view.uri}
+            onShare={() =>
+              sendFeedback?.('app.bsky.feed.defs#interactionShare')
+            }
+          />
+          <KnownLikers view={view} />
+          <View style={[a.flex_1]} />
+          <AccentLinkButton
             {...linkProps}
-            testID="activityGalleryCardTitle"
-            label={l({
-              message: `Open gallery: ${view.title}`,
-              comment:
-                'Accessibility label for a link that opens a photo gallery. {title} is the gallery title, written by its author.',
-            })}
-            emoji
-            numberOfLines={2}
-            style={[a.text_lg, a.font_bold, a.leading_snug, t.atoms.text]}>
-            {view.title}
-          </InlineLinkText>
-        )}
-        {!!view.description.trim() && (
-          <Text
-            emoji
-            numberOfLines={3}
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-            {view.description}
-          </Text>
-        )}
-        <MetaLine date={view.createdAt} />
+            testID="activityGalleryCardSee"
+            label={
+              provider
+                ? l({
+                    message: `See on ${provider.name}`,
+                    comment:
+                      'Button that opens a photo gallery in the app it was posted with, e.g. “See on Grain”. {name} is the app’s name.',
+                  })
+                : l`See gallery`
+            }
+          />
+        </View>
       </View>
     </View>
   )
