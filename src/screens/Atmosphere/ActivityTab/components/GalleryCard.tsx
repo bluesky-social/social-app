@@ -102,7 +102,7 @@ export function GalleryCard({
           author={author}
         />
       </View>
-      <View style={[a.gap_sm, a.px_md, a.pt_xs, a.pb_md]}>
+      <View style={[a.px_md, a.pb_md, {paddingTop: 2, gap: 6}]}>
         {!!view.title && (
           <InlineLinkText
             {...linkProps}
@@ -114,7 +114,7 @@ export function GalleryCard({
             })}
             emoji
             numberOfLines={2}
-            style={[a.text_md, a.font_bold, a.leading_snug, t.atoms.text]}>
+            style={[a.text_lg, a.font_bold, a.leading_snug, t.atoms.text]}>
             {view.title}
           </InlineLinkText>
         )}

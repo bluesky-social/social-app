@@ -134,8 +134,8 @@ function DocumentCard({
           {image}
         </Link>
       )}
-      <View style={[a.flex_row, a.align_start, a.gap_md, a.px_md, a.pt_md]}>
-        <View style={[a.flex_1, a.gap_xs]}>
+      <View style={[a.flex_row, a.align_start, a.px_md, a.pt_md]}>
+        <View style={[a.flex_1, {gap: 6}]}>
           {!!view.title && (
             <InlineLinkText
               {...linkProps}
@@ -143,41 +143,15 @@ function DocumentCard({
               label={label}
               emoji
               numberOfLines={3}
-              style={[
-                a.text_xl,
-                a.font_bold,
-                a.leading_snug,
-                t.atoms.text,
-                a.pb_xs,
-              ]}>
+              style={[a.text_lg, a.font_bold, a.leading_snug, t.atoms.text]}>
               {view.title}
             </InlineLinkText>
           )}
-          <MetaLine
-            date={view.createdAt}
-            details={[
-              !!view.readingTime &&
-                l({
-                  message: plural(view.readingTime, {
-                    one: '# min read',
-                    other: '# min read',
-                  }),
-                  comment:
-                    'How long it takes to read an article, in minutes, e.g. “5 min read”.',
-                }),
-              toNiceDomain(view.uri),
-            ]}
-          />
           {!!view.description.trim() && (
             <Text
               emoji
               numberOfLines={3}
-              style={[
-                a.pt_xs,
-                a.text_sm,
-                a.leading_snug,
-                t.atoms.text_contrast_high,
-              ]}>
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
               {view.description}
             </Text>
           )}
@@ -198,10 +172,37 @@ function DocumentCard({
           </Link>
         )}
       </View>
-      <View style={[a.flex_row, a.align_center, a.gap_xs, a.px_md, a.py_sm]}>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
+          a.px_md,
+          a.pb_sm,
+          {paddingTop: 6},
+        ]}>
         <LikeButton view={view} kind="recommend" testID="documentRecommend" />
         <KnownLikers view={view} leadingProfiles={recommenders?.actors} />
-        <View style={a.flex_1} />
+        {/*
+         * Takes the spare width and sits against the menu, so a long line
+         * truncates instead of pushing into it.
+         */}
+        <View style={[a.flex_1, a.align_end, a.px_xs, {minWidth: 0}]}>
+          <MetaLine
+            date={view.createdAt}
+            details={[
+              !!view.readingTime &&
+                l({
+                  message: plural(view.readingTime, {
+                    one: '# min read',
+                    other: '# min read',
+                  }),
+                  comment:
+                    'How long it takes to read an article, in minutes, e.g. “5 min read”.',
+                }),
+            ]}
+          />
+        </View>
         <AtmosphereCardMenu
           inline
           type="article"
@@ -247,7 +248,7 @@ function PublicationHeader({
          * A publication's own background can be any color, so its band needs
          * a stronger step than the app's near-white to stand apart.
          */
-        hasPublicationTheme ? t.atoms.bg_contrast_100 : t.atoms.bg_contrast_25,
+        hasPublicationTheme ? t.atoms.bg_contrast_50 : t.atoms.bg_contrast_25,
       ]}>
       <Link
         testID="documentPublicationIcon"
