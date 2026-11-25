@@ -280,20 +280,7 @@ export function Root({
     scrollTo({offset: next})
   })
 
-  const scrollToIndex = useNonReactiveCallback((index: number) => {
-    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
-    const offset = Math.min(
-      getOffsetForIndex(itemWidthsRef.current, index),
-      getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
-    )
-    setCurrentIndex(index)
-    scrollTo({offset, animated: true})
-  })
-
-  useImperativeHandle(ref, () => ({scrollIntoView, scrollToIndex}), [
-    scrollIntoView,
-    scrollToIndex,
-  ])
+  useImperativeHandle(ref, () => ({scrollIntoView}), [scrollIntoView])
 
   const onSettle = useNonReactiveCallback((index: number) => {
     setCurrentIndex(index)

@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {plural} from '@lingui/core/macro'
@@ -202,7 +202,6 @@ function PhotoCarousel({
   const {t: l} = useLingui()
   const t = useTheme()
   const {gtPhone, gtMobile} = useBreakpoints()
-  const galleryRef = useRef<Gallery.GalleryRef>(null)
   const [width, setWidth] = useState(0)
   const getLabel = usePhotoLabel(images.length)
 
@@ -216,7 +215,6 @@ function PhotoCarousel({
       onLayout={e => setWidth(e.nativeEvent.layout.width)}>
       {width > 0 && (
         <Gallery.Root
-          ref={galleryRef}
           label={l({
             message: plural(images.length, {
               one: '# photo',
@@ -225,11 +223,7 @@ function PhotoCarousel({
             comment:
               'Accessibility label for a scrollable row of photos. The number is how many photos are in it.',
           })}
-          footer={
-            <CarouselOverlay
-              onNext={index => galleryRef.current?.scrollToIndex(index)}
-            />
-          }>
+          footer={<CarouselOverlay />}>
           {images.map((image, index) => (
             <Gallery.Item key={`${index}:${image.fullsize}`}>
               {({focusRef, tabIndex, onFocus}) => (
@@ -293,10 +287,11 @@ function getPhotoWidths(
 }
 
 /** The "2/5" counter, and on web the "next" button, over the carousel. */
-function CarouselOverlay({onNext}: {onNext: (index: number) => void}) {
+function CarouselOverlay() {
   const {t: l} = useLingui()
   const t = useTheme()
-  const {itemKeys, activeIndex, endIndex} = Gallery.useGalleryContext()
+  const {itemKeys, activeIndex, endIndex, revealIndex} =
+    Gallery.useGalleryContext()
   const position = activeIndex + 1
   const total = itemKeys.length
 
@@ -341,7 +336,7 @@ function CarouselOverlay({onNext}: {onNext: (index: number) => void}) {
             shape="round"
             color="secondary"
             style={[t.atoms.bg, t.atoms.shadow_md]}
-            onPress={() => onNext(activeIndex + 1)}>
+            onPress={() => revealIndex(activeIndex + 1)}>
             <ButtonIcon icon={ChevronRightIcon} />
           </Button>
         </View>

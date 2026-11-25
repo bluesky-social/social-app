@@ -37,10 +37,4 @@ export type GalleryRef = {
    * Invalid indices are ignored.
    */
   scrollIntoView(index: number): void
-  /**
-   * Scrolls, animated, until the item at `index` leads, or as far as the
-   * content allows. Counts as user navigation, so it calls `onIndexChange`.
-   * Invalid indices are ignored.
-   */
-  scrollToIndex(index: number): void
 }

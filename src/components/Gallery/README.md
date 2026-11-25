@@ -83,10 +83,11 @@ without including it in slide counting or height measurements. Use it for
 ```
 
 Footer content can read `Gallery.useGalleryContext()`: `itemKeys`,
-`activeIndex` (the leading item, as the page dots show it), and `endIndex` (the
+`activeIndex` (the leading item, as the page dots show it), `endIndex` (the
 leading item once scrolled all the way, so `activeIndex < endIndex` means there
-is further to go). Lay it out absolutely to overlay the slides, e.g. for a
-counter or a "next" button that calls `scrollToIndex`.
+is further to go), and `revealIndex(index)`, which scrolls that item to the
+front as far as the content allows, as user navigation. Lay it out absolutely
+to overlay the slides, e.g. for a counter or a "next" button.
 
 `snapToItems` opts into slide snapping on iOS and Android. Snap positions use
 measured item widths and the gap, so variable-width slides work too. Positions
@@ -156,10 +157,6 @@ ref.current?.scrollIntoView(3)
 without animating. Items that are already visible don't move; an item wider
 than the gallery lines up its leading edge. It does not move focus, and does
 not call `onIndexChange`. Invalid indices, and empty galleries, are ignored.
-
-`scrollToIndex(index)` scrolls, animated, until the item leads, or as far as
-the content allows. It's meant for buttons, so it counts as user navigation
-and calls `onIndexChange`, but does not move focus. Invalid indices are ignored.
 
 ### `Gallery.Bleed`
 
