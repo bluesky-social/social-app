@@ -1,23 +1,16 @@
 import assert from 'node:assert'
 
 import {ChatBskyGroupDefs} from '@atproto/api'
-import resvg from '@resvg/resvg-js'
 import {type Express} from 'express'
-import satori from 'satori'
 
-import {
-  CHAT_INVITE_HEIGHT,
-  CHAT_INVITE_WIDTH,
-  ChatInvite,
-} from '../components/ChatInvite.js'
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
-import {loadEmojiAsSvg} from '../util.js'
 import {
   getImage,
   handler,
   hideAvatarLabels,
   originVerifyMiddleware,
+  renderImage,
 } from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
@@ -58,25 +51,14 @@ export default function (ctx: AppContext, app: Express) {
         }
       }
 
-      const svg = await satori(
-        <ChatInvite preview={preview} ownerImage={ownerImage} />,
-        {
-          fonts: ctx.fonts,
-          height: CHAT_INVITE_HEIGHT,
-          width: CHAT_INVITE_WIDTH,
-          loadAdditionalAsset: async (lang, text) => {
-            if (lang === 'emoji') {
-              return (await loadEmojiAsSvg(text)) ?? ''
-            }
-            return ''
-          },
-        },
-      )
-      const output = await resvg.renderAsync(svg)
+      const output = await renderImage(ctx, res, {
+        kind: 'chat-invite',
+        props: {name: preview.name, ownerHandle: owner.handle, ownerImage},
+      })
       res.statusCode = 200
       res.setHeader('content-type', 'image/png')
       res.setHeader('cdn-tag', owner.did)
-      return res.end(output.asPng())
+      return res.end(output)
     }),
   )
 }

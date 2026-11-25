@@ -8,6 +8,7 @@ import {Registry} from 'prom-client'
 import {type Config} from './config.js'
 import {AppContext} from './context.js'
 import {startMetricsServer} from './metrics.js'
+import {createRenderer} from './render/client.js'
 import {default as routes, errorHandler} from './routes/index.js'
 
 export * from './config.js'
@@ -34,9 +35,11 @@ export class CardService {
   static async create(cfg: Config, workerSlot = 0): Promise<CardService> {
     const app = express()
 
-    const ctx = await AppContext.fromConfig(cfg)
     const registry = new Registry()
     registry.setDefaultLabels({worker: String(workerSlot)})
+    const ctx = await AppContext.fromConfig(cfg, {
+      renderer: createRenderer(registry),
+    })
 
     // Add Prometheus middleware for automatic HTTP instrumentation
     const metricsMiddleware = promBundle({
@@ -125,7 +128,11 @@ export class CardService {
       shutdownPromises.push(this.stopMetrics())
     }
 
-    await Promise.all(shutdownPromises)
+    try {
+      await Promise.all(shutdownPromises)
+    } finally {
+      await this.ctx.renderer.destroy()
+    }
 
     const elapsed = Date.now() - startTime
     const {httpLogger} = await import('./logger.js')

@@ -33,15 +33,44 @@ returns a partial snapshot as successful. Concurrent scrapes share one
 collection. Shutdown cancels collection, drains application requests, and
 force-kills workers still running after the 17-second cluster shutdown budget.
 
-A request that throws `WebAssembly.RuntimeError` initiates a graceful process
-shutdown with exit code `1`: the renderer may stay broken after a WASM trap.
-The process stops listening immediately and rejects subsequent requests on
-existing connections with `503` while in-flight requests drain. The cluster
-replaces that worker; single-process deployments rely on their process
-supervisor. Other request errors return `500` without initiating a
-shutdown. Starter-pack rendering failures include the pack URI, rendered title,
-rendering stage, image count, build version, and configured font names, weights,
-and SHA-256 hashes in the exception log. Font and image buffers are not logged.
+## Render isolation
+
+Satori and resvg run in disposable child processes. In clustered mode, the
+primary owns a shared pool with one slot per HTTP worker; standalone mode uses
+one slot. Each HTTP worker submits at most one render at a time. Processes start
+lazily, and requests do not queue: saturation, replacement cooldown, and shutdown
+return `503`.
+
+Any render exception, child exit, invalid response, or 15-second deadline
+retires that renderer. Replacement is attempted by a later request after an
+exponential cooldown from one to 30 seconds, reset by a successful render.
+There is no automatic respawn loop. Client disconnects and HTTP worker exits
+cancel their renders and reap the child. Normal shutdown drains HTTP requests
+before stopping renderers.
+
+Only component inputs cross IPC, with a 16 MiB aggregate image-input limit and
+a 16 MiB PNG-output limit. Fonts load in the renderer. Starter-pack exceptions
+retain the original error type, stack and rendering stage, along with the pack
+URI, rendered title, image count, build version, and configured font names,
+weights and SHA-256 hashes. Font and image buffers are not logged.
+
+The pool owner exports these metrics in both deployment modes:
+
+| Metric | Meaning |
+| --- | --- |
+| `bskyogcard_renderer_restarts_total` | Failed renderer processes or starts requiring replacement; excludes cancellation and shutdown. |
+| `bskyogcard_renderers_busy` | Slots occupied by a request, including startup. |
+| `bskyogcard_renderers_ready` | Initialized renderer processes, including busy processes. |
+
+Renderer failures do not increment `bskyogcard_worker_restarts_total`; monitoring
+renderer failures requires the separate renderer counter. No alert configuration
+is changed here.
+
+A raw `WebAssembly.RuntimeError` in the HTTP process still initiates its graceful
+shutdown with exit code `1`, stops listening immediately, and rejects subsequent
+requests on existing connections with `503` while in-flight requests drain.
+Isolated rendering errors preserve their diagnostics without triggering that
+HTTP-process fallback.
 
 The middleware's synthetic `up` metric is disabled: use the scraper-generated
 `up` for target health, rather than counting one application `up` per worker.
@@ -75,8 +104,9 @@ histogram_quantile(0.95,
 
 Node event-loop percentiles remain per-worker values, not service-wide
 percentiles. Group runtime charts by worker, or explicitly choose the relevant
-sum/max. Memory gauges describe worker processes and omit the supervising
-primary; Kubernetes container metrics cover the entire container.
+sum/max. Node CPU and memory metrics describe HTTP worker processes and omit the
+supervising primary and renderers; Kubernetes container metrics cover the entire
+container.
 
 The `worker!=""` filter excludes old, unlabeled series during rollout and when
 viewing historical data. Historical metrics from the old shared-worker endpoint

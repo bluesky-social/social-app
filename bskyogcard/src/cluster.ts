@@ -5,6 +5,17 @@ import {Counter, Gauge, Registry} from 'prom-client'
 
 import {httpLogger} from './logger.js'
 import {collectWorkerMetrics, startMetricsServer} from './metrics.js'
+import {RenderPool} from './render/pool.js'
+import {
+  isMessage,
+  isRenderJob,
+  RENDER_CANCEL,
+  RENDER_REQUEST,
+  RENDER_RESULT,
+  RenderUnavailableError,
+  serializeRenderError,
+  type RenderResult,
+} from './render/protocol.js'
 
 /** Owns the worker roster and the cluster's single metrics listener. */
 export class CardCluster {
@@ -20,6 +31,7 @@ export class CardCluster {
   private restarts: Counter<'worker'>
   private metricsPort: number
   private workerCount: number
+  private renderers: RenderPool
 
   constructor(metricsPort: number, workerCount: number) {
     if (!Number.isSafeInteger(workerCount) || workerCount < 1) {
@@ -27,6 +39,7 @@ export class CardCluster {
     }
     this.metricsPort = metricsPort
     this.workerCount = workerCount
+    this.renderers = new RenderPool(workerCount, this.registry)
     const workers = this.workers
     new Gauge({
       name: 'bskyogcard_workers_live',
@@ -72,6 +85,54 @@ export class CardCluster {
   private fork(slot: number) {
     const worker = cluster.fork({CARD_WORKER_SLOT: String(slot)})
     this.workers.add(worker)
+    const renders = new Map<number, AbortController>()
+    const cancelRenders = () => {
+      for (const controller of renders.values()) controller.abort()
+      renders.clear()
+    }
+    const reply = (message: RenderResult) => {
+      if (!worker.isConnected()) return
+      try {
+        worker.send(message, () => {})
+      } catch {}
+    }
+    const onMessage = (message: unknown) => {
+      if (
+        !isMessage(message) ||
+        typeof message.id !== 'number' ||
+        !Number.isSafeInteger(message.id)
+      )
+        return
+      const {id} = message
+      if (message.type === RENDER_CANCEL) {
+        renders.get(id)?.abort()
+        return
+      }
+      if (message.type !== RENDER_REQUEST) return
+      // Accepted HTTP requests may reach rendering during the shutdown drain.
+      if (renders.size > 0 || !isRenderJob(message.job)) {
+        reply({
+          type: RENDER_RESULT,
+          id,
+          error: serializeRenderError(
+            new RenderUnavailableError('Render request cannot be accepted'),
+          ),
+        })
+        return
+      }
+      const controller = new AbortController()
+      renders.set(id, controller)
+      void this.renderers
+        .render(message.job, controller.signal)
+        .then(
+          png => reply({type: RENDER_RESULT, id, png}),
+          err =>
+            reply({type: RENDER_RESULT, id, error: serializeRenderError(err)}),
+        )
+        .finally(() => renders.delete(id))
+    }
+    worker.on('message', onMessage)
+    worker.once('disconnect', cancelRenders)
     const onListening = () => this.ready.add(worker)
     const onError = (err: Error) => {
       if (!this.stopping) {
@@ -81,6 +142,9 @@ export class CardCluster {
     worker.on('listening', onListening)
     worker.on('error', onError)
     worker.once('exit', (code, signal) => {
+      cancelRenders()
+      worker.off('message', onMessage)
+      worker.off('disconnect', cancelRenders)
       worker.off('listening', onListening)
       worker.off('error', onError)
       this.ready.delete(worker)
@@ -143,6 +207,7 @@ export class CardCluster {
       }
     } finally {
       clearTimeout(deadline)
+      await this.renderers.destroy()
     }
   }
 }

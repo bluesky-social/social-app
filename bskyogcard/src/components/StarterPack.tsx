@@ -26,15 +26,15 @@ const GRADIENT_BOTTOM = '#59B9FF'
 const IMAGE_STROKE = '#359CFF'
 
 export function StarterPack(props: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  title: string
+  creatorDid: AppBskyGraphDefs.StarterPackView['creator']['did']
   images: Map<string, Buffer>
 }) {
-  const {starterPack, images} = props
-  const title = getStarterPackTitle(starterPack)
+  const {title, creatorDid, images} = props
   const imagesArray = [...images.values()]
-  const imageOfCreator = images.get(starterPack.creator.did)
+  const imageOfCreator = images.get(creatorDid)
   const imagesExceptCreator = [...images.entries()]
-    .filter(([did]) => did !== starterPack.creator.did)
+    .filter(([did]) => did !== creatorDid)
     .map(([, image]) => image)
   const imagesAcross: Buffer[] = []
   if (imageOfCreator) {
