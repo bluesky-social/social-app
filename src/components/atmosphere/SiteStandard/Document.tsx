@@ -15,6 +15,7 @@ import {KnownLikers} from '#/components/atmosphere/KnownLikers'
 import {LikeButton} from '#/components/atmosphere/LikeButton'
 import {MetaLine} from '#/components/atmosphere/MetaLine'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
+import {StandardSiteThemeProvider} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -108,7 +109,9 @@ export function Document({
         style,
       ]}>
       {view.publisher && (
-        <PublicationHeader publication={view.publisher} author={author} />
+        <StandardSiteThemeProvider view={view.publisher}>
+          <PublicationHeader publication={view.publisher} author={author} />
+        </StandardSiteThemeProvider>
       )}
       {variant === 'default' && image && (
         <Link

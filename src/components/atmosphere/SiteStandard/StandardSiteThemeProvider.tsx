@@ -1,9 +1,22 @@
-import {Context, useAlf, utils} from '#/alf'
-import {getPublicationTheme} from '#/components/atmosphere/SiteStandard/utils'
+import {createTheme, type Palette} from '@bsky.app/alf'
+
+import {Context, useAlf} from '#/alf'
+import {contrastRatio, hexToRgb, rgbToHex} from '#/alf/util/colorGeneration'
+import {getPublicationColors} from '#/components/atmosphere/SiteStandard/utils'
 import {type app} from '#/lexicons'
 
+const CONTRAST_STEPS = [
+  0, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950, 975, 1000,
+] as const
+
 /**
- * Overrides only the values needed for `secondary_inverted` buttons atm.
+ * Themes the subtree with the publication's own background and text colors,
+ * so `t.atoms.bg`, `t.atoms.text`, their contrast steps and borders all
+ * follow the publication. Everything else, like the primary palette, stays
+ * the app's. Without readable publication colors, renders the children as is.
+ *
+ * The publication's colors are used whatever the app theme is, the way its
+ * site looks the same to everyone.
  *
  * Renders the alf Context directly (rather than nesting a ThemeProvider) so
  * that font-scale and other parent state stay live in the subtree.
@@ -16,47 +29,32 @@ export function StandardSiteThemeProvider({
   children: React.ReactNode
 }) {
   const alf = useAlf()
-  const theme = getPublicationTheme(view)
-  if (!theme) return children
+  const colors = getPublicationColors(view)
+  if (!colors) return children
 
-  const {accent, accentForeground} = theme
-  const atomsOverride = {
-    text_inverted: {color: accentForeground},
+  const {background, foreground} = colors
+  const palette: Palette = {...alf.theme.palette}
+  for (const step of CONTRAST_STEPS) {
+    palette[`contrast_${step}`] = mix(background, foreground, step / 1000)
   }
-  const paletteOverride = {
-    contrast_975: utils.darken(accent, 5), // hover
-    contrast_900: accent, // bg
-    contrast_600: utils.lighten(accent, 5), // disabled bg
-    contrast_300: accentForeground, // disabled text
-  }
+  /* Whichever of black and white stands out more is what the background isn't. */
+  const isLight =
+    (contrastRatio(background, '#000000') ?? 0) >
+    (contrastRatio(background, '#FFFFFF') ?? 0)
+  const theme = createTheme({
+    scheme: isLight ? 'light' : 'dark',
+    name: alf.theme.name,
+    palette,
+  })
 
-  const themes = {
-    ...alf.themes,
-    lightPalette: {...alf.themes.lightPalette, ...paletteOverride},
-    darkPalette: {...alf.themes.darkPalette, ...paletteOverride},
-    dimPalette: {...alf.themes.dimPalette, ...paletteOverride},
-    light: {
-      ...alf.themes.light,
-      atoms: {...alf.themes.light.atoms, ...atomsOverride},
-      palette: {...alf.themes.light.palette, ...paletteOverride},
-    },
-    dark: {
-      ...alf.themes.dark,
-      atoms: {...alf.themes.dark.atoms, ...atomsOverride},
-      palette: {...alf.themes.dark.palette, ...paletteOverride},
-    },
-    dim: {
-      ...alf.themes.dim,
-      atoms: {...alf.themes.dim.atoms, ...atomsOverride},
-      palette: {...alf.themes.dim.palette, ...paletteOverride},
-    },
-  }
+  return <Context.Provider value={{...alf, theme}}>{children}</Context.Provider>
+}
 
-  const value = {
-    ...alf,
-    themes,
-    theme: themes[alf.themeName],
-  }
-
-  return <Context.Provider value={value}>{children}</Context.Provider>
+/** `from` moved `amount` (0-1) of the way to `to`. */
+function mix(from: string, to: string, amount: number) {
+  const a = hexToRgb(from)
+  const b = hexToRgb(to)
+  if (!a || !b) return from
+  const channel = (x: number, y: number) => Math.round(x + (y - x) * amount)
+  return rgbToHex(channel(a.r, b.r), channel(a.g, b.g), channel(a.b, b.b))
 }

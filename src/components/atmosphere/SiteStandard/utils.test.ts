@@ -1,5 +1,6 @@
 import {type app, type com, site} from '#/lexicons'
 import {
+  getPublicationColors,
   getPublicationTheme,
   isStandardSiteDocumentUri,
   isStandardSiteEmbed,
@@ -69,18 +70,18 @@ describe('StandardSite record refs', () => {
   })
 })
 
-describe('getPublicationTheme', () => {
-  function publication(
-    theme?: app.bsky.embed.external.ViewArticlePublicationTheme,
-  ): app.bsky.embed.external.ViewArticlePublication {
-    return {
-      uri: 'https://example.com',
-      title: 'Publication',
-      description: '',
-      theme,
-    }
+function publication(
+  theme?: app.bsky.embed.external.ViewArticlePublicationTheme,
+): app.bsky.embed.external.ViewArticlePublication {
+  return {
+    uri: 'https://example.com',
+    title: 'Publication',
+    description: '',
+    theme,
   }
+}
 
+describe('getPublicationTheme', () => {
   it('reads and normalizes the new hex colors', () => {
     const theme = {accent: '#123456', accentForeground: '#fff'}
     expect(getPublicationTheme(publication(theme))).toEqual({
@@ -105,5 +106,24 @@ describe('getPublicationTheme', () => {
     {accent: '#123456', accentForeground: '#nope'},
   ])('keeps ALF defaults for an absent or invalid pair: %j', theme => {
     expect(getPublicationTheme(publication(theme))).toBeUndefined()
+  })
+})
+
+describe('getPublicationColors', () => {
+  it('reads readable page colors as opaque hex', () => {
+    expect(
+      getPublicationColors(
+        publication({background: '#FDF0ECFF', foreground: '#4a2a1f'}),
+      ),
+    ).toEqual({background: '#fdf0ec', foreground: '#4a2a1f'})
+  })
+
+  it.each([
+    undefined,
+    {background: '#ffffff'},
+    {background: '#ffffff', foreground: '#nope'},
+    {background: '#ffffff', foreground: '#bbbbbb'},
+  ])('leaves out absent, invalid or unreadable colors: %j', theme => {
+    expect(getPublicationColors(publication(theme))).toBeUndefined()
   })
 })
