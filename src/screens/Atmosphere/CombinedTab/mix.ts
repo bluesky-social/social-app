@@ -19,8 +19,22 @@ export type CombinedInterstitial = {
   type: 'popularPhotos'
 }
 
+/**
+ * When activity happened, relative to today, in local time. "pastWeek" is the
+ * rolling 2 to 6 days before today, not the calendar week.
+ */
+export type CombinedDateBucket = 'today' | 'yesterday' | 'pastWeek' | 'earlier'
+
+const DATE_BUCKETS: CombinedDateBucket[] = [
+  'today',
+  'yesterday',
+  'pastWeek',
+  'earlier',
+]
+
 export type CombinedRow =
   | {kind: 'activity'; key: string; row: ActivityRow}
+  | {kind: 'dateHeader'; key: string; bucket: CombinedDateBucket}
   | {
       kind: 'recommended'
       key: string
@@ -44,8 +58,9 @@ export type CombinedRow =
 
 /**
  * Mixes recommendations, and later interstitials, into the activity timeline.
- * Activity keeps its time order, with a recommendation after a random 3 to 10
- * rows.
+ * Activity keeps its time order under date headers, with a recommendation
+ * after a random 3 to 10 rows. Recommendations only ever follow activity, so
+ * each date section starts with activity from that date.
  * Once activity runs out, the rest of the recommendations follow under a
  * header, so a viewer with little or no activity still gets a feed.
  *
@@ -58,6 +73,7 @@ export function mixCombinedPages({
   interstitials = [],
   isLastPage,
   random,
+  now = new Date(),
 }: {
   /** Each timeline page's rows, in order. */
   activityPages: ActivityRow[][]
@@ -72,6 +88,8 @@ export function mixCombinedPages({
    * spacing stays put when the rows are recomputed or another page loads.
    */
   random: () => number
+  /** Where the date sections start from. */
+  now?: Date
 }): {pages: CombinedRow[][]; recommendedItems: ForYouItem[]} {
   /** Content already shown as activity, which a recommendation would repeat. */
   const shownUris = new Set<string>()
@@ -84,6 +102,12 @@ export function mixCombinedPages({
     MIN_RECOMMENDATION_GAP +
     Math.floor(random() * (MAX_RECOMMENDATION_GAP - MIN_RECOMMENDATION_GAP + 1))
   let recommendationGap = nextGap()
+  const getDateBucket = createDateBucketer(now)
+  /*
+   * Index into DATE_BUCKETS. Only moves forward, so a slightly out-of-order
+   * row can't repeat a header.
+   */
+  let dateBucketIndex = -1
 
   const takeRecommendation = () => {
     while (nextRecommendation < recommendations.length) {
@@ -127,6 +151,13 @@ export function mixCombinedPages({
     }
 
     for (const row of activityRows) {
+      // Warnings have no date, so they stay in the current section.
+      const bucket = row.kind === 'card' && getDateBucket(row.indexedAt)
+      if (bucket && DATE_BUCKETS.indexOf(bucket) > dateBucketIndex) {
+        dateBucketIndex = DATE_BUCKETS.indexOf(bucket)
+        // Not through `push`, so headers don't count toward interstitial slots.
+        rows.push({kind: 'dateHeader', key: `dateHeader:${bucket}`, bucket})
+      }
       push({kind: 'activity', key: `activity:${row.key}`, row})
       activitySinceRecommendation++
       if (activitySinceRecommendation >= recommendationGap) {
@@ -156,6 +187,30 @@ export function mixCombinedPages({
   })
 
   return {pages, recommendedItems}
+}
+
+/** Buckets dates by local calendar day, counting back from `now`. */
+function createDateBucketer(now: Date) {
+  const daysAgo = (days: number) => {
+    // setDate, rather than subtracting milliseconds, handles DST changes.
+    const date = new Date(now)
+    date.setHours(0, 0, 0, 0)
+    date.setDate(date.getDate() - days)
+    return date.getTime()
+  }
+  const startOfToday = daysAgo(0)
+  const startOfYesterday = daysAgo(1)
+  const startOfPastWeek = daysAgo(6)
+
+  return (indexedAt: string): CombinedDateBucket | undefined => {
+    const time = new Date(indexedAt).getTime()
+    if (Number.isNaN(time)) return undefined
+    // Includes anything dated ahead of the device clock.
+    if (time >= startOfToday) return 'today'
+    if (time >= startOfYesterday) return 'yesterday'
+    if (time >= startOfPastWeek) return 'pastWeek'
+    return 'earlier'
+  }
 }
 
 /**

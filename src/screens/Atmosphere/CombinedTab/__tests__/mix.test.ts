@@ -9,6 +9,9 @@ const activity = (uri: string) =>
     content: {type: 'article', view: {uri}},
   }) as unknown as ActivityRow
 
+const datedActivity = (uri: string, indexedAt: string) =>
+  ({...activity(uri), indexedAt}) as ActivityRow
+
 const recommendation = (uri: string) =>
   ({reqId: 'req', content: {type: 'article', view: {uri}}}) as ForYouItem
 
@@ -17,6 +20,8 @@ const describeRows = (rows: CombinedRow[]) =>
     switch (row.kind) {
       case 'activity':
         return row.row.key
+      case 'dateHeader':
+        return `date:${row.bucket}`
       case 'recommended':
         return `${row.eyebrow ? 'mixed' : 'tail'}:${row.item.content.view.uri}`
       case 'recommendedHeader':
@@ -114,6 +119,47 @@ describe('mixCombinedPages', () => {
       'a3',
       'interstitial:photos',
       'a4',
+    ])
+  })
+
+  it('starts a date section when the day changes, across pages', () => {
+    // Local time, like the buckets.
+    const now = new Date(2026, 10, 25, 15)
+    const at = (day: number, hour = 12) =>
+      new Date(2026, 10, day, hour).toISOString()
+    const {pages} = mixCombinedPages({
+      activityPages: [
+        [
+          datedActivity('a1', at(25, 14)),
+          datedActivity('a2', at(25, 0)),
+          datedActivity('a3', at(24, 23)),
+        ],
+        [
+          datedActivity('a4', at(24)),
+          datedActivity('a5', at(23)),
+          // Out of order, so it stays under Past week.
+          datedActivity('a6', at(24)),
+          datedActivity('a7', at(19)),
+          datedActivity('a8', at(18, 23)),
+        ],
+      ],
+      recommendations,
+      isLastPage: false,
+      random,
+      now,
+    })
+    expect(pages.map(describeRows)).toEqual([
+      ['date:today', 'a1', 'a2', 'date:yesterday', 'a3', 'mixed:r1'],
+      [
+        'a4',
+        'date:pastWeek',
+        'a5',
+        'a6',
+        'mixed:r2',
+        'a7',
+        'date:earlier',
+        'a8',
+      ],
     ])
   })
 

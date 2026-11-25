@@ -30,7 +30,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {LiveNowRow} from './LiveNowRow'
-import {type CombinedRow} from './mix'
+import {type CombinedDateBucket, type CombinedRow} from './mix'
 import {useCombinedFeedQuery} from './useCombinedFeedQuery'
 
 /**
@@ -188,8 +188,12 @@ function CombinedFeedRow({
           feedback={feedback}
         />
       )
+    case 'dateHeader':
+      return <DateHeader bucket={row.bucket} first={position === 0} />
     case 'recommendedHeader':
-      return <RecommendedHeader caughtUp={row.caughtUp} />
+      return (
+        <RecommendedHeader caughtUp={row.caughtUp} first={position === 0} />
+      )
     case 'interstitial':
       // None are produced yet.
       return null
@@ -246,31 +250,83 @@ function RecommendedRow({
   )
 }
 
+function DateHeader({
+  bucket,
+  first,
+}: {
+  bucket: CombinedDateBucket
+  first: boolean
+}) {
+  const {t: l} = useLingui()
+  const titles: Record<CombinedDateBucket, string> = {
+    today: l({message: 'Today', context: 'Feed section header'}),
+    yesterday: l({message: 'Yesterday', context: 'Feed section header'}),
+    pastWeek: l({
+      message: 'Past week',
+      comment: 'Feed section header for activity from 2 to 6 days ago',
+      context: 'Feed section header',
+    }),
+    earlier: l({
+      message: 'Earlier',
+      comment: 'Feed section header for activity from over a week ago',
+      context: 'Feed section header',
+    }),
+  }
+  return (
+    <SectionHeader
+      testID="combinedDateHeader"
+      title={titles[bucket]}
+      first={first}
+    />
+  )
+}
+
 /** Where activity ends and the remaining recommendations begin. */
-function RecommendedHeader({caughtUp}: {caughtUp: boolean}) {
+function RecommendedHeader({
+  caughtUp,
+  first,
+}: {
+  caughtUp: boolean
+  first: boolean
+}) {
+  const {t: l} = useLingui()
+  return (
+    <SectionHeader
+      testID="combinedRecommendedHeader"
+      title={l`Recommended for you`}
+      subtitle={caughtUp ? l`You’re all caught up` : undefined}
+      first={first}
+    />
+  )
+}
+
+/** Titles the rows below it, which bring their own dividers. */
+function SectionHeader({
+  title,
+  subtitle,
+  first,
+  testID,
+}: {
+  title: string
+  /** Above the title, in smaller text. */
+  subtitle?: string
+  /** Whether it's the first row, so there's no row above to separate from. */
+  first: boolean
+  testID?: string
+}) {
   const t = useTheme()
   return (
     <View
-      testID="combinedRecommendedHeader"
-      style={[
-        a.gap_xs,
-        a.px_lg,
-        a.pt_xl,
-        a.pb_md,
-        a.border_b,
-        t.atoms.border_contrast_low,
-      ]}>
-      {caughtUp && (
+      testID={testID}
+      style={[a.gap_2xs, a.px_lg, first ? a.pt_2xl : a.pt_4xl]}>
+      {subtitle && (
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          <Trans>You’re all caught up</Trans>
+          {subtitle}
         </Text>
       )}
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <SparkleIcon size="md" style={t.atoms.text} />
-        <Text style={[a.text_lg, a.font_bold, t.atoms.text]}>
-          <Trans>Recommended for you</Trans>
-        </Text>
-      </View>
+      <Text role="heading" style={[a.text_xl, a.font_bold, t.atoms.text]}>
+        {title}
+      </Text>
     </View>
   )
 }
