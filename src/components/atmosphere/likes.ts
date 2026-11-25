@@ -28,7 +28,7 @@ import {type com, site, social} from '#/lexicons'
 export type AtmosphereLikeKind = 'recommend' | 'favorite'
 
 /** The parts of an article or gallery view a like needs. */
-type LikeableView = {
+export type LikeableView = {
   likeCount?: number
   viewer?: {like?: AtUriString}
   associatedRefs?: com.atproto.repo.strongRef.Main[]

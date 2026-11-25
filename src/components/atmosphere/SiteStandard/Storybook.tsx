@@ -3,10 +3,6 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {Document} from '#/components/atmosphere/SiteStandard/Document'
 import {
-  DocumentCompact,
-  DocumentCompactCard,
-} from '#/components/atmosphere/SiteStandard/DocumentCompact'
-import {
   Publication,
   PublicationCard,
 } from '#/components/atmosphere/SiteStandard/Publication'
@@ -95,6 +91,17 @@ const noLikersDocument = {
   viewer: {},
 } satisfies app.bsky.embed.external.ViewArticle
 
+const noImageDocument = {
+  ...document,
+  image: undefined,
+} satisfies app.bsky.embed.external.ViewArticle
+
+const noPublicationDocument = {
+  ...noLikersDocument,
+  image: undefined,
+  publisher: undefined,
+} satisfies app.bsky.embed.external.ViewArticle
+
 const leafletPublication = {
   ...publication,
   uri: 'https://fieldnotes.leaflet.pub',
@@ -115,64 +122,57 @@ export function SiteStandardStorybook() {
       <H1>SiteStandard v2</H1>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact</H2>
-        <DocumentCompact view={document} />
+        <H2>Document</H2>
+        <Document view={document} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card</H2>
-        <DocumentCompactCard view={document} />
+        <H2>Document, Leaflet publication</H2>
+        <Document view={leafletDocument} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, themed Leaflet publication</H2>
-        <DocumentCompactCard view={leafletDocument} />
+        <H2>Document, no image</H2>
+        <Document view={noImageDocument} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, one known recommender</H2>
-        <DocumentCompactCard view={singleKnownLikerDocument} />
+        <H2>Document, no publication or recommenders</H2>
+        <Document view={noPublicationDocument} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, no known recommenders</H2>
-        <DocumentCompactCard view={noKnownLikersDocument} />
+        <H2>Document, one known recommender</H2>
+        <Document view={singleKnownLikerDocument} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, Activity tab related activity first</H2>
-        <DocumentCompactCard
+        <H2>Document, Activity tab related activity first</H2>
+        <Document
           view={document}
           recommenders={{actors: likers.slice(1, 2), actorCount: 1}}
         />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, Activity tab related activity only</H2>
-        <DocumentCompactCard
+        <H2>Document, Activity tab related activity only</H2>
+        <Document
           view={noKnownLikersDocument}
           recommenders={{actors: likers, actorCount: likers.length}}
         />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, no recommenders</H2>
-        <DocumentCompactCard view={noLikersDocument} />
+        <H2>Document compact</H2>
+        <Document variant="compact" view={document} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact with containerStyle</H2>
-        <DocumentCompact view={document} containerStyle={[a.px_lg, a.py_md]} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document</H2>
-        <Document view={document} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document, themed Leaflet publication</H2>
-        <Document view={leafletDocument} />
+        <H2>Document compact, no reading time or recommenders</H2>
+        <Document
+          variant="compact"
+          view={{...noLikersDocument, readingTime: undefined}}
+        />
       </View>
 
       <View style={[a.gap_md]}>

@@ -1,14 +1,9 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useReducedMotion} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {isActorHidden} from '#/screens/Atmosphere/ActivityTab/moderation'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {
   getAssociatedProfile,
@@ -16,22 +11,18 @@ import {
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {AtmosphereFirstActionWelcomeDialog} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
-import {useAtmosphereLike} from '#/components/atmosphere/likes'
-import {AvatarStack} from '#/components/AvatarStack'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {KnownLikers} from '#/components/atmosphere/KnownLikers'
+import {LikeButton} from '#/components/atmosphere/LikeButton'
+import {MetaLine} from '#/components/atmosphere/MetaLine'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Gallery from '#/components/Gallery'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
-  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
-} from '#/components/icons/Heart2'
 import {getAspectRatio} from '#/components/images/Gallery/utils'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {type app, social} from '#/lexicons'
+import {social} from '#/lexicons'
 import {type ActivityContent} from '../rows'
 
 /** Keeps a lone photo between square and 16:9. */
@@ -44,9 +35,6 @@ const MIN_CAROUSEL_ASPECT_RATIO = 1 / 2
  * peeks in.
  */
 const MAX_CAROUSEL_WIDTH = 0.85
-
-/** Space between the favorite pill's edge and its heart. */
-const FAVORITE_PILL_INSET = 8
 
 const OVERLAY_COLOR = 'rgba(0, 0, 0, 0.6)'
 
@@ -99,8 +87,12 @@ export function GalleryCard({
         <PhotoCarousel images={images} linkProps={linkProps} />
       )}
       <View style={[a.flex_row, a.align_center, a.gap_md, a.px_md, a.pt_sm]}>
-        <FavoriteButton view={view} />
-        <KnownFavoriters view={view} />
+        <LikeButton
+          view={view}
+          kind="favorite"
+          testID="activityGalleryCardFavorite"
+        />
+        <KnownLikers view={view} />
         <View style={a.flex_1} />
         <AtmosphereCardMenu
           inline
@@ -134,7 +126,7 @@ export function GalleryCard({
             {view.description}
           </Text>
         )}
-        <MetaLine view={view} />
+        <MetaLine date={view.createdAt} />
       </View>
     </View>
   )
@@ -352,199 +344,5 @@ function CarouselOverlay({onNext}: {onNext: (index: number) => void}) {
         </View>
       )}
     </>
-  )
-}
-
-/** The heart and favorite count, which favorite or unfavorite the gallery. */
-function FavoriteButton({view}: {view: app.bsky.embed.external.ViewGallery}) {
-  const {t: l, i18n} = useLingui()
-  const {
-    canLike: canFavorite,
-    isLiked: isFavorited,
-    likeCount,
-    toggle: toggleFavorite,
-    firstActionWelcomeDialogControl,
-  } = useAtmosphereLike(view, 'favorite', 'card')
-
-  const count = formatCount(i18n, likeCount)
-  const countLabel = l({
-    message: plural(likeCount, {
-      one: `${count} favorite`,
-      other: `${count} favorites`,
-    }),
-    comment:
-      'Number of people who favorited (liked) a photo gallery, read out by screen readers. {count} is already formatted.',
-  })
-  const shownCount = likeCount > 0 ? count : undefined
-
-  if (!canFavorite) {
-    if (likeCount === 0 && !isFavorited) return null
-    return (
-      <View
-        accessible
-        accessibilityLabel={countLabel}
-        accessibilityHint=""
-        style={{marginLeft: -FAVORITE_PILL_INSET}}>
-        <FavoritePill favorited={isFavorited} count={shownCount} />
-      </View>
-    )
-  }
-
-  const action = isFavorited
-    ? l({
-        message: 'Remove your favorite',
-        comment:
-          'Accessibility label for a button that unfavorites (unlikes) a photo gallery',
-      })
-    : l({
-        message: 'Favorite',
-        comment: 'Button that favorites (likes) a photo gallery',
-      })
-
-  return (
-    <>
-      <Button
-        testID="activityGalleryCardFavorite"
-        label={l({
-          message: `${action}, ${countLabel}`,
-          comment:
-            'Accessibility label for a gallery’s favorite button, e.g. “Favorite, 3 favorites”. Both parts are already translated.',
-        })}
-        hitSlop={4}
-        style={[a.rounded_full, {marginLeft: -FAVORITE_PILL_INSET}]}
-        onPress={toggleFavorite}>
-        {({hovered, focused, pressed}) => (
-          <FavoritePill
-            favorited={isFavorited}
-            count={shownCount}
-            hovered={hovered || focused || pressed}
-          />
-        )}
-      </Button>
-      <AtmosphereFirstActionWelcomeDialog
-        control={firstActionWelcomeDialogControl}
-      />
-    </>
-  )
-}
-
-/**
- * The heart and count, blue once favorited. Hovered, a pill appears behind
- * them. The pill's left padding is pulled back out with a negative margin, so
- * the heart stays on the text line either way.
- */
-function FavoritePill({
-  favorited,
-  count,
-  hovered = false,
-}: {
-  favorited: boolean
-  /** Formatted, or undefined to show the heart alone. */
-  count?: string
-  /** Hovered, focused or pressed. */
-  hovered?: boolean
-}) {
-  const t = useTheme()
-  const reducedMotion = useReducedMotion()
-  const highlighted = favorited || hovered
-  const Icon = favorited ? HeartFilledIcon : HeartIcon
-  const color = highlighted
-    ? t.palette.primary_700
-    : t.atoms.text_contrast_medium.color
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.gap_xs,
-        a.rounded_full,
-        {
-          paddingVertical: 4,
-          // The heart's built-in ~2px makes 8 read like the count side's 10.
-          paddingLeft: FAVORITE_PILL_INSET,
-          paddingRight: 10,
-        },
-        hovered && {
-          backgroundColor: favorited
-            ? t.palette.primary_100
-            : t.palette.primary_50,
-        },
-        !reducedMotion &&
-          web([a.transition_color, a.transition_timing_default]),
-      ]}>
-      <View
-        style={[
-          !reducedMotion &&
-            web([
-              a.transition_transform,
-              a.transition_timing_default,
-              hovered && {transform: [{scale: 1.15}]},
-            ]),
-        ]}>
-        <Icon size="sm" fill={color} />
-      </View>
-      {count && (
-        <Text
-          style={[
-            a.text_sm,
-            a.font_medium,
-            {color, fontVariant: ['tabular-nums']},
-          ]}>
-          {count}
-        </Text>
-      )}
-    </View>
-  )
-}
-
-/** Avatars of people the viewer follows who favorited the gallery. */
-function KnownFavoriters({view}: {view: app.bsky.embed.external.ViewGallery}) {
-  const moderationOpts = useModerationOpts()
-  const {currentAccount} = useSession()
-
-  if (!moderationOpts) return null
-  const profiles = (view.viewer?.knownLikers ?? []).filter(
-    profile =>
-      profile.did !== currentAccount?.did &&
-      !isActorHidden(profile, moderationOpts),
-  )
-  if (profiles.length === 0) return null
-
-  return (
-    <View accessible={false} pointerEvents="none">
-      <AvatarStack profiles={profiles.slice(0, 3)} size={20} overlap={6} />
-    </View>
-  )
-}
-
-/**
- * "Nov 21", with the year when it isn't this year. Joined with " · " so more
- * details, like a location, can follow once the view has them.
- */
-function MetaLine({view}: {view: app.bsky.embed.external.ViewGallery}) {
-  const {i18n} = useLingui()
-  const t = useTheme()
-
-  const createdAt = view.createdAt ? new Date(view.createdAt) : undefined
-  const parts: string[] = []
-  if (createdAt && !Number.isNaN(createdAt.getTime())) {
-    parts.push(
-      i18n.date(createdAt, {
-        month: 'short',
-        day: 'numeric',
-        year:
-          createdAt.getFullYear() === new Date().getFullYear()
-            ? undefined
-            : 'numeric',
-      }),
-    )
-  }
-  if (parts.length === 0) return null
-
-  return (
-    <Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
-      {parts.join(' · ')}
-    </Text>
   )
 }

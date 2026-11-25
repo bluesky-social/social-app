@@ -11,8 +11,10 @@ import {
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {type DocumentRecommenders} from '#/components/atmosphere/SiteStandard/DocumentActions'
-import {DocumentCompactCard} from '#/components/atmosphere/SiteStandard/DocumentCompact'
+import {
+  Document,
+  type DocumentRecommenders,
+} from '#/components/atmosphere/SiteStandard/Document'
 import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
@@ -99,7 +101,7 @@ export function ActivityContentCard({
   recommenders,
 }: {
   content: ActivityContent
-  /** Named in an article's social proof. */
+  /** Shown in an article's social proof. */
   recommenders?: DocumentRecommenders
 }) {
   const logPress = useLogContentPress()
@@ -112,7 +114,7 @@ export function ActivityContentCard({
   switch (content.type) {
     case 'article':
       return (
-        <DocumentCompactCard
+        <Document
           view={content.view}
           recommenders={recommenders}
           onPressCallback={onPress}

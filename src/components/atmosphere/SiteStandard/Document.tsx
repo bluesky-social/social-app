@@ -1,198 +1,266 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react/macro'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
+import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
-import {atoms as a, useTheme, web} from '#/alf'
-import {DocumentActions} from '#/components/atmosphere/SiteStandard/DocumentActions'
-import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
-import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
-import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
+import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {atoms as a, useTheme} from '#/alf'
+import {KnownLikers} from '#/components/atmosphere/KnownLikers'
+import {LikeButton} from '#/components/atmosphere/LikeButton'
+import {MetaLine} from '#/components/atmosphere/MetaLine'
+import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
-import {Divider} from '#/components/Divider'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app, site} from '#/lexicons'
 
+const THUMBNAIL_SIZE = 80
+
+/**
+ * People the viewer follows who recommended the document within the same
+ * stretch of timeline, shown ahead of `knownLikers`.
+ */
+export type DocumentRecommenders = {
+  /** The ones to show, with moderated actors left out. Never empty. */
+  actors: app.bsky.actor.defs.ProfileViewBasic[]
+  /** Every one, including moderated actors. */
+  actorCount: number
+}
+
+/**
+ * An article card: its publication, image, title, details and description,
+ * then a recommend button, known recommenders and a menu. Only the image and
+ * title open the article, leaving the rest free for other actions.
+ */
 export function Document({
-  preview,
   view,
+  variant = 'default',
+  recommenders,
   onPressCallback,
   onShareCallback,
   style,
-}: ssTypes.PreviewProps &
-  ssTypes.PublicApiProps & {
-    view: app.bsky.embed.external.ViewArticle
-    style?: StyleProp<ViewStyle>
-  }) {
+}: ssTypes.PublicApiProps & {
+  view: app.bsky.embed.external.ViewArticle
+  /**
+   * `default` shows the image full width above the title; `compact` shows it
+   * as a thumbnail beside the title.
+   */
+  variant?: 'default' | 'compact'
+  /** Shown ahead of the view's `knownLikers`. */
+  recommenders?: DocumentRecommenders
+  style?: StyleProp<ViewStyle>
+}) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
   const haptics = useHaptics()
-  const niceUrl = toNiceDomain(view.uri)
-  const imageUri = view.image
-  const publisher = view.publisher
-  const hasMedia = Boolean(imageUri)
-  /*
-   * The menu is a sibling of the article link, not inside it, since
-   * interactive elements can't nest in one. With no image to hold it, content
-   * that would sit under it is padded away.
-   */
-  const hasMenu = !preview
-  const menuClearance = hasMenu && !hasMedia && a.pr_5xl
-  const actionsStyle = [a.px_md, a.pt_xs, a.pb_md]
+  const author = getAssociatedProfile(view.associatedProfiles)
+  const label = view.title || l`Open link to ${toNiceDomain(view.uri)}`
 
-  const {
-    state: interacted,
-    onIn: onInteract,
-    onOut: onInteractOut,
-  } = useInteractionState()
-  const onPress = (source: 'card' | 'cta') => {
-    haptics.tap()
-    onPressCallback?.(source)
-    ax.metric('embed:standardSite:article:press', {url: view.uri})
-  }
-  const onLongPress = IS_NATIVE
-    ? () => {
-        if (view.uri) {
+  const linkProps = {
+    to: view.uri,
+    shouldProxy: true,
+    accessibilityHint: '',
+    onPress: () => {
+      haptics.tap()
+      onPressCallback?.('card')
+      ax.metric('embed:standardSite:article:press', {url: view.uri})
+    },
+    onLongPress: IS_NATIVE
+      ? () => {
           haptics.longPress()
           onShareCallback?.()
           void shareUrl(view.uri)
           ax.metric('embed:standardSite:article:longPress', {url: view.uri})
         }
-      }
-    : undefined
+      : undefined,
+  }
+
+  const image = view.image && (
+    <Image
+      source={{uri: view.image}}
+      contentFit="cover"
+      accessibilityIgnoresInvertColors
+      loading="lazy"
+      useAppleWebpCodec
+      style={[a.w_full, a.h_full]}
+    />
+  )
+
+  return (
+    <View
+      testID="document"
+      style={[
+        a.w_full,
+        a.overflow_hidden,
+        a.rounded_lg,
+        a.border,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        style,
+      ]}>
+      {view.publisher && (
+        <PublicationHeader publication={view.publisher} author={author} />
+      )}
+      {variant === 'default' && image && (
+        <Link
+          {...linkProps}
+          testID="documentImage"
+          label={label}
+          style={[a.w_full, a.aspect_card, t.atoms.bg_contrast_25]}>
+          {image}
+        </Link>
+      )}
+      <View style={[a.flex_row, a.align_start, a.gap_md, a.px_md, a.pt_md]}>
+        <View style={[a.flex_1, a.gap_xs]}>
+          {!!view.title && (
+            <InlineLinkText
+              {...linkProps}
+              testID="documentTitle"
+              label={label}
+              emoji
+              numberOfLines={3}
+              style={[
+                a.text_xl,
+                a.font_bold,
+                a.leading_snug,
+                t.atoms.text,
+                a.pb_xs,
+              ]}>
+              {view.title}
+            </InlineLinkText>
+          )}
+          <MetaLine
+            date={view.createdAt}
+            details={[
+              !!view.readingTime &&
+                l({
+                  message: plural(view.readingTime, {
+                    one: '# min read',
+                    other: '# min read',
+                  }),
+                  comment:
+                    'How long it takes to read an article, in minutes, e.g. “5 min read”.',
+                }),
+              toNiceDomain(view.uri),
+            ]}
+          />
+          {!!view.description.trim() && (
+            <Text
+              emoji
+              numberOfLines={3}
+              style={[
+                a.pt_xs,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_high,
+              ]}>
+              {view.description}
+            </Text>
+          )}
+        </View>
+        {variant === 'compact' && image && (
+          <Link
+            {...linkProps}
+            testID="documentImage"
+            label={label}
+            style={[
+              a.flex_shrink_0,
+              a.overflow_hidden,
+              a.rounded_md,
+              t.atoms.bg_contrast_25,
+              {width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE},
+            ]}>
+            {image}
+          </Link>
+        )}
+      </View>
+      <View style={[a.flex_row, a.align_center, a.gap_xs, a.px_md, a.py_sm]}>
+        <LikeButton view={view} kind="recommend" testID="documentRecommend" />
+        <KnownLikers view={view} leadingProfiles={recommenders?.actors} />
+        <View style={a.flex_1} />
+        <AtmosphereCardMenu
+          inline
+          type="article"
+          item={view}
+          reportableTypes={[site.standard.document.$type]}
+          author={author}
+        />
+      </View>
+    </View>
+  )
+}
+
+/**
+ * The publication's icon and name, which opens the publication, and the
+ * author's handle, which opens their profile.
+ */
+function PublicationHeader({
+  publication,
+  author,
+}: {
+  publication: app.bsky.embed.external.ViewArticlePublication
+  author?: app.bsky.actor.defs.ProfileViewBasic
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const handle = author && sanitizeHandle(author.handle, '@')
 
   return (
     <View
       style={[
-        a.flex_col,
-        a.rounded_lg,
-        a.w_full,
-        a.border,
-        interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
-        preview && a.pointer_events_none,
-        style,
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.py_sm,
+        t.atoms.bg_contrast_25,
       ]}>
-      {/*
-       * The article is an in-flow `Link` wrapping the content so the iOS peek
-       * menu has something to lift.
-       */}
-      <Link
-        peek
-        shouldProxy
-        to={view.uri}
-        label={view.title || l`Open link to ${niceUrl}`}
-        onPress={() => onPress('card')}
-        onLongPress={onLongPress}
-        style={[a.rounded_lg]}
-        {...web({
-          onMouseEnter: onInteract,
-          onMouseLeave: onInteractOut,
-        })}
-        onFocus={onInteract}
-        onBlur={onInteractOut}>
-        {({pressed}) => (
-          <View
-            style={[
-              a.w_full,
-              /*
-               * The inner view clips and rounds, not the container, since
-               * overflow_hidden on the container breaks the peek lift animation.
-               */
-              a.overflow_hidden,
-              a.rounded_lg,
-              interacted ? t.atoms.bg_contrast_25 : pressed && t.atoms.bg,
-            ]}>
-            {imageUri ? (
-              <Image
-                style={[a.aspect_card]}
-                source={{uri: imageUri}}
-                accessibilityIgnoresInvertColors
-                loading="lazy"
-                useAppleWebpCodec
-              />
-            ) : undefined}
-
-            <View
-              style={[
-                a.flex_1,
-                a.pt_md,
-                hasMedia && a.border_t,
-                interacted
-                  ? t.atoms.border_contrast_high
-                  : t.atoms.border_contrast_low,
-                {gap: 3},
-              ]}>
-              <View style={[a.pb_sm, a.px_md, {gap: 5}]}>
-                {publisher && (
-                  <DocumentPublicationRow
-                    view={publisher}
-                    style={menuClearance}
-                  />
-                )}
-                <View style={[{gap: 3}]}>
-                  <Text
-                    emoji
-                    numberOfLines={3}
-                    style={[
-                      a.text_lg,
-                      a.font_bold,
-                      a.leading_snug,
-                      !publisher && menuClearance,
-                    ]}>
-                    {view.title}
-                  </Text>
-                  {view.description ? (
-                    <Text
-                      emoji
-                      numberOfLines={imageUri ? 2 : 4}
-                      style={[a.text_sm, a.leading_snug]}>
-                      {view.description}
-                    </Text>
-                  ) : undefined}
-                </View>
-                <DocumentStats view={view} />
-              </View>
-            </View>
-
-            {!publisher && (
-              <View style={[a.px_md]}>
-                <Divider />
-                <View style={[a.py_sm]}>
-                  <StandardSiteMetaRow preview={preview} view={view} />
-                </View>
-              </View>
-            )}
-
-            <DocumentActions ghost view={view} style={actionsStyle} />
-          </View>
+      <PublicationIcon view={publication} size={32} />
+      <View style={[a.flex_1, a.gap_2xs]}>
+        <InlineLinkText
+          testID="documentPublication"
+          to={publication.uri}
+          shouldProxy
+          label={l({
+            message: `Open publication: ${publication.title}`,
+            comment:
+              'Accessibility label for a link to the publication an article was published in. {title} is its name, written by its author.',
+          })}
+          emoji
+          numberOfLines={1}
+          style={[a.text_xs, a.font_bold, a.leading_tight, t.atoms.text]}>
+          {publication.title}
+        </InlineLinkText>
+        {author && handle && (
+          <Text
+            numberOfLines={1}
+            style={[a.text_xs, a.leading_tight, t.atoms.text_contrast_medium]}>
+            <Trans comment="Under the name of the publication an article was published in. The handle links to the author's profile.">
+              by{' '}
+              <InlineLinkText
+                testID="documentAuthor"
+                to={makeProfileLink(author)}
+                label={l`View profile of ${handle}`}
+                style={[
+                  a.text_xs,
+                  a.leading_tight,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {handle}
+              </InlineLinkText>
+            </Trans>
+          </Text>
         )}
-      </Link>
-
-      <DocumentActions
-        view={view}
-        interacted={interacted}
-        onReadPress={() => onPress('cta')}
-        style={[a.absolute, a.left_0, a.right_0, a.bottom_0, actionsStyle]}
-      />
-
-      {hasMenu && (
-        <AtmosphereCardMenu
-          type="article"
-          item={view}
-          reportableTypes={[site.standard.document.$type]}
-          author={view.associatedProfiles?.[0]}
-          offsetY={a.p_sm.padding}
-          offsetX={a.p_sm.padding}
-        />
-      )}
+      </View>
     </View>
   )
 }

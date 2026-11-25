@@ -141,11 +141,11 @@ jest.mock('#/components/icons/community/Grain', () => ({GrainMark: () => null}))
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => undefined,
 }))
-jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => {
+jest.mock('#/components/atmosphere/SiteStandard/Document', () => {
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
-    DocumentCompactCard: (props: {
+    Document: (props: {
       onPressCallback: () => void
       onShareCallback?: () => void
     }) => {

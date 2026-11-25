@@ -144,13 +144,21 @@ export function AtmosphereCardMenu({
   const [devModeEnabled] = useDevMode()
   let labels: {trigger: string; view: string; report: string}
   switch (type) {
-    case 'article':
+    case 'article': {
+      const provider = getAtmosphereProvider(item.providerId)
       labels = {
         trigger: l`Article options`,
-        view: l`View article`,
+        view: provider
+          ? l({
+              message: `Read on ${provider.name}`,
+              comment:
+                'Menu item that opens an article on the platform it was published with, e.g. “Read on Leaflet”',
+            })
+          : l`View article`,
         report: l`Report article`,
       }
       break
+    }
     case 'photo': {
       const provider = getAtmosphereProvider(item.providerId)
       labels = {
