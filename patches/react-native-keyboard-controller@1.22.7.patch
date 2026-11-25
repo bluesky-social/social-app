@@ -1,22 +1,26 @@
 diff --git a/src/components/KeyboardAvoidingView/hooks.ts b/src/components/KeyboardAvoidingView/hooks.ts
-index 64bfa65439..0862b6ca6b 100644
+index 64bfa6543..9243a5ee9 100644
 --- a/src/components/KeyboardAvoidingView/hooks.ts
 +++ b/src/components/KeyboardAvoidingView/hooks.ts
-@@ -1,6 +1,6 @@
- import { useLayoutEffect } from "react";
+@@ -1,33 +1,27 @@
+-import { useLayoutEffect } from "react";
  import { Platform } from "react-native";
--import { useSharedValue } from "react-native-reanimated";
-+import { runOnUI, useSharedValue } from "react-native-reanimated";
+ import { useSharedValue } from "react-native-reanimated";
  
- import { useKeyboardContext } from "../../context";
+-import { useKeyboardContext } from "../../context";
  import { useKeyboardHandler } from "../../hooks";
-@@ -14,16 +14,28 @@ export const useKeyboardAnimation = () => {
+ 
+ const OS = Platform.OS;
+ 
+ export const useKeyboardAnimation = () => {
+-  const { reanimated } = useKeyboardContext();
+-
+   const heightWhenOpened = useSharedValue(0);
    const height = useSharedValue(0);
    const progress = useSharedValue(0);
    const isClosed = useSharedValue(true);
-+  const hasReceivedEvent = useSharedValue(false);
  
-   useLayoutEffect(() => {
+-  useLayoutEffect(() => {
 -    const initialHeight = -reanimated.height.value;
 -    const initialProgress = reanimated.progress.value;
 -
@@ -25,118 +29,118 @@ index 64bfa65439..0862b6ca6b 100644
 -    height.value = initialHeight;
 -    progress.value = initialProgress;
 -    isClosed.value = initialProgress === 0;
-+    // writes from JS are applied on the UI thread asynchronously, so they may
-+    // overwrite values set by keyboard events that arrived in between (i. e. when
-+    // input has `autoFocus`) - set initial values only if no event arrived yet
-+    runOnUI(() => {
-+      "worklet";
-+
-+      if (hasReceivedEvent.value) {
-+        return;
-+      }
-+
-+      const initialHeight = -reanimated.height.value;
-+      const initialProgress = reanimated.progress.value;
-+
-+      // eslint-disable-next-line react-compiler/react-compiler
-+      heightWhenOpened.value = initialHeight;
-+      height.value = initialHeight;
-+      progress.value = initialProgress;
-+      isClosed.value = initialProgress === 0;
-+    })();
-   }, []);
- 
+-  }, []);
+-
    useKeyboardHandler(
-@@ -31,6 +43,8 @@ export const useKeyboardAnimation = () => {
+     {
++      onSync: (e) => {
++        "worklet";
++
++        // eslint-disable-next-line react-compiler/react-compiler
++        heightWhenOpened.value = e.height;
++        height.value = e.height;
++        progress.value = e.progress;
++        isClosed.value = e.progress === 0;
++      },
        onStart: (e) => {
          "worklet";
  
-+        hasReceivedEvent.value = true;
-+
-         if (e.height > 0) {
-           isClosed.value = false;
-           heightWhenOpened.value = e.height;
-@@ -39,20 +53,28 @@ export const useKeyboardAnimation = () => {
-       onMove: (e) => {
-         "worklet";
+@@ -53,6 +47,11 @@ export const useKeyboardAnimation = () => {
  
-+        hasReceivedEvent.value = true;
-         progress.value = e.progress;
-         height.value = e.height;
-       },
-       onInteractive: (e) => {
-         "worklet";
- 
-+        hasReceivedEvent.value = true;
-         progress.value = e.progress;
-         height.value = e.height;
-       },
-       onEnd: (e) => {
-         "worklet";
- 
-+        hasReceivedEvent.value = true;
          isClosed.value = e.height === 0;
  
-+        // `onStart` may have been dispatched before this handler was attached
-+        if (e.height > 0 && e.progress === 1) {
++        // `onStart` is not received if the view was mounted during keyboard appearance
++        if (e.height > 0) {
 +          heightWhenOpened.value = e.height;
 +        }
 +
          height.value = e.height;
          progress.value = e.progress;
        },
-@@ -67,10 +89,18 @@ export const useTranslateAnimation = () => {
- 
+@@ -63,18 +62,17 @@ export const useKeyboardAnimation = () => {
+   return { height, progress, heightWhenOpened, isClosed };
+ };
+ export const useTranslateAnimation = () => {
+-  const { reanimated } = useKeyboardContext();
+-
    const padding = useSharedValue(0);
    const translate = useSharedValue(0);
-+  const hasReceivedEvent = useSharedValue(false);
  
-   useLayoutEffect(() => {
+-  useLayoutEffect(() => {
 -    // eslint-disable-next-line react-compiler/react-compiler
 -    padding.value = reanimated.progress.value;
-+    // see `useKeyboardAnimation` for an explanation
-+    runOnUI(() => {
-+      "worklet";
-+
-+      if (!hasReceivedEvent.value) {
-+        // eslint-disable-next-line react-compiler/react-compiler
-+        padding.value = reanimated.progress.value;
-+      }
-+    })();
-   }, []);
- 
+-  }, []);
+-
    useKeyboardHandler(
-@@ -78,6 +108,8 @@ export const useTranslateAnimation = () => {
+     {
++      onSync: (e) => {
++        "worklet";
++
++        // eslint-disable-next-line react-compiler/react-compiler
++        padding.value = e.progress;
++      },
        onStart: (e) => {
          "worklet";
  
-+        hasReceivedEvent.value = true;
+diff --git a/src/hooks/index.ts b/src/hooks/index.ts
+index 70141ae5f..10f481797 100644
+--- a/src/hooks/index.ts
++++ b/src/hooks/index.ts
+@@ -1,5 +1,5 @@
+ import { useEffect, useLayoutEffect } from "react";
+-import { useEvent } from "react-native-reanimated";
++import { runOnUI, useEvent } from "react-native-reanimated";
+ 
+ import { AndroidSoftInputModes } from "../constants";
+ import { useKeyboardContext } from "../context";
+@@ -151,6 +151,23 @@ export function useGenericKeyboardHandler(
+ 
+   useLayoutEffect(() => {
+     const cleanup = context.setKeyboardHandlers(eventHandler);
++    const { onSync } = handler;
++    const { height, progress } = context.reanimated;
 +
-         if (e.height === 0) {
-           padding.value = 0;
-         }
-@@ -88,6 +120,8 @@ export const useTranslateAnimation = () => {
-       onMove: (e) => {
-         "worklet";
- 
-+        hasReceivedEvent.value = true;
++    if (onSync) {
++      // events dispatched before the handler was attached are not delivered to it,
++      // so the state that the keyboard has now is reported separately
++      runOnUI(() => {
++        "worklet";
 +
-         if (OS !== "ios") {
-           translate.value = e.progress;
-         }
-@@ -95,6 +129,7 @@ export const useTranslateAnimation = () => {
-       onInteractive: (e) => {
-         "worklet";
++        onSync({
++          height: Math.abs(height.value),
++          progress: progress.value,
++          duration: 0,
++          target: -1,
++        });
++      })();
++    }
  
-+        hasReceivedEvent.value = true;
-         padding.value = 0;
- 
-         translate.value = e.progress;
-@@ -102,6 +137,7 @@ export const useTranslateAnimation = () => {
-       onEnd: (e) => {
-         "worklet";
- 
-+        hasReceivedEvent.value = true;
-         padding.value = e.progress;
- 
-         if (OS !== "ios") {
+     return () => cleanup();
+   }, deps);
+diff --git a/src/types/hooks.ts b/src/types/hooks.ts
+index 850b9b25b..02fb96c3e 100644
+--- a/src/types/hooks.ts
++++ b/src/types/hooks.ts
+@@ -150,6 +150,22 @@ export type FocusedInputSelectionHandlerHook<TContext, Event> = (
+ // package types
+ export type Handlers<T> = Record<string, T | undefined>;
+ export type KeyboardHandler = Partial<{
++  /**
++   * A callback that gets invoked after the handler is attached: when a component is mounted,
++   * when a frozen screen becomes active again or when dependencies of the handler change.
++   * The event contains CURRENT state of the keyboard. Events dispatched before the handler
++   * was attached are not delivered, so use it for initializing values that other callbacks update.
++   *
++   * @example
++   * ```ts
++   * onSync: (e) => {
++   *   "worklet";
++   *
++   *   const isKeyboardShown = e.progress === 1;
++   * }
++   * ```
++   */
++  onSync: (e: NativeEvent) => void;
+   /**
+    * A callback that gets invoked when keyboard starts its movement.
+    * The event contains DESTINATION values.
