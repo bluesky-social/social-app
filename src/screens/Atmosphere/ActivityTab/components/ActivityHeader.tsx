@@ -128,7 +128,7 @@ function getActivityApp({
 /** Centers the app marks on text_sm's cap height rather than its baseline. */
 const INLINE_ICON_OFFSET = 1.5
 
-function AppName({
+export function AppName({
   app,
   children,
 }: {

@@ -1603,7 +1603,7 @@ export type Events = {
   /** The user pressed a link to someone's profile. */
   'atmosphere:profile:press': AtmosphereMetricContext & {
     profileDid: string
-    source: 'activityHeader' | 'cardMenu' | 'photoDialog'
+    source: 'activityHeader' | 'cardMenu' | 'photoDialog' | 'liveNowRow'
   }
   /** The user pressed a section's "See more", which switches tabs. */
   'atmosphere:section:seeMore': AtmosphereMetricContext & {

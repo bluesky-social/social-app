@@ -29,6 +29,7 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {LiveNowRow} from './LiveNowRow'
 import {type CombinedRow} from './mix'
 import {useCombinedFeedQuery} from './useCombinedFeedQuery'
 
@@ -145,7 +146,12 @@ export function CombinedTab() {
       onRefresh={() => void onRefresh()}
       onEndReached={() => void onEndReached()}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<AtmosphereNux style={a.pt_lg} />}
+      ListHeaderComponent={
+        <>
+          <LiveNowRow livestreams={data.livestreams} />
+          <AtmosphereNux style={a.pt_lg} />
+        </>
+      }
       ListEmptyComponent={<EmptyState />}
       ListFooterComponent={
         <ListFooter

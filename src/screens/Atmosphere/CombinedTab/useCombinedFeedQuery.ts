@@ -16,11 +16,13 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
+import {isLive} from '#/screens/Atmosphere/ActivityTab/components/LivestreamCard'
 import {
   isActivityHidden,
   moderateActivity,
 } from '#/screens/Atmosphere/ActivityTab/moderation'
 import {
+  type ActivityContent,
   toActivityRows,
   toViewContent,
 } from '#/screens/Atmosphere/ActivityTab/rows'
@@ -36,6 +38,8 @@ import type * as bsky from '#/types/bsky'
 import {mixCombinedPages, seededRandom} from './mix'
 
 const useCombinedFeedQueryRoot = 'useCombinedFeedQuery'
+
+export type Livestream = Extract<ActivityContent, {type: 'livestream'}>
 
 /** How many recommendations to fetch; the endpoint has no further pages. */
 const RECOMMENDATION_LIMIT = 50
@@ -109,7 +113,12 @@ export function useCombinedFeedQuery() {
     staleTime: STALE.SECONDS.FIFTEEN,
     select: data => {
       if (!moderationOpts) {
-        return {pages: [], pageParams: [], recommendedItems: []}
+        return {
+          pages: [],
+          pageParams: [],
+          recommendedItems: [],
+          livestreams: [],
+        }
       }
       const recommendations = data.pages[0]?.recommendations
       const seen = new Set<string>()
@@ -130,12 +139,34 @@ export function useCombinedFeedQuery() {
           return [{content, moderation, reqId: recommendations?.recIdStr ?? ''}]
         },
       )
+      const activityPages = data.pages.map((page, pageIndex) =>
+        toActivityRows(
+          mapTimelinePageProfiles(page.timeline, applyProfileShadow),
+          pageIndex,
+          moderationOpts,
+        ),
+      )
+      /*
+       * Livestreams show in a row above the feed instead of in it, and only
+       * live ones from the first page, so the row doesn't change as the feed
+       * scrolls.
+       */
+      const livestreams: Livestream[] = []
+      for (const row of activityPages[0] ?? []) {
+        if (
+          row.kind === 'card' &&
+          row.content.type === 'livestream' &&
+          !row.moderation.blur &&
+          isLive(row.content.view) &&
+          !livestreams.some(({view}) => view.uri === row.content.view.uri)
+        ) {
+          livestreams.push(row.content)
+        }
+      }
       const mixed = mixCombinedPages({
-        activityPages: data.pages.map((page, pageIndex) =>
-          toActivityRows(
-            mapTimelinePageProfiles(page.timeline, applyProfileShadow),
-            pageIndex,
-            moderationOpts,
+        activityPages: activityPages.map(rows =>
+          rows.filter(
+            row => row.kind !== 'card' || row.content.type !== 'livestream',
           ),
         ),
         recommendations: recommendedItems,
@@ -149,6 +180,8 @@ export function useCombinedFeedQuery() {
         /** The recommendations shown, in feed order, for feed feedback. */
         recommendedItems: mixed.recommendedItems,
         recIdStr: recommendations?.recIdStr,
+        /** Live now, from the first page, in timeline order. */
+        livestreams,
       }
     },
   })
