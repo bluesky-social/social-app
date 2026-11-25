@@ -757,7 +757,7 @@ msgid "{label}, Beta"
 msgstr "{label}, Beta"
 
 #. Screen reader label for the carousel position. {label} is the carousel name, {position} is the 1-based number of the current item, and {count} is the total number of items.
-#: src/components/Gallery/PageDots.tsx:36
+#: src/components/Gallery/PageDots.tsx:42
 msgid "{label}, item {position} of {count}"
 msgstr "{label}, item {position} of {count}"
 
@@ -1670,11 +1670,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1629
+#: src/view/com/composer/Composer.tsx:1681
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2302
+#: src/view/com/composer/Composer.tsx:2354
 msgid "Add another post to thread"
 msgstr ""
 
@@ -2502,7 +2502,7 @@ msgstr ""
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Are you sure you want to rescind your request to join {0}?"
 
-#: src/view/com/composer/Composer.tsx:1767
+#: src/view/com/composer/Composer.tsx:1819
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -3186,8 +3186,8 @@ msgstr "Camera access needed"
 #: src/screens/Settings/Settings.tsx:330
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1845
-#: src/view/com/composer/Composer.tsx:1856
+#: src/view/com/composer/Composer.tsx:1897
+#: src/view/com/composer/Composer.tsx:1908
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:267
@@ -3222,7 +3222,8 @@ msgstr "Cancels signing in so you can check your username"
 #: src/components/PostControls/index.tsx:124
 #: src/components/PostControls/index.tsx:148
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:69
-#: src/state/shell/composer/index.tsx:128
+#: src/state/shell/composer/index.tsx:134
+#: src/view/com/composer/Composer.tsx:408
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
@@ -3269,7 +3270,7 @@ msgstr "Cards that bleed to the container edges"
 msgid "Cards that change"
 msgstr "Cards that change"
 
-#: src/components/Gallery/index.tsx:426
+#: src/components/Gallery/index.tsx:446
 msgid "carousel"
 msgstr "carousel"
 
@@ -3820,7 +3821,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1854
+#: src/view/com/composer/Composer.tsx:1906
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -3879,7 +3880,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1729
+#: src/view/com/composer/Composer.tsx:1781
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -3887,11 +3888,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2743
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2745
 msgid "Compressing video..."
 msgstr ""
 
@@ -4408,6 +4409,10 @@ msgstr "Couldn’t load more accounts, please try again"
 msgid "Couldn’t load more posts. Try again"
 msgstr "Couldn’t load more posts. Try again"
 
+#: src/view/com/composer/Composer.tsx:400
+msgid "Couldn’t load the post to quote"
+msgstr "Couldn’t load the post to quote"
+
 #: src/components/ShareDialog/ShareRow.tsx:127
 msgid "Couldn’t open {label}"
 msgstr "Couldn’t open {label}"
@@ -4745,7 +4750,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:810
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:812
-#: src/view/com/composer/Composer.tsx:1741
+#: src/view/com/composer/Composer.tsx:1793
 msgid "Delete post"
 msgstr ""
 
@@ -4918,9 +4923,9 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
 #: src/screens/Profile/Header/EditProfileDialog.tsx:102
-#: src/view/com/composer/Composer.tsx:1519
-#: src/view/com/composer/Composer.tsx:1564
-#: src/view/com/composer/Composer.tsx:1774
+#: src/view/com/composer/Composer.tsx:1571
+#: src/view/com/composer/Composer.tsx:1616
+#: src/view/com/composer/Composer.tsx:1826
 #: src/view/com/composer/drafts/DraftItem.tsx:243
 #: src/view/com/composer/drafts/DraftsButton.tsx:128
 msgid "Discard"
@@ -4931,14 +4936,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1517
+#: src/view/com/composer/Composer.tsx:1569
 #: src/view/com/composer/drafts/DraftItem.tsx:240
 #: src/view/com/composer/drafts/DraftsButton.tsx:94
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1534
-#: src/view/com/composer/Composer.tsx:1766
+#: src/view/com/composer/Composer.tsx:1586
+#: src/view/com/composer/Composer.tsx:1818
 msgid "Discard post?"
 msgstr ""
 
@@ -4984,7 +4989,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2633
+#: src/view/com/composer/Composer.tsx:2685
 msgid "Dismiss error"
 msgstr ""
 
@@ -5612,7 +5617,7 @@ msgstr ""
 msgid "Equal-height cards"
 msgstr "Equal-height cards"
 
-#: src/view/com/composer/Composer.tsx:2711
+#: src/view/com/composer/Composer.tsx:2763
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -6070,7 +6075,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:739
+#: src/view/com/composer/Composer.tsx:791
 msgid "Failed to save draft"
 msgstr ""
 
@@ -6904,7 +6909,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2716
+#: src/view/com/composer/Composer.tsx:2768
 msgid "GIF uploaded"
 msgstr ""
 
@@ -7923,7 +7928,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2652
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -7967,8 +7972,8 @@ msgstr "Joined {createdAt}"
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1562
-#: src/view/com/composer/Composer.tsx:1577
+#: src/view/com/composer/Composer.tsx:1614
+#: src/view/com/composer/Composer.tsx:1629
 #: src/view/com/composer/drafts/DraftsButton.tsx:126
 msgid "Keep editing"
 msgstr ""
@@ -9998,11 +10003,11 @@ msgstr "One of the selected recipients does not allow group chats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
-#: src/view/com/composer/Composer.tsx:951
+#: src/view/com/composer/Composer.tsx:1003
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:948
+#: src/view/com/composer/Composer.tsx:1000
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -10014,11 +10019,11 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:750
+#: src/view/com/composer/Composer.tsx:802
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:958
+#: src/view/com/composer/Composer.tsx:1010
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -10166,7 +10171,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:268
-#: src/view/com/composer/Composer.tsx:2279
+#: src/view/com/composer/Composer.tsx:2331
 msgid "Open emoji picker"
 msgstr ""
 
@@ -11013,7 +11018,7 @@ msgstr "Portrait, square, and landscape frames as plain children. The frames, no
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/composer/Composer.tsx:1921
+#: src/view/com/composer/Composer.tsx:1973
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -11045,12 +11050,12 @@ msgctxt "notifications tab"
 msgid "Post alerts"
 msgstr "Post alerts"
 
-#: src/view/com/composer/Composer.tsx:1919
+#: src/view/com/composer/Composer.tsx:1971
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1576
+#: src/view/com/composer/Composer.tsx:1628
 msgid "Post anyway"
 msgstr "Post anyway"
 
@@ -11302,11 +11307,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2757
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2759
 msgid "Processing video..."
 msgstr ""
 
@@ -11379,22 +11384,22 @@ msgid "Publication options"
 msgstr "Publication options"
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1905
+#: src/view/com/composer/Composer.tsx:1957
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1900
+#: src/view/com/composer/Composer.tsx:1952
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1889
+#: src/view/com/composer/Composer.tsx:1941
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1894
+#: src/view/com/composer/Composer.tsx:1946
 msgid "Publish reply"
 msgstr ""
 
@@ -11997,7 +12002,7 @@ msgstr ""
 msgid "Reply"
 msgstr "Reply"
 
-#: src/view/com/composer/Composer.tsx:1917
+#: src/view/com/composer/Composer.tsx:1969
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -12559,22 +12564,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1557
+#: src/view/com/composer/Composer.tsx:1609
 #: src/view/com/composer/drafts/DraftsButton.tsx:121
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1529
+#: src/view/com/composer/Composer.tsx:1581
 #: src/view/com/composer/drafts/DraftsButton.tsx:89
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1557
+#: src/view/com/composer/Composer.tsx:1609
 #: src/view/com/composer/drafts/DraftsButton.tsx:121
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1531
+#: src/view/com/composer/Composer.tsx:1583
 #: src/view/com/composer/drafts/DraftsButton.tsx:91
 msgid "Save draft?"
 msgstr ""
@@ -13472,6 +13477,12 @@ msgstr ""
 msgid "Show group chat updates"
 msgstr "Show group chat updates"
 
+#. Accessible label for a button that reveals an item in a carousel. The numbers are the 1-based item position and total item count.
+#. placeholder {0}: index + 1
+#: src/components/Gallery/PageDots.tsx:54
+msgid "Show item {0} of {count}"
+msgstr "Show item {0} of {count}"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:607
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:609
 #: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:295
@@ -13724,7 +13735,7 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1574
+#: src/view/com/composer/Composer.tsx:1626
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
@@ -13738,7 +13749,7 @@ msgstr ""
 msgid "Skip to next step"
 msgstr ""
 
-#: src/components/Gallery/index.tsx:541
+#: src/components/Gallery/index.tsx:561
 msgid "slide"
 msgstr "slide"
 
@@ -15190,7 +15201,8 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1145
+#: src/view/com/composer/Composer.tsx:397
+#: src/view/com/composer/Composer.tsx:1197
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -15903,7 +15915,7 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr "Unsupported clipboard content"
 
-#: src/view/com/composer/Composer.tsx:1666
+#: src/view/com/composer/Composer.tsx:1718
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -16000,7 +16012,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2698
+#: src/view/com/composer/Composer.tsx:2750
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -16014,7 +16026,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2700
+#: src/view/com/composer/Composer.tsx:2752
 msgid "Uploading video..."
 msgstr ""
 
@@ -16312,7 +16324,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2718
+#: src/view/com/composer/Composer.tsx:2770
 msgid "Video uploaded"
 msgstr ""
 
@@ -16325,13 +16337,13 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:452
-#: src/view/com/composer/Composer.tsx:584
+#: src/view/com/composer/Composer.tsx:504
+#: src/view/com/composer/Composer.tsx:636
 #: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "Videos must be 10 minutes or less."
 
-#: src/view/com/composer/Composer.tsx:1252
+#: src/view/com/composer/Composer.tsx:1304
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -16510,7 +16522,7 @@ msgstr "View photos in {0}"
 msgid "View photos in {title}"
 msgstr "View photos in {title}"
 
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1299
 msgid "View post"
 msgstr ""
 
@@ -16887,7 +16899,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1143
+#: src/view/com/composer/Composer.tsx:1195
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -16973,7 +16985,7 @@ msgid "what’s up"
 msgstr "what’s up"
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1630
+#: src/view/com/composer/Composer.tsx:1682
 #: src/view/com/feeds/ComposerPrompt.tsx:206
 msgid "What's up?"
 msgstr ""
@@ -17099,7 +17111,7 @@ msgstr "Would you like to block this user and/or leave this conversation?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1545
+#: src/view/com/composer/Composer.tsx:1597
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -17108,12 +17120,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1728
+#: src/view/com/composer/Composer.tsx:1780
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:98
-#: src/view/com/composer/Composer.tsx:1628
+#: src/view/com/composer/Composer.tsx:1680
 msgid "Write your reply"
 msgstr ""
 
@@ -17299,7 +17311,7 @@ msgstr ""
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 
-#: src/view/com/composer/Composer.tsx:1550
+#: src/view/com/composer/Composer.tsx:1602
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -17452,7 +17464,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1540
+#: src/view/com/composer/Composer.tsx:1592
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -17716,7 +17728,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:737
+#: src/view/com/composer/Composer.tsx:789
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
@@ -17995,11 +18007,11 @@ msgstr "Your post was removed"
 msgid "Your post was restored"
 msgstr "Your post was restored"
 
-#: src/view/com/composer/Composer.tsx:1243
+#: src/view/com/composer/Composer.tsx:1295
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1240
+#: src/view/com/composer/Composer.tsx:1292
 msgid "Your posts were sent"
 msgstr ""
 
@@ -18024,7 +18036,7 @@ msgstr ""
 msgid "Your pronouns show next to your handle on your profile."
 msgstr "Your pronouns show next to your handle on your profile."
 
-#: src/view/com/composer/Composer.tsx:1242
+#: src/view/com/composer/Composer.tsx:1294
 msgid "Your reply was sent"
 msgstr ""
 
@@ -18055,7 +18067,7 @@ msgstr "Your reports notifications"
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1627
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
