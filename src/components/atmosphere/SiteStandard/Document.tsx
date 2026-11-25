@@ -15,7 +15,10 @@ import {KnownLikers} from '#/components/atmosphere/KnownLikers'
 import {LikeButton} from '#/components/atmosphere/LikeButton'
 import {MetaLine} from '#/components/atmosphere/MetaLine'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
-import {StandardSiteThemeProvider} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
+import {
+  StandardSiteThemeProvider,
+  useHasPublicationTheme,
+} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -36,19 +39,7 @@ export type DocumentRecommenders = {
   actorCount: number
 }
 
-/**
- * An article card: its publication, image, title, details and description,
- * then a recommend button, known recommenders and a menu. Only the image and
- * title open the article, leaving the rest free for other actions.
- */
-export function Document({
-  view,
-  variant = 'default',
-  recommenders,
-  onPressCallback,
-  onShareCallback,
-  style,
-}: ssTypes.PublicApiProps & {
+type DocumentProps = ssTypes.PublicApiProps & {
   view: app.bsky.embed.external.ViewArticle
   /**
    * `default` shows the image full width above the title; `compact` shows it
@@ -58,7 +49,30 @@ export function Document({
   /** Shown ahead of the view's `knownLikers`. */
   recommenders?: DocumentRecommenders
   style?: StyleProp<ViewStyle>
-}) {
+}
+
+/**
+ * An article card: its publication, image, title, details and description,
+ * then a recommend button, known recommenders and a menu. Only the image and
+ * title open the article, leaving the rest free for other actions. Takes on
+ * the publication's colors when they're readable.
+ */
+export function Document(props: DocumentProps) {
+  return (
+    <StandardSiteThemeProvider view={props.view.publisher}>
+      <DocumentCard {...props} />
+    </StandardSiteThemeProvider>
+  )
+}
+
+function DocumentCard({
+  view,
+  variant = 'default',
+  recommenders,
+  onPressCallback,
+  onShareCallback,
+  style,
+}: DocumentProps) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
@@ -109,9 +123,7 @@ export function Document({
         style,
       ]}>
       {view.publisher && (
-        <StandardSiteThemeProvider view={view.publisher}>
-          <PublicationHeader publication={view.publisher} author={author} />
-        </StandardSiteThemeProvider>
+        <PublicationHeader publication={view.publisher} author={author} />
       )}
       {variant === 'default' && image && (
         <Link
@@ -215,6 +227,7 @@ function PublicationHeader({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const hasPublicationTheme = useHasPublicationTheme()
   const handle = author && sanitizeHandle(author.handle, '@')
   const publicationLabel = l({
     message: `Open publication: ${publication.title}`,
@@ -230,7 +243,11 @@ function PublicationHeader({
         a.gap_sm,
         a.px_md,
         a.py_sm,
-        t.atoms.bg_contrast_25,
+        /*
+         * A publication's own background can be any color, so its band needs
+         * a stronger step than the app's near-white to stand apart.
+         */
+        hasPublicationTheme ? t.atoms.bg_contrast_100 : t.atoms.bg_contrast_25,
       ]}>
       <Link
         testID="documentPublicationIcon"

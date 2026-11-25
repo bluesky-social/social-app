@@ -48,6 +48,14 @@ jest.mock('#/components/atmosphere/KnownLikers', () => ({
 jest.mock('#/components/atmosphere/SiteStandard/PublicationIcon', () => ({
   PublicationIcon: () => null,
 }))
+jest.mock(
+  '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider',
+  () => ({
+    StandardSiteThemeProvider: ({children}: {children: React.ReactNode}) =>
+      children,
+    useHasPublicationTheme: () => false,
+  }),
+)
 jest.mock('#/components/atmosphere/MetaLine', () => ({MetaLine: () => null}))
 jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
   AtmosphereCardMenu: () => null,

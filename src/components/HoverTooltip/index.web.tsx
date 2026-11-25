@@ -16,13 +16,26 @@ import {Text} from '#/components/Typography'
  */
 export function HoverTooltip({
   label,
+  color = 'default',
   children,
 }: {
   label: string
+  /**
+   * `primary` matches a primary-tinted control's hover, e.g. a like button,
+   * and follows any theme the control is in.
+   */
+  color?: 'default' | 'primary'
   children: React.ReactNode
 }) {
   const t = useTheme()
-  const style = getTooltipStyle(t, 'default')
+  const style =
+    color === 'primary'
+      ? /*
+         * Not the shared `primary` tooltip, whose `primary_600` text can fall
+         * short of AA under a publication's accent; `primary_700` is checked.
+         */
+        {surface: t.palette.primary_50, text: t.palette.primary_700}
+      : getTooltipStyle(t, 'default')
   return (
     <Tooltip.Provider delayDuration={300}>
       <Tooltip.Root>

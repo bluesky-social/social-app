@@ -11,6 +11,7 @@ import {
   type LikeableView,
   useAtmosphereLike,
 } from '#/components/atmosphere/likes'
+import {AppThemeProvider} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import {Button} from '#/components/Button'
 import {HoverTooltip} from '#/components/HoverTooltip'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -163,7 +164,7 @@ export function LikeButton({
 
   return (
     <>
-      <HoverTooltip label={tooltip}>
+      <HoverTooltip label={tooltip} color="primary">
         <Button
           testID={testID}
           label={l({
@@ -184,9 +185,11 @@ export function LikeButton({
           )}
         </Button>
       </HoverTooltip>
-      <AtmosphereFirstActionWelcomeDialog
-        control={firstActionWelcomeDialogControl}
-      />
+      <AppThemeProvider>
+        <AtmosphereFirstActionWelcomeDialog
+          control={firstActionWelcomeDialogControl}
+        />
+      </AppThemeProvider>
     </>
   )
 }

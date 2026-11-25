@@ -16,6 +16,12 @@ jest.mock('@lingui/react', () => ({
     i18n: {number: String},
   }),
 }))
+jest.mock(
+  '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider',
+  () => ({
+    AppThemeProvider: ({children}: {children: React.ReactNode}) => children,
+  }),
+)
 jest.mock('#/alf', () => {
   const knownAtoms = {
     flex_grow: {flexGrow: 1},

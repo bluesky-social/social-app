@@ -16,6 +16,7 @@ import {
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import {getAtmosphereProvider} from '#/components/atmosphere/providers'
+import {AppThemeProvider} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
@@ -257,205 +258,208 @@ export function AtmosphereCardMenu({
             </Button>
           )}
         </Menu.Trigger>
-        <Menu.Outer>
-          <Menu.Group>
-            <Menu.Item
-              testID="atmosphereCardShare"
-              label={shareLabel}
-              onPress={() => {
-                logAction(IS_WEB ? 'copyLink' : 'share')
-                sendFeedback?.('app.bsky.feed.defs#interactionShare')
-                void shareUrl(item.uri)
-              }}>
-              <Menu.ItemText>{shareLabel}</Menu.ItemText>
-              <Menu.ItemIcon
-                icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
-                position="right"
-              />
-            </Menu.Item>
-            <Menu.Item
-              testID="atmosphereCardCreatePost"
-              label={l`Create post`}
-              onPress={() => {
-                logAction('createPost')
-                requireAuth(() =>
-                  openComposer({text: item.uri, logContext: 'Other'}),
-                )
-              }}>
-              <Menu.ItemText>{l`Post to Bluesky`}</Menu.ItemText>
-              <Menu.ItemIcon icon={BlueskyIcon} position="right" />
-            </Menu.Item>
-            {canSendViaChat && (
+        {/* The card may wear a publication's theme; its menu shouldn't. */}
+        <AppThemeProvider>
+          <Menu.Outer>
+            <Menu.Group>
               <Menu.Item
-                testID="atmosphereCardSendViaChat"
-                label={l`Send via chat`}
+                testID="atmosphereCardShare"
+                label={shareLabel}
                 onPress={() => {
-                  logAction('sendViaChat')
-                  sendViaChatControl.open()
+                  logAction(IS_WEB ? 'copyLink' : 'share')
+                  sendFeedback?.('app.bsky.feed.defs#interactionShare')
+                  void shareUrl(item.uri)
                 }}>
-                <Menu.ItemText>{l`Send via chat`}</Menu.ItemText>
-                <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
+                <Menu.ItemText>{shareLabel}</Menu.ItemText>
+                <Menu.ItemIcon
+                  icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                  position="right"
+                />
               </Menu.Item>
-            )}
-          </Menu.Group>
-          <Menu.Divider />
-          {sendFeedback && hasSession && (
-            <>
-              <Menu.Group>
-                <Menu.Item
-                  testID="atmosphereCardShowMore"
-                  label={l`Show more like this`}
-                  onPress={() => {
-                    sendFeedback('app.bsky.feed.defs#requestMore')
-                    Toast.show(
-                      l({
-                        message: 'Feedback sent to feed operator',
-                        context: 'toast',
-                      }),
-                    )
-                  }}>
-                  <Menu.ItemText>{l`Show more like this`}</Menu.ItemText>
-                  <Menu.ItemIcon icon={EmojiSmile} position="right" />
-                </Menu.Item>
-                <Menu.Item
-                  testID="atmosphereCardShowLess"
-                  label={l`Show less like this`}
-                  onPress={() => {
-                    sendFeedback('app.bsky.feed.defs#requestLess')
-                    Toast.show(
-                      l({
-                        message: 'Feedback sent to feed operator',
-                        context: 'toast',
-                      }),
-                    )
-                  }}>
-                  <Menu.ItemText>{l`Show less like this`}</Menu.ItemText>
-                  <Menu.ItemIcon icon={EmojiSad} position="right" />
-                </Menu.Item>
-              </Menu.Group>
-              <Menu.Divider />
-            </>
-          )}
-          <Menu.Group>
-            <Menu.Item
-              label={labels.view}
-              onPress={() => {
-                logAction('viewExternal')
-                sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
-                openLink(item.uri)
-              }}>
-              <Menu.ItemText>{labels.view}</Menu.ItemText>
-              <Menu.ItemIcon icon={ExternalLinkIcon} position="right" />
-            </Menu.Item>
-            {author && (
               <Menu.Item
-                label={l`View author profile`}
+                testID="atmosphereCardCreatePost"
+                label={l`Create post`}
                 onPress={() => {
-                  logAction('viewProfile')
-                  sendFeedback?.('app.bsky.feed.defs#clickthroughAuthor')
-                  if (metricContext) {
-                    ax.metric('atmosphere:profile:press', {
-                      ...metricContext,
-                      profileDid: author.did,
-                      source: 'cardMenu',
-                    })
-                  }
-                  navigation.navigate('Profile', {name: author.did})
+                  logAction('createPost')
+                  requireAuth(() =>
+                    openComposer({text: item.uri, logContext: 'Other'}),
+                  )
                 }}>
-                <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
-                <Menu.ItemIcon icon={PersonIcon} position="right" />
+                <Menu.ItemText>{l`Post to Bluesky`}</Menu.ItemText>
+                <Menu.ItemIcon icon={BlueskyIcon} position="right" />
               </Menu.Item>
-            )}
-            {children}
-          </Menu.Group>
-          <Menu.Divider />
-          <Menu.Group>
-            {reportTargets.length ? (
-              reportTargets.map(({subject, parsedSubject}) => {
-                /*
-                 * Titled like the report dialog it opens, so the menu and
-                 * dialog always agree. Rendered inline because the native
-                 * Menu.Group only renders direct Menu.Item children.
-                 */
-                const {title} = getReportCopy(parsedSubject)
-                return (
+              {canSendViaChat && (
+                <Menu.Item
+                  testID="atmosphereCardSendViaChat"
+                  label={l`Send via chat`}
+                  onPress={() => {
+                    logAction('sendViaChat')
+                    sendViaChatControl.open()
+                  }}>
+                  <Menu.ItemText>{l`Send via chat`}</Menu.ItemText>
+                  <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
+                </Menu.Item>
+              )}
+            </Menu.Group>
+            <Menu.Divider />
+            {sendFeedback && hasSession && (
+              <>
+                <Menu.Group>
                   <Menu.Item
-                    key={subject.uri}
-                    label={title}
+                    testID="atmosphereCardShowMore"
+                    label={l`Show more like this`}
                     onPress={() => {
-                      logAction(
-                        'report',
-                        'nsid' in parsedSubject
-                          ? parsedSubject.nsid
-                          : undefined,
+                      sendFeedback('app.bsky.feed.defs#requestMore')
+                      Toast.show(
+                        l({
+                          message: 'Feedback sent to feed operator',
+                          context: 'toast',
+                        }),
                       )
-                      reportDialogControl.open({
-                        subject,
-                        ...(sendFeedback
-                          ? {
-                              onAfterSubmit: ({
-                                reason,
-                              }: {
-                                reason: string | undefined
-                              }) =>
-                                sendFeedback(
-                                  'app.bsky.feed.defs#interactionUnspecced',
-                                  {
-                                    type: 'report',
-                                    reason,
-                                  },
-                                ),
-                            }
-                          : {}),
-                      })
                     }}>
-                    <Menu.ItemText>{title}</Menu.ItemText>
-                    <Menu.ItemIcon icon={WarningIcon} position="right" />
+                    <Menu.ItemText>{l`Show more like this`}</Menu.ItemText>
+                    <Menu.ItemIcon icon={EmojiSmile} position="right" />
                   </Menu.Item>
-                )
-              })
-            ) : (
-              <Menu.Item label={labels.report} disabled onPress={() => {}}>
-                <Menu.ItemText>{labels.report}</Menu.ItemText>
-                <Menu.ItemIcon icon={WarningIcon} position="right" />
-              </Menu.Item>
+                  <Menu.Item
+                    testID="atmosphereCardShowLess"
+                    label={l`Show less like this`}
+                    onPress={() => {
+                      sendFeedback('app.bsky.feed.defs#requestLess')
+                      Toast.show(
+                        l({
+                          message: 'Feedback sent to feed operator',
+                          context: 'toast',
+                        }),
+                      )
+                    }}>
+                    <Menu.ItemText>{l`Show less like this`}</Menu.ItemText>
+                    <Menu.ItemIcon icon={EmojiSad} position="right" />
+                  </Menu.Item>
+                </Menu.Group>
+                <Menu.Divider />
+              </>
             )}
-          </Menu.Group>
-          {devRecords.length > 0 && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
-                {devRecords.map(({uri, collection}) => {
-                  const copyLabel = getCopyUriLabel(collection)
+            <Menu.Group>
+              <Menu.Item
+                label={labels.view}
+                onPress={() => {
+                  logAction('viewExternal')
+                  sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+                  openLink(item.uri)
+                }}>
+                <Menu.ItemText>{labels.view}</Menu.ItemText>
+                <Menu.ItemIcon icon={ExternalLinkIcon} position="right" />
+              </Menu.Item>
+              {author && (
+                <Menu.Item
+                  label={l`View author profile`}
+                  onPress={() => {
+                    logAction('viewProfile')
+                    sendFeedback?.('app.bsky.feed.defs#clickthroughAuthor')
+                    if (metricContext) {
+                      ax.metric('atmosphere:profile:press', {
+                        ...metricContext,
+                        profileDid: author.did,
+                        source: 'cardMenu',
+                      })
+                    }
+                    navigation.navigate('Profile', {name: author.did})
+                  }}>
+                  <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
+                  <Menu.ItemIcon icon={PersonIcon} position="right" />
+                </Menu.Item>
+              )}
+              {children}
+            </Menu.Group>
+            <Menu.Divider />
+            <Menu.Group>
+              {reportTargets.length ? (
+                reportTargets.map(({subject, parsedSubject}) => {
+                  /*
+                   * Titled like the report dialog it opens, so the menu and
+                   * dialog always agree. Rendered inline because the native
+                   * Menu.Group only renders direct Menu.Item children.
+                   */
+                  const {title} = getReportCopy(parsedSubject)
                   return (
                     <Menu.Item
-                      key={uri}
-                      testID="atmosphereCardCopyUri"
-                      label={copyLabel}
+                      key={subject.uri}
+                      label={title}
                       onPress={() => {
-                        void Clipboard.setStringAsync(uri)
-                        Toast.show(l`Copied to clipboard`, {type: 'success'})
+                        logAction(
+                          'report',
+                          'nsid' in parsedSubject
+                            ? parsedSubject.nsid
+                            : undefined,
+                        )
+                        reportDialogControl.open({
+                          subject,
+                          ...(sendFeedback
+                            ? {
+                                onAfterSubmit: ({
+                                  reason,
+                                }: {
+                                  reason: string | undefined
+                                }) =>
+                                  sendFeedback(
+                                    'app.bsky.feed.defs#interactionUnspecced',
+                                    {
+                                      type: 'report',
+                                      reason,
+                                    },
+                                  ),
+                              }
+                            : {}),
+                        })
                       }}>
-                      <Menu.ItemText>{copyLabel}</Menu.ItemText>
-                      <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                      <Menu.ItemText>{title}</Menu.ItemText>
+                      <Menu.ItemIcon icon={WarningIcon} position="right" />
                     </Menu.Item>
                   )
-                })}
-              </Menu.Group>
-            </>
-          )}
-        </Menu.Outer>
-        {/* Outside Menu.Outer so it stays mounted after the menu closes. */}
-        <SendViaChatDialog
-          control={sendViaChatControl}
-          onSelectChat={conversation => {
-            sendFeedback?.('app.bsky.feed.defs#interactionShare')
-            navigation.navigate('MessagesConversation', {
-              conversation,
-              text: item.uri,
-            })
-          }}
-        />
+                })
+              ) : (
+                <Menu.Item label={labels.report} disabled onPress={() => {}}>
+                  <Menu.ItemText>{labels.report}</Menu.ItemText>
+                  <Menu.ItemIcon icon={WarningIcon} position="right" />
+                </Menu.Item>
+              )}
+            </Menu.Group>
+            {devRecords.length > 0 && (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  {devRecords.map(({uri, collection}) => {
+                    const copyLabel = getCopyUriLabel(collection)
+                    return (
+                      <Menu.Item
+                        key={uri}
+                        testID="atmosphereCardCopyUri"
+                        label={copyLabel}
+                        onPress={() => {
+                          void Clipboard.setStringAsync(uri)
+                          Toast.show(l`Copied to clipboard`, {type: 'success'})
+                        }}>
+                        <Menu.ItemText>{copyLabel}</Menu.ItemText>
+                        <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                      </Menu.Item>
+                    )
+                  })}
+                </Menu.Group>
+              </>
+            )}
+          </Menu.Outer>
+          {/* Outside Menu.Outer so it stays mounted after the menu closes. */}
+          <SendViaChatDialog
+            control={sendViaChatControl}
+            onSelectChat={conversation => {
+              sendFeedback?.('app.bsky.feed.defs#interactionShare')
+              navigation.navigate('MessagesConversation', {
+                conversation,
+                text: item.uri,
+              })
+            }}
+          />
+        </AppThemeProvider>
       </Menu.Root>
     </View>
   )
