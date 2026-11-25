@@ -1,5 +1,5 @@
 /* eslint-disable bsky-internal/avoid-unwrapped-text */
-import {ChatBskyGroupDefs} from '@atproto/api'
+import {type ChatBskyGroupDefs} from '@atproto/api'
 
 import {Img} from './Img.js'
 
@@ -9,10 +9,12 @@ export const CHAT_INVITE_WIDTH = 1200
 const PADDING = 64
 
 export function ChatInvite({
-  preview,
+  name,
+  ownerHandle,
   ownerImage,
 }: {
-  preview: ChatBskyGroupDefs.JoinLinkPreviewView
+  name: string
+  ownerHandle: ChatBskyGroupDefs.JoinLinkPreviewView['owner']['handle']
   ownerImage: Buffer<ArrayBufferLike> | null
 }) {
   return (
@@ -83,7 +85,7 @@ export function ChatInvite({
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}>
-          {preview.name}
+          {name}
         </div>
 
         {/* By @handle */}
@@ -100,7 +102,7 @@ export function ChatInvite({
             maxWidth: 800,
             wordBreak: 'break-all',
           }}>
-          {'By @' + preview.owner.handle}
+          {'By @' + ownerHandle}
         </div>
       </div>
     </div>

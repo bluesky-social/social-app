@@ -7,9 +7,14 @@ import {
 
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
+import {
+  RenderError,
+  RenderUnavailableError,
+  type RenderJob,
+} from '../render/protocol.js'
 
 export type RenderErrorContext = {
-  stage: 'satori' | 'resvg'
+  stage: 'renderer' | 'satori' | 'resvg'
   starterPackUri: string
   title: string
   imageCount: number
@@ -23,6 +28,23 @@ type HandlerResponse = Response<
 >
 
 export type Handler = (req: Request, res: HandlerResponse) => Awaited<void>
+
+/** Cancel abandoned requests while allowing normal shutdown to drain renders. */
+export async function renderImage(
+  ctx: AppContext,
+  res: Response,
+  job: RenderJob,
+) {
+  const controller = new AbortController()
+  const onClose = () => controller.abort()
+  res.once('close', onClose)
+  try {
+    if (res.destroyed) throw new RenderUnavailableError('Response is closed')
+    return await ctx.renderer.render(job, controller.signal)
+  } finally {
+    res.off('close', onClose)
+  }
+}
 
 export const handler = (runHandler: Handler): RequestHandler => {
   return async (req, res, next) => {
@@ -54,6 +76,8 @@ export function errorHandler(onFatalError?: () => void): ErrorRequestHandler {
     let renderContextError: string | undefined
     try {
       render = res.locals.renderErrorContext?.()
+      if (render && err instanceof RenderError)
+        render.stage = err.stage ?? 'renderer'
     } catch (contextError) {
       renderContextError =
         contextError instanceof Error
@@ -68,6 +92,9 @@ export function errorHandler(onFatalError?: () => void): ErrorRequestHandler {
     if (restartRequired) onFatalError?.()
     if (res.headersSent) {
       return next(err)
+    }
+    if (err instanceof RenderUnavailableError) {
+      return res.status(503).end('renderer unavailable')
     }
     return res.status(500).end('server error')
   }

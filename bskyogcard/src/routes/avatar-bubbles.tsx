@@ -1,11 +1,5 @@
-import resvg from '@resvg/resvg-js'
 import {type Express} from 'express'
-import satori from 'satori'
 
-import {
-  AVATAR_BUBBLES_SIZE,
-  AvatarBubbles,
-} from '../components/AvatarBubbles.js'
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
 import {
@@ -13,6 +7,7 @@ import {
   handler,
   hideAvatarLabels,
   originVerifyMiddleware,
+  renderImage,
 } from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
@@ -54,16 +49,14 @@ export default function (ctx: AppContext, app: Express) {
         }),
       )
 
-      const svg = await satori(<AvatarBubbles images={images} />, {
-        fonts: ctx.fonts,
-        height: AVATAR_BUBBLES_SIZE,
-        width: AVATAR_BUBBLES_SIZE,
+      const output = await renderImage(ctx, res, {
+        kind: 'avatar-bubbles',
+        props: {images},
       })
-      const output = await resvg.renderAsync(svg)
       res.statusCode = 200
       res.setHeader('content-type', 'image/png')
       res.setHeader('cdn-tag', dids.join(','))
-      return res.end(output.asPng())
+      return res.end(output)
     }),
   )
 }
