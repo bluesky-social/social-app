@@ -23,7 +23,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-import {useAtmosphereAppCategories} from './appCategories'
+import {AppCategoryTag} from './AppCategoryTag'
 
 const LOGO_SIZE = 56
 
@@ -49,6 +49,7 @@ export function AppDialog({
           surface="appDialog">
           <AppDialogInner app={app} metric={metric} />
         </AtmosphereMetricsRestore>
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
@@ -74,8 +75,6 @@ function AppDialogInner({
   const {close} = Dialog.useDialogContext()
   const openLink = useOpenLink()
   const navigation = useNavigation<NavigationProp>()
-  const categories = useAtmosphereAppCategories()
-  const categoryLabel = categories.find(c => c.key === app.category)?.label
   const profile = app.profile
   const url = app.url
 
@@ -129,19 +128,7 @@ function AppDialogInner({
               </Text>
             ) : undefined}
           </Text>
-          {categoryLabel ? (
-            <View
-              style={[
-                a.px_sm,
-                a.py_2xs,
-                a.rounded_sm,
-                {backgroundColor: t.palette.primary_50},
-              ]}>
-              <Text style={[a.text_sm, {color: t.palette.primary_600}]}>
-                {categoryLabel}
-              </Text>
-            </View>
-          ) : undefined}
+          <AppCategoryTag category={app.category} />
         </View>
       </View>
       {app.description ? (

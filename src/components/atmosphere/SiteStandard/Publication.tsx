@@ -8,6 +8,7 @@ import {shareUrl} from '#/lib/sharing'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
+import {useCardSurface} from '#/components/atmosphere/cardSurface'
 import {getAtmosphereProvider} from '#/components/atmosphere/providers'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
@@ -35,6 +36,17 @@ type PublicationProps = ssTypes.PreviewProps &
      */
     containerStyle?: StyleProp<ViewStyle>
   }
+
+/** The publication's owner: the repo that holds its publication record. */
+export function getPublicationAuthor(
+  view: app.bsky.embed.external.ViewArticlePublication,
+) {
+  const publicationRef = view.associatedRefs?.find(isStandardSitePublicationUri)
+  const authorDid = publicationRef && new AtUri(publicationRef.uri).host
+  return authorDid
+    ? view.associatedProfiles?.find(p => p.did === authorDid)
+    : undefined
+}
 
 /**
  * Fills its host column with no outer padding, border, or rounding of its own.
@@ -77,13 +89,9 @@ function PublicationBase({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
+  const surface = useCardSurface({interacted})
 
-  /* The publication's owner is the repo that holds its publication record. */
-  const publicationRef = view.associatedRefs?.find(isStandardSitePublicationUri)
-  const authorDid = publicationRef && new AtUri(publicationRef.uri).host
-  const author = authorDid
-    ? view.associatedProfiles?.find(p => p.did === authorDid)
-    : undefined
+  const author = getPublicationAuthor(view)
   const provider = getAtmosphereProvider(view.providerId)
   const hasSubscribers = !!view.subscribers?.length || !!view.subscriptionCount
 
@@ -108,14 +116,9 @@ function PublicationBase({
         a.relative,
         a.flex_col,
         a.w_full,
-        card && [
-          a.rounded_lg,
-          a.border,
-          interacted
-            ? t.atoms.border_contrast_high
-            : t.atoms.border_contrast_low,
-        ],
-        interacted && t.atoms.bg_contrast_25,
+        card
+          ? [a.rounded_lg, surface.style]
+          : interacted && t.atoms.bg_contrast_25,
         preview && a.pointer_events_none,
         style,
       ]}>
@@ -189,9 +192,11 @@ function PublicationBase({
                       size={16}
                       profiles={view.subscribers.slice(0, 3)}
                       backgroundColor={
-                        interacted
-                          ? t.atoms.bg_contrast_25.backgroundColor
-                          : t.atoms.bg.backgroundColor
+                        card
+                          ? surface.fill
+                          : interacted
+                            ? t.atoms.bg_contrast_25.backgroundColor
+                            : t.atoms.bg.backgroundColor
                       }
                     />
                   )}

@@ -1524,10 +1524,8 @@ export type Events = {
    */
   'blockedGeoOverlay:shown': {}
 
-  /** The user dismissed the Atmosphere introduction banner. */
-  'atmosphere:nux:bannerDismissed': {}
-  /** The user opened the About Atmosphere dialog from the banner. */
-  'atmosphere:nux:learnMore': {}
+  /** The user opened the About Atmosphere dialog from the header. */
+  'atmosphere:about:open': {}
   /**
    * The screen gained focus on this tab, or the pager reported a tab change.
    * Returning from the background alone does not count.
@@ -1541,9 +1539,8 @@ export type Events = {
      * - `tap`: the user pressed the tab.
      * - `swipe`: the user swiped the pager to the tab, which only native
      *   does.
-     * - `seeMoreApps`: Explore's "See more" on featured apps opened Apps.
      */
-    reason: 'focus' | 'tap' | 'swipe' | 'seeMoreApps'
+    reason: 'focus' | 'tap' | 'swipe'
   }
   /**
    * Time with the tab selected, the screen focused, and the app in the
@@ -1604,11 +1601,6 @@ export type Events = {
   'atmosphere:profile:press': AtmosphereMetricContext & {
     profileDid: string
     source: 'activityHeader' | 'cardMenu' | 'photoDialog'
-  }
-  /** The user pressed a section's "See more", which switches tabs. */
-  'atmosphere:section:seeMore': AtmosphereMetricContext & {
-    section: 'apps'
-    destinationTab: 'apps'
   }
   /** The user opened an Apps tab card's details dialog. */
   'atmosphere:app:detailsOpened': AtmosphereAppMetricContext

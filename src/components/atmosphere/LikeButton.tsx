@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react/macro'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AtmosphereFirstActionWelcomeDialog} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
+import {useCardPillColor} from '#/components/atmosphere/cardSurface'
 import {
   type AtmosphereLikeKind,
   type LikeableView,
@@ -83,12 +84,25 @@ const KINDS: Record<
 export function LikeButton({
   view,
   kind,
+  appearance = 'inline',
+  icon,
   testID,
 }: {
   view: LikeableView
   kind: AtmosphereLikeKind
+  /**
+   * Which kind's icon to show, when it should differ from `kind`, e.g. a star
+   * on a gallery favorite to match the buttons beside it. Defaults to `kind`.
+   */
+  icon?: AtmosphereLikeKind
+  /**
+   * `inline` sits on the text line and shows its pill only on hover; `pill`
+   * always shows a filled pill, for a row of buttons.
+   */
+  appearance?: 'inline' | 'pill'
   testID?: string
 }) {
+  const isPill = appearance === 'pill'
   const {t: l, i18n} = useLingui()
   const {canLike, isLiked, likeCount, toggle, firstActionWelcomeDialogControl} =
     useAtmosphereLike(view, kind, 'card')
@@ -156,8 +170,13 @@ export function LikeButton({
         accessible
         accessibilityLabel={countLabel}
         accessibilityHint=""
-        style={{marginLeft: -PILL_INSET}}>
-        <LikePill kind={kind} liked={isLiked} count={shownCount} />
+        style={isPill ? undefined : {marginLeft: -PILL_INSET}}>
+        <LikePill
+          kind={icon ?? kind}
+          liked={isLiked}
+          count={shownCount}
+          filled={isPill}
+        />
       </View>
     )
   }
@@ -173,13 +192,14 @@ export function LikeButton({
               'Accessibility label for a like button, e.g. “Favorite, 3 favorites” or “Recommend, 3 recommendations”. Both parts are already translated.',
           })}
           hitSlop={4}
-          style={[a.rounded_full, {marginLeft: -PILL_INSET}]}
+          style={[a.rounded_full, !isPill && {marginLeft: -PILL_INSET}]}
           onPress={toggle}>
           {({hovered, focused, pressed}) => (
             <LikePill
-              kind={kind}
+              kind={icon ?? kind}
               liked={isLiked}
               count={shownCount}
+              filled={isPill}
               hovered={hovered || focused || pressed}
             />
           )}
@@ -203,16 +223,20 @@ function LikePill({
   kind,
   liked,
   count,
+  filled = false,
   hovered = false,
 }: {
   kind: AtmosphereLikeKind
   liked: boolean
   /** Formatted, or undefined to show the icon alone. */
   count?: string
+  /** Always shows a pill, larger, rather than only on hover. */
+  filled?: boolean
   /** Hovered, focused or pressed. */
   hovered?: boolean
 }) {
   const t = useTheme()
+  const pillColor = useCardPillColor()
   const reducedMotion = useReducedMotion()
   const highlighted = liked || hovered
   const config = KINDS[kind]
@@ -228,12 +252,15 @@ function LikePill({
         a.align_center,
         a.gap_xs,
         a.rounded_full,
-        {
-          paddingVertical: 4,
-          // The icon's built-in ~2px makes 8 read like the count side's 10.
-          paddingLeft: PILL_INSET,
-          paddingRight: 10,
-        },
+        filled
+          ? {paddingVertical: 8, paddingHorizontal: 14}
+          : {
+              paddingVertical: 4,
+              // The icon's built-in ~2px makes 8 read like the count side's 10.
+              paddingLeft: PILL_INSET,
+              paddingRight: 10,
+            },
+        filled && !hovered && {backgroundColor: pillColor},
         hovered && {
           backgroundColor: liked ? t.palette.primary_100 : t.palette.primary_50,
         },
@@ -245,12 +272,12 @@ function LikePill({
           !reducedMotion &&
             web([config.iconMotion.rest, hovered && config.iconMotion.hovered]),
         ]}>
-        <Icon size="sm" fill={color} />
+        <Icon size={filled ? 'md' : 'sm'} fill={color} />
       </View>
       {count && (
         <Text
           style={[
-            a.text_sm,
+            filled ? a.text_md : a.text_sm,
             a.font_medium,
             {color, fontVariant: ['tabular-nums']},
           ]}>

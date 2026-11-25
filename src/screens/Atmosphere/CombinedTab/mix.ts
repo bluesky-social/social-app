@@ -12,11 +12,12 @@ const INTERSTITIAL_EVERY = 15
 
 /**
  * A full-width module between feed rows, such as a carousel of popular
- * photos. Nothing produces these yet; the mixing leaves room for them.
+ * photos. The tab places Featured photos and publications itself, after live
+ * streams leave the feed; the mixing here still leaves room for more.
  */
 export type CombinedInterstitial = {
   key: string
-  type: 'popularPhotos'
+  type: 'popularPhotos' | 'featuredPublications'
 }
 
 export type CombinedRow =

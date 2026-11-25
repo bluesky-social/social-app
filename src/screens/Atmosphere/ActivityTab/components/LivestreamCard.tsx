@@ -8,6 +8,7 @@ import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
+import {useCardSurface} from '#/components/atmosphere/cardSurface'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Link} from '#/components/Link'
@@ -30,6 +31,7 @@ export function LivestreamCard({
   const logPress = useLogContentPress()
   const sendFeedback = useAtmosphereFeedback()
   const live = isLive(view)
+  const surface = useCardSurface({interacted})
 
   return (
     <View style={a.relative}>
@@ -52,11 +54,8 @@ export function LivestreamCard({
           a.gap_sm,
           a.p_md,
           a.rounded_lg,
-          a.border,
           t.atoms.bg,
-          interacted
-            ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
-            : t.atoms.border_contrast_low,
+          surface.style,
         ]}>
         <View style={[a.gap_xs, a.pr_5xl]}>
           <Text

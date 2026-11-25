@@ -4,8 +4,12 @@ import {useSharedValue, withTiming} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {getAtmosphereApps} from '#/screens/Atmosphere/data/exploreData'
+import {
+  getAtmosphereApps,
+  getAtmosphereExploreApps,
+} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
+import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {getAppMetric} from '#/screens/Atmosphere/metrics/apps'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
@@ -17,11 +21,16 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {AppCard} from './components/AppCard'
 import {useAtmosphereAppCategories} from './components/appCategories'
+import {FeaturedApps} from './components/FeaturedApps'
 
 export function AtmosphereAppsTab() {
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereAppsQuery()
+  /** Featured apps are picked for Explore, so they come from its data. */
+  const {data: exploreData, refetch: refetchExplore} =
+    useAtmosphereExploreQuery()
+  const featuredApps = exploreData ? getAtmosphereExploreApps(exploreData) : []
   const [selectedKey, setSelectedKey] = useState('all')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const ax = useAnalytics()
@@ -61,7 +70,7 @@ export function AtmosphereAppsTab() {
     metrics.logRefresh()
     setIsRefreshing(true)
     try {
-      await refetch()
+      await Promise.all([refetch(), refetchExplore()])
     } finally {
       setIsRefreshing(false)
     }
@@ -123,6 +132,7 @@ export function AtmosphereAppsTab() {
       contentContainerStyle={[a.pb_xl]}>
       <View style={[a.gap_lg, a.pt_lg]}>
         {isError ? <View style={[a.px_lg]}>{errorMessage}</View> : undefined}
+        <FeaturedApps apps={featuredApps} />
         <TabPills
           tabs={categories}
           selectedTab={activeKey}
