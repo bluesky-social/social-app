@@ -9,6 +9,7 @@ import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {useCallOnce} from '#/lib/once'
+import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -155,7 +156,13 @@ function SettingsInner({convoId}: {convoId: string}) {
           if (navigation.canGoBack()) {
             navigation.goBack()
           } else {
-            navigation.replace('Messages', {animation: 'pop'})
+            navigation.dispatch(
+              getMessagesNavigationAction(
+                {animation: 'pop'},
+                navigation.getState(),
+                'replace',
+              ),
+            )
           }
         }}
       />
@@ -391,7 +398,13 @@ function SettingsHeader({
   const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(convoId, {
     onSuccess: () => {
       ax.metric('groupchat:leave', {convoId, isOwner})
-      navigation.replace('Messages', {animation: 'pop'})
+      navigation.dispatch(
+        getMessagesNavigationAction(
+          {animation: 'pop'},
+          navigation.getState(),
+          'replace',
+        ),
+      )
     },
     onError: e => {
       logger.error('Failed to leave group chat', {message: e})

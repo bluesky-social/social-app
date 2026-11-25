@@ -18,9 +18,8 @@ import {
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
-import {type AllNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
 import {type FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
@@ -33,6 +32,7 @@ import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/features/feedFeedback'
 import {
   isFollowingV2Eligible,
   isFollowingV2HomeDotEnabled,
@@ -67,12 +67,12 @@ export function FeedPage({
   const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
+  const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
   const isScreenFocused = useIsFocused()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const headerOffset = useHeaderOffset()
-  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession, 'feed')
   const scrollElRef = useRef<ListMethods>(null)
   const feedRef = useRef<PostFeedRef>(null)
   const [hasNew, setHasNew] = useState(false)

@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 i18n.configure({
-  locales: ['en', 'es', 'fr'],
+  locales: ['en', 'es', 'fr', 'ja'],
   defaultLocale: 'en',
   directory: path.join(__dirname, '../locales'),
 })

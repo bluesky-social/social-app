@@ -17,6 +17,31 @@ import * as bsky from '#/types/bsky'
  */
 const MAX_ATTEMPTS = 5
 
+/**
+ * Bound each attempt to fill a client-visible page, including its first
+ * request. Partial results do not restart the budget. A full page does, so
+ * ordinary pagination can continue for feeds with enough visible content.
+ */
+export function hasReachedPageFillLimit(
+  pages:
+    {cursor: string | undefined; slices: {items: unknown[]}[]}[] | undefined,
+  pageSize: number,
+) {
+  let requests = 0
+  let itemCount = 0
+  for (const page of pages || []) {
+    requests++
+    for (const slice of page.slices) {
+      itemCount += slice.items.length
+    }
+    if (itemCount >= pageSize) {
+      requests = 0
+      itemCount = 0
+    }
+  }
+  return requests >= MAX_ATTEMPTS && Boolean(pages?.at(-1)?.cursor)
+}
+
 type AutoPaginationQuery = {
   data?: {pageParams: unknown[]}
   isLoading: boolean
@@ -26,14 +51,22 @@ type AutoPaginationQuery = {
   fetchNextPage: () => Promise<unknown>
 }
 
+/**
+ * Fetches another page when filtering left a page with fewer than half of
+ * `pageSize` visible items, so a heavily filtered page isn't left nearly empty.
+ * A page that only lost a few items is left alone, since topping it up costs a
+ * whole extra request.
+ */
 export function useAutoPagination(
   query: AutoPaginationQuery,
   itemCount: number,
+  /** How many items each request asks for. */
   pageSize: number,
 ) {
+  const minItems = Math.ceil(pageSize / 2)
   const lastItemCount = useRef(0)
   const lastPageParams = useRef(query.data?.pageParams)
-  const wantedItemCount = useRef(pageSize)
+  const wantedItemCount = useRef(minItems)
   const attemptCount = useRef(0)
 
   useEffect(() => {
@@ -55,7 +88,7 @@ export function useAutoPagination(
       previousPageParams &&
       !continuedPagination
     ) {
-      wantedItemCount.current = pageSize
+      wantedItemCount.current = minItems
       attemptCount.current = 0
     }
     lastPageParams.current = pageParams
@@ -63,17 +96,17 @@ export function useAutoPagination(
     if (itemCount !== lastItemCount.current) {
       attemptCount.current = 0
       if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = Math.max(itemCount, pageSize)
+        wantedItemCount.current = Math.max(itemCount, minItems)
       }
       lastItemCount.current = itemCount
     }
 
     if (query.isLoading || query.isRefetching) {
-      wantedItemCount.current = pageSize
+      wantedItemCount.current = minItems
       attemptCount.current = 0
     } else if (query.isFetchingNextPage) {
       if (itemCount > wantedItemCount.current) {
-        wantedItemCount.current = itemCount + pageSize
+        wantedItemCount.current = itemCount + minItems
       }
     } else if (query.hasNextPage) {
       if (itemCount < wantedItemCount.current) {
@@ -90,7 +123,7 @@ export function useAutoPagination(
         attemptCount.current = 0
       }
     }
-  }, [itemCount, pageSize, query])
+  }, [itemCount, minItems, query])
 }
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [

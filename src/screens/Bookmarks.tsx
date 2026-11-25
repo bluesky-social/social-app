@@ -12,6 +12,7 @@ import {
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -295,7 +296,10 @@ function BookmarksEmpty() {
       button={{
         label: _(msg`Button to go back to the home timeline`),
         text: _(msg`Go home`),
-        onPress: () => navigation.navigate('Home' as never),
+        onPress: () =>
+          navigation.dispatch(
+            getHomeNavigationAction(navigation.getState(), 'navigate'),
+          ),
         size: 'small',
         color: 'secondary',
       }}

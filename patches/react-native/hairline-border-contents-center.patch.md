@@ -16,4 +16,4 @@ Fix: compute the middle from the cap insets (`size - caps`) instead of assuming 
 
 Upstream issue: https://github.com/react/react-native/issues/58054 (repro:
 https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0; the
-1pt formula is still there in 0.88.0).
+1pt formula is still there in 0.88.1).

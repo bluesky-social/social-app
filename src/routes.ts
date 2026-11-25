@@ -10,6 +10,7 @@ export const router = new Router<AllNavigatableRoutes>({
   Home: ['/', '/download'],
   Search: '/search',
   Atmosphere: '/atmosphere',
+  AtmosphereActivityList: '/atmosphere/activity',
   Feeds: '/feeds',
   Notifications: '/notifications',
   NotificationsActivityList: '/notifications/activity',

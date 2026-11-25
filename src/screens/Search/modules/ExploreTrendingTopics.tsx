@@ -18,7 +18,14 @@ import {
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf'
+import {
+  atoms as a,
+  useAlf,
+  useGutters,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
+import {useNativeFontScale} from '#/alf/util/dimensions'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
@@ -36,6 +43,13 @@ import {type app} from '#/lexicons'
 import * as ModuleHeader from '../components/ModuleHeader'
 
 const IMAGE_SIZE = 56
+
+/** Reserves space for two-digit ranks at the current app and system font sizes. */
+function useRankWidth() {
+  const {fonts} = useAlf()
+  const nativeFontScale = useNativeFontScale()
+  return 28 * fonts.scaleMultiplier * nativeFontScale
+}
 
 export function ExploreTrendingTopics() {
   const {enabled} = useTrendingConfig()
@@ -133,6 +147,7 @@ export function TrendRow({
   const t = useTheme()
   const {t: l, i18n} = useLingui()
   const gutters = useGutters([0, 'base'])
+  const rankWidth = useRankWidth()
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
@@ -161,10 +176,12 @@ export function TrendRow({
           <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}>
             <Text
               style={[
+                a.flex_shrink_0,
                 a.text_md,
                 a.font_medium,
                 t.atoms.text_contrast_low,
                 {
+                  width: rankWidth,
                   fontVariant: ['tabular-nums'],
                 },
               ]}>
@@ -259,6 +276,7 @@ export function useCategoryDisplayName(
 export function TrendingTopicRowSkeleton() {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
+  const rankWidth = useRankWidth()
 
   return (
     <View
@@ -271,7 +289,7 @@ export function TrendingTopicRowSkeleton() {
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
-      <View style={[{width: 20}]}>
+      <View style={[a.flex_shrink_0, {width: rankWidth}]}>
         <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} />
       </View>
       <View style={[a.flex_1, a.gap_2xs]}>

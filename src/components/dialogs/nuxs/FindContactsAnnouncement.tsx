@@ -119,7 +119,7 @@ export function FindContactsAnnouncement() {
             onPress={() => {
               ax.metric('contacts:nux:ctaPressed', {})
               control.close(() => {
-                navigate('FindContactsFlow')
+                navigate({name: 'FindContactsFlow', params: undefined})
               })
             }}
             style={[a.w_full]}>

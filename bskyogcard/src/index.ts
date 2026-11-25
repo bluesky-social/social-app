@@ -3,11 +3,11 @@ import type http from 'node:http'
 
 import express from 'express'
 import promBundle from 'express-prom-bundle'
-import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
-import {register} from 'prom-client'
+import {Registry} from 'prom-client'
 
 import {type Config} from './config.js'
 import {AppContext} from './context.js'
+import {startMetricsServer} from './metrics.js'
 import {default as routes, errorHandler} from './routes/index.js'
 
 export * from './config.js'
@@ -16,30 +16,38 @@ export * from './logger.js'
 export class CardService {
   public server?: http.Server
   public metricsServer?: http.Server
-  private terminator?: HttpTerminator
-  private metricsTerminator?: HttpTerminator
+  private stopMetrics?: () => Promise<void>
+  private draining = false
+  private shutdown?: Promise<void>
 
   public app: express.Application
   public ctx: AppContext
+  readonly registry: Registry
+  onFatalError?: () => void
 
-  constructor(app: express.Application, ctx: AppContext) {
+  constructor(app: express.Application, ctx: AppContext, registry: Registry) {
     this.app = app
     this.ctx = ctx
+    this.registry = registry
   }
 
-  static async create(cfg: Config): Promise<CardService> {
-    let app = express()
+  static async create(cfg: Config, workerSlot = 0): Promise<CardService> {
+    const app = express()
 
     const ctx = await AppContext.fromConfig(cfg)
+    const registry = new Registry()
+    registry.setDefaultLabels({worker: String(workerSlot)})
 
     // Add Prometheus middleware for automatic HTTP instrumentation
     const metricsMiddleware = promBundle({
       includeMethod: true,
       includePath: true,
       includeStatusCode: true,
-      includeUp: true,
+      // Scrapers provide target-level up; do not add a second up per worker.
+      includeUp: false,
+      promRegistry: registry,
       promClient: {
-        collectDefaultMetrics: {},
+        collectDefaultMetrics: {register: registry},
       },
 
       autoregister: false,
@@ -55,50 +63,66 @@ export class CardService {
     })
     app.use(metricsMiddleware)
 
-    app = routes(ctx, app)
-    app.use(errorHandler)
-
-    return new CardService(app, ctx)
+    const service = new CardService(app, ctx, registry)
+    app.use((_req, res, next) => {
+      if (service.draining) {
+        return res
+          .status(503)
+          .set('connection', 'close')
+          .end('service unavailable')
+      }
+      next()
+    })
+    routes(ctx, app)
+    app.use(errorHandler(() => service.onFatalError?.()))
+    return service
   }
 
-  async start() {
+  async start({serveMetrics = true} = {}) {
     // Start main application server
     this.server = this.app.listen(this.ctx.cfg.service.port)
     this.server.keepAliveTimeout = 90000
-    this.terminator = createHttpTerminator({
-      server: this.server,
-      gracefulTerminationTimeout: 15000, // 15s timeout for in-flight requests
-    })
     await events.once(this.server, 'listening')
 
-    // Start separate metrics server
-    const metricsApp = express()
-    metricsApp.get('/metrics', async (_req, res) => {
-      res.set('Content-Type', register.contentType)
-      res.end(await register.metrics())
-    })
-
-    this.metricsServer = metricsApp.listen(this.ctx.cfg.service.metricsPort)
-    this.metricsTerminator = createHttpTerminator({
-      server: this.metricsServer,
-      gracefulTerminationTimeout: 2000, // 2s timeout for metrics server
-    })
-    await events.once(this.metricsServer, 'listening')
+    if (serveMetrics) {
+      const metrics = await startMetricsServer(
+        this.ctx.cfg.service.metricsPort,
+        this.registry.contentType,
+        () => this.registry.metrics(),
+      )
+      this.metricsServer = metrics.server
+      this.stopMetrics = metrics.stop
+    }
   }
 
-  async destroy() {
+  destroy() {
+    this.shutdown ??= this.stop()
+    return this.shutdown
+  }
+
+  private async stop() {
+    this.draining = true
     const startTime = Date.now()
 
     this.ctx.abortController.abort()
 
     const shutdownPromises = []
-
-    if (this.terminator) {
-      shutdownPromises.push(this.terminator.terminate())
+    const server = this.server
+    if (server?.listening) {
+      shutdownPromises.push(
+        new Promise<void>((resolve, reject) => {
+          const deadline = setTimeout(() => server.closeAllConnections(), 15000)
+          server.close(err => {
+            clearTimeout(deadline)
+            if (err) reject(err)
+            else resolve()
+          })
+        }),
+      )
     }
 
-    if (this.metricsTerminator) {
-      shutdownPromises.push(this.metricsTerminator.terminate())
+    if (this.stopMetrics) {
+      shutdownPromises.push(this.stopMetrics())
     }
 
     await Promise.all(shutdownPromises)

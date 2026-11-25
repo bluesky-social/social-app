@@ -5,6 +5,7 @@ import {
   type FeedLoad,
   getMarkReadAt,
   isRefreshPillVisible,
+  MARK_READ_SAFETY_WINDOW_MS,
   nextSeenAt,
 } from '#/screens/Notifications/unread'
 
@@ -70,24 +71,29 @@ describe('nextSeenAt', () => {
 })
 
 describe('getMarkReadAt', () => {
-  it('marks up to the request on All', () => {
-    expect(getMarkReadAt(load())).toEqual(new Date(REQUESTED_AT))
+  const WINDOW_START = REQUESTED_AT - MARK_READ_SAFETY_WINDOW_MS
+
+  it('marks up to the newest notification All loaded, not the request', () => {
+    // Anything between the two may not have reached the feed yet
+    const newestAt = REQUESTED_AT - 5000
+    expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt))
   })
 
-  it('marks up to the newest notification when the server clock is ahead', () => {
+  it('marks up to the newest notification even past the request, e.g. when the server clock is ahead', () => {
     const newestAt = REQUESTED_AT + 5000
     expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt))
   })
 
-  it('never moves the server seenAt backwards', () => {
-    const seenAt = new Date(REQUESTED_AT + 60_000).toISOString()
-    expect(getMarkReadAt(load({seenAt}))).toEqual(new Date(seenAt))
+  it('marks up to the safety window when the newest notification is older', () => {
+    // Anything in between that the load left out was filtered out
+    const newestAt = WINDOW_START - 60 * 60_000
+    expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(WINDOW_START))
   })
 
-  it('marks up to the request on an empty feed', () => {
-    expect(
-      getMarkReadAt(load({newestAt: undefined, seenAt: undefined})),
-    ).toEqual(new Date(REQUESTED_AT))
+  it('marks up to the safety window for an empty feed', () => {
+    expect(getMarkReadAt(load({newestAt: undefined}))).toEqual(
+      new Date(WINDOW_START),
+    )
   })
 
   it('leaves the other feeds to All', () => {

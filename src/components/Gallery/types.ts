@@ -12,7 +12,7 @@ export type NavigationHandlerArgs = {
   scrollRef: React.RefObject<ScrollHandle | null>
   itemWidthsRef: React.RefObject<Map<number, number>>
   currentIndexRef: React.RefObject<number>
-  scrollTo: (offset: number) => void
+  scrollTo: (options: {offset: number; animated?: boolean}) => void
   onSettle: (index: number) => void
   itemCount: number
   /**
@@ -20,6 +20,14 @@ export type NavigationHandlerArgs = {
    * doesn't, so in-flight navigation for the old items is dropped.
    */
   resetKey: string
+}
+
+export type ScrollNavigationArgs = Pick<
+  NavigationHandlerArgs,
+  'scrollRef' | 'itemWidthsRef' | 'currentIndexRef' | 'itemCount' | 'resetKey'
+> & {
+  /** Called with the new leading item. */
+  onNavigate: (index: number) => void
 }
 
 export type GalleryRef = {

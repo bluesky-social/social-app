@@ -87,16 +87,36 @@ jest.mock('#/components/icons/ArrowShareRight', () => ({
 jest.mock('#/components/PostControls/util', () => ({
   useFormatPostStatCount: () => String,
 }))
+/** Records analytics calls in order, so tests can check what ran first. */
+const mockAnalyticsCalls: string[] = []
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: jest.fn()}),
+  useAnalytics: () => ({
+    metric: (event: string) => mockAnalyticsCalls.push(event),
+    features: {
+      enabled: (feature: string) => {
+        mockAnalyticsCalls.push(`enabled:${feature}`)
+        return false
+      },
+      ShareDestinationsEnable: 'share_destinations:enable',
+    },
+  }),
 }))
-jest.mock('#/state/feed-feedback', () => ({
+jest.mock('#/features/feedFeedback', () => ({
   useFeedFeedbackContext: () => ({feedDescriptor: undefined}),
+  useFeedItemFeedback: () => ({
+    item: undefined,
+    feedDescriptor: undefined,
+    send: () => {},
+    sendUnspecced: () => {},
+  }),
 }))
 jest.mock('#/lib/routes/links', () => ({makeProfileLink: jest.fn()}))
 jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
 jest.mock('#/lib/strings/url-helpers', () => ({toShareUrl: jest.fn()}))
-jest.mock('#/alf', () => ({native: (callback: () => void) => callback}))
+jest.mock('#/alf', () => ({
+  native: (callback: () => void) => callback,
+  useBreakpoints: () => ({gtMobile: false}),
+}))
 jest.mock('@lingui/react/macro', () => ({
   useLingui: () => ({t: (message: TemplateStringsArray) => message[0]}),
 }))
@@ -112,6 +132,7 @@ const post = {
 }
 
 afterEach(() => {
+  mockAnalyticsCalls.length = 0
   jest.clearAllMocks()
   jest.useRealTimers()
 })
@@ -123,8 +144,6 @@ describe('lazy post menu anchoring', () => {
       <PostMenuButton
         testID="post"
         post={post as never}
-        postFeedContext={undefined}
-        postReqId={undefined}
         record={{} as never}
         richText={{} as never}
         timestamp="2026-09-27T00:00:00.000Z"
@@ -169,5 +188,30 @@ describe('lazy post menu anchoring', () => {
     })
 
     expect(mockMenuOpen).toHaveBeenCalledWith({sourceViewTag: 42})
+  })
+
+  it('checks the share sheet flag before logging the share press', () => {
+    const screen = render(
+      <ShareMenuButton
+        testID="post"
+        post={post as never}
+        record={{} as never}
+        richText={{} as never}
+        timestamp="2026-09-27T00:00:00.000Z"
+        onShare={jest.fn()}
+        logContext="Post"
+      />,
+    )
+
+    fireEvent.press(screen.getByTestId('postShareBtn'))
+
+    /*
+     * Checking the flag logs the experiment exposure, so it has to come
+     * first for the open to count as exposed.
+     */
+    expect(mockAnalyticsCalls).toEqual([
+      'enabled:share_destinations:enable',
+      'post:share',
+    ])
   })
 })

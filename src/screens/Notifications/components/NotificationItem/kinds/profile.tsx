@@ -9,6 +9,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
+import {Contacts_Filled_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {
   NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon,
   NotificationStarterPackSmall_Filled_Corner0_Rounded as StarterPackIcon,
@@ -67,11 +68,19 @@ function SingleFollowNotification({
       <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content>
         <View style={[a.gap_xs]}>
-          <Item.PrimaryText>
-            <Trans>
-              <Item.Name profile={actor} /> followed you
-            </Trans>
-          </Item.PrimaryText>
+          <Item.HeadlineWithButton
+            button={
+              <Item.FollowButton
+                profile={actor}
+                logContext="NotificationFollowRow"
+              />
+            }>
+            <Item.PrimaryText>
+              <Trans>
+                <Item.Name profile={actor} /> followed you
+              </Trans>
+            </Item.PrimaryText>
+          </Item.HeadlineWithButton>
           {starterPack && Item.getStarterPackName(starterPack) ? (
             <Item.ViaStarterPack starterPack={starterPack} />
           ) : (
@@ -80,9 +89,6 @@ function SingleFollowNotification({
         </View>
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
-      <Item.Trailing>
-        <Item.FollowButton profile={actor} logContext="NotificationFollowRow" />
-      </Item.Trailing>
     </Item.Root>
   )
 }
@@ -138,7 +144,7 @@ function GroupedFollowNotification({
         }
       }}
       testID={`notification-follow-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
+      <Item.Icon glyph="follow" />
       <Item.Content>
         <Item.AvatarRow />
         <Item.PrimaryText>
@@ -335,21 +341,24 @@ export function ContactMatchNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-contactMatch-${notification.id}`}>
-      <Item.Avatar profile={actor} />
+      {/* There's no small contacts icon yet, so this is the full-size one */}
+      <Item.Avatar profile={actor} icon={ContactsIcon} tone="follow" />
       <Item.Content>
-        <Item.PrimaryText>
-          <Trans>
-            Your contact <Item.Name profile={actor} /> is on Bluesky
-          </Trans>
-        </Item.PrimaryText>
+        <Item.HeadlineWithButton
+          button={
+            <Item.FollowButton
+              profile={actor}
+              logContext="NotificationContactMatchRow"
+            />
+          }>
+          <Item.PrimaryText>
+            <Trans>
+              Your contact <Item.Name profile={actor} /> is on Bluesky
+            </Trans>
+          </Item.PrimaryText>
+        </Item.HeadlineWithButton>
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
-      <Item.Trailing>
-        <Item.FollowButton
-          profile={actor}
-          logContext="NotificationContactMatchRow"
-        />
-      </Item.Trailing>
     </Item.Root>
   )
 }

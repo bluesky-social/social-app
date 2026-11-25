@@ -17,7 +17,7 @@ type MetricFn = <E extends keyof Metrics>(event: E, payload: Metrics[E]) => void
 const COMPRESS_ENGINE =
   Platform.OS === 'web'
     ? 'web:mediabunny@1.25.3'
-    : 'native:@bsky.app/video-compressor@0.2.0'
+    : 'native:@bsky.app/video-compressor@0.3.2'
 
 type Phase = 'compress' | 'upload' | 'processing'
 

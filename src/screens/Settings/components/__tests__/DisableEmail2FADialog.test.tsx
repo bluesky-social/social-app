@@ -148,7 +148,7 @@ describe('DisableEmail2FADialog', () => {
     const control = renderDialog()
     enterCodeStage()
     fireEvent.changeText(getInput(), 'abcde23456')
-    expect(getInput().props.value).toBe('ABCDE-23456')
+    expect(getInput().props.value).toBe('ABCDE23456')
 
     await act(async () => {
       fireEvent.press(screen.getByTestId('confirmBtn'))

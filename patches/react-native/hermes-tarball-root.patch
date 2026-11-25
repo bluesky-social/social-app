@@ -1,0 +1,21 @@
+diff --git a/ReactAndroid/hermes-engine/build.gradle.kts b/ReactAndroid/hermes-engine/build.gradle.kts
+index 0a1ea2a..97d829a 100644
+--- a/ReactAndroid/hermes-engine/build.gradle.kts
++++ b/ReactAndroid/hermes-engine/build.gradle.kts
+@@ -119,11 +119,11 @@ val unzipHermes by
+       dependsOn(downloadHermes)
+       from(tarTree(downloadHermesDest)) {
+         eachFile {
+-          // We flatten the unzip as the tarball contains a `facebook-hermes-<SHA>`
+-          // folder at the top level.
+-          if (this.path.startsWith("facebook-hermes-")) {
+-            this.path = this.path.substringAfter("/")
+-          }
++          // We flatten the unzip as the tarball contains a single
++          // `<owner>-hermes-<SHA>` folder at the top level. Strip it regardless
++          // of the owner, which changes when the repository moves (it went
++          // from `facebook-hermes-` to `meta-hermes-`).
++          this.path = this.path.substringAfter("/")
+         }
+       }
+       into(hermesDir)

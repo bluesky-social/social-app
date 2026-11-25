@@ -1,8 +1,8 @@
 {
-  "Potentially Dangerous Link": "Enlace Potencialmente Peligroso",
+  "Warning": "Advertencia",
   "Blocked Link": "Enlace Bloqueado",
-  "This link may be malicious. You should proceed at your own risk.": "Este enlace puede ser malicioso. Debes proceder bajo tu propio riesgo.",
-  "This link has been identified as malicious and has blocked for your safety.": "Este enlace ha sido identificado como malicioso y ha sido bloqueado por tu seguridad.",
+  "This link may violate Bluesky's Community Guidelines. Proceed with caution.": "Este enlace puede infringir las Directrices de la comunidad de Bluesky. Procede con precaución.",
+  "This link has been disabled because it violates Bluesky’s Community Guidelines.": "Este enlace ha sido desactivado porque infringe las Directrices de la comunidad de Bluesky.",
   "Continue Anyway": "Continuar de Todos Modos",
   "Return to Bluesky": "Regresar a Bluesky"
 }

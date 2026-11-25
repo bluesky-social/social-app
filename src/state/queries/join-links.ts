@@ -154,6 +154,17 @@ export function invalidateJoinLinkPreviewsForConvo(
   })
 }
 
+/**
+ * Invalidate every cached join link preview. Use this when the viewer's
+ * memberships may have changed without us seeing which ones (e.g. after a gap
+ * in the chat log).
+ */
+export function invalidateAllJoinLinkPreviews(queryClient: QueryClient) {
+  return queryClient.invalidateQueries({
+    queryKey: [joinLinkPreviewQueryKeyRoot],
+  })
+}
+
 let publicChatClient: Client | undefined
 
 /**

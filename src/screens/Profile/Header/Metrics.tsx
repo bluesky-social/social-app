@@ -30,7 +30,8 @@ export function ProfileHeaderMetrics({
 
   return (
     <View
-      style={[a.flex_row, a.gap_sm, a.align_center]}
+      // 10pt has no gap atom; matches the handle-to-pronouns gap in Handle.tsx
+      style={[a.flex_row, a.align_center, {gap: 10}]}
       pointerEvents="box-none">
       <InlineLinkText
         testID="profileHeaderFollowersButton"

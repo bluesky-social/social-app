@@ -17,7 +17,7 @@ import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
+import {type FlatNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
@@ -47,7 +47,7 @@ export {useButtonContext as useLinkContext} from '#/components/Button'
 type BaseLinkProps = {
   testID?: string
 
-  to: RNLinkProps<AllNavigatorParams> | string
+  to: RNLinkProps<FlatNavigatorParams> | string
 
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
@@ -91,6 +91,12 @@ type BaseLinkProps = {
   shouldProxy?: boolean
 
   /**
+   * On native, try handing the link off to an installed app before falling back
+   * to the browser flow.
+   */
+  preferNativeApp?: boolean
+
+  /**
    * iOS only. Wraps the link in a peek menu: long-pressing previews the live
    * page in an in-app browser (morphing into it on tap when the in-app browser
    * preference is on), with a share action in the menu. No-op elsewhere.
@@ -117,6 +123,7 @@ export function useLink({
   shareOnLongPress,
   overridePresentation,
   shouldProxy,
+  preferNativeApp,
 }: BaseLinkProps & {
   displayText: string
   overridePresentation?: boolean
@@ -141,7 +148,7 @@ export function useLink({
 
   const isExternal = isExternalUrl(href)
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
-  const openLink = useOpenLink()
+  const openLink = useOpenLink({preferNativeApp})
   const groupChatJoinIntent = useGroupChatJoinIntent()
 
   const onPress = useCallback(
@@ -188,7 +195,7 @@ export function useLink({
             void openLink(href)
           } else {
             const [screen, params] = router.matchPath(href) as [
-              screen: keyof AllNavigatorParams,
+              screen: keyof FlatNavigatorParams,
               params?: RouteParams,
             ]
 
@@ -197,7 +204,7 @@ export function useLink({
               const state = navigation.getState()
               // if screen is not in the current navigator, it means it's
               // most likely a tab screen. note: state can be undefined
-              if (!state?.routeNames?.includes?.(screen)) {
+              if (!state?.routeNames?.some(name => name === screen)) {
                 const parent = navigation.getParent()
                 if (
                   parent &&
@@ -305,6 +312,10 @@ export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
      * Forwarded to the underlying `Button`, e.g. for a roving focus target.
      */
     ref?: React.Ref<React.ComponentRef<typeof View>>
+    /**
+     * Web-only attribute. Overrides the default `rel` attr on web.
+     */
+    rel?: string
   }
 
 /**
@@ -324,7 +335,9 @@ export function Link({
   download,
   shouldProxy,
   overridePresentation,
+  preferNativeApp,
   peek,
+  rel,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress, openExternally} = useLink({
@@ -335,6 +348,7 @@ export function Link({
     onLongPress: outerOnLongPress,
     shouldProxy: shouldProxy,
     overridePresentation,
+    preferNativeApp,
   })
 
   // Peek is iOS-only and only makes sense for external web links.
@@ -356,7 +370,7 @@ export function Link({
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
+          rel: rel ?? (isExternal ? 'noopener noreferrer' : undefined),
           download,
         },
         dataSet: {
@@ -463,6 +477,7 @@ export function InlineLinkText({
   disableUnderline,
   overridePresentation,
   shouldProxy,
+  preferNativeApp,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -477,6 +492,7 @@ export function InlineLinkText({
     shareOnLongPress,
     overridePresentation,
     shouldProxy: shouldProxy,
+    preferNativeApp,
   })
   const {
     state: interacted,
@@ -566,6 +582,7 @@ export function SimpleInlineLinkText({
   | 'overridePresentation'
   | 'onLongPress'
   | 'shareOnLongPress'
+  | 'preferNativeApp'
 > & {
   to: string
 }) {

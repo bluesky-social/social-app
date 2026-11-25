@@ -37,6 +37,10 @@ export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
 }
 
 export function canBeAddedToGroup(profile: bsky.profile.AnyProfileView) {
+  if (isBlockedOrBlocking(profile) || profile.viewer?.blockingByList) {
+    return false
+  }
+
   switch (profile.associated?.chat?.allowGroupInvites) {
     case 'none':
       return false

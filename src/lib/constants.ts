@@ -62,6 +62,7 @@ export function FEEDBACK_FORM_URL({
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
+export const MAX_PRONOUNS = 20
 
 export const MAX_GRAPHEME_LENGTH = 300
 
@@ -97,6 +98,9 @@ export const STAGING_DEFAULT_FEED = (rkey: string) =>
 export const PROD_FEEDS = [
   `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`,
   `feedgen|${PROD_DEFAULT_FEED('thevids')}`,
+  `feedgen|${PROD_DEFAULT_FEED('atmosphere-activity')}`,
+  `feedgen|${PROD_DEFAULT_FEED('atmosphere-articles')}`,
+  `feedgen|${PROD_DEFAULT_FEED('atmosphere-galleries')}`,
 ]
 
 export const STAGING_FEEDS = [

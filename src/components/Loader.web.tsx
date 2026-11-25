@@ -14,7 +14,7 @@ export function Loader(props: Props) {
         a.relative,
         a.justify_center,
         a.align_center,
-        {width: common.size, height: common.size},
+        {width: common.width, height: common.height},
       ]}>
       {/* css rotation animation - /bskyweb/templates/base.html */}
       <div className="rotate-500ms">

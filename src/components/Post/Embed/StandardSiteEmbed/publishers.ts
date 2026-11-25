@@ -33,19 +33,24 @@ export function hostMatches(host: string, target: string): boolean {
   return host === target || host.endsWith('.' + target)
 }
 
-function matchByHost(host: string | null): StandardSitePublisher | null {
+function matchHostByDomain(url: string): StandardSitePublisher | null {
+  const host = hostFromUri(url)
   if (!host) return null
   return STANDARD_SITE_PUBLISHERS.find(p => hostMatches(host, p.host)) ?? null
 }
 
-export function matchStandardSitePublisher(
+/**
+ * Matches the publication's host, falling back to the article's own URL when
+ * the view has no publication source.
+ */
+export function matchStandardSiteHostByPublication(
   view: app.bsky.embed.external.ViewExternal,
 ): StandardSitePublisher | null {
-  return matchByHost(getStandardSitePublisherHost(view))
+  return matchHostByDomain(view.source?.uri || view.uri)
 }
 
-export function matchStandardSitePublisherByUri(
-  uri: string | undefined,
+export function matchStandardSiteHostByUrl(
+  url: string | undefined,
 ): StandardSitePublisher | null {
-  return matchByHost(hostFromUri(uri))
+  return matchHostByDomain(url || '')
 }

@@ -17,6 +17,7 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {GrowthHack} from './GrowthHack'
 
@@ -68,6 +69,7 @@ function PostThreadFollowBtnLoaded({
     'PostThreadItem',
   )
   const requireAuth = useRequireAuth()
+  const feedItem = useFeedItemFeedback()
 
   const isFollowing = !!profile.viewer?.following
   const isFollowedBy = !!profile.viewer?.followedBy
@@ -111,6 +113,9 @@ function PostThreadFollowBtnLoaded({
       requireAuth(async () => {
         try {
           await queueFollow()
+          if (feedItem.item?.authorDid === profile.did) {
+            feedItem.send('app.bsky.feed.defs#interactionFollow')
+          }
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
@@ -134,7 +139,15 @@ function PostThreadFollowBtnLoaded({
         }
       })
     }
-  }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow])
+  }, [
+    isFollowing,
+    requireAuth,
+    queueFollow,
+    _,
+    queueUnfollow,
+    feedItem,
+    profile.did,
+  ])
 
   if (!showFollowBtn) return null
 

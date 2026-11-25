@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {Modal, ScrollView, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
+import {Modal, ScrollView, StatusBar, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -124,7 +123,7 @@ export function SignupQueued() {
       }
       style={[web(a.util_screen_outer)]}>
       {IS_IOS && !IS_LIQUID_GLASS && (
-        <SystemBars style={{statusBar: 'light'}} />
+        <StatusBar animated barStyle="light-content" />
       )}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}

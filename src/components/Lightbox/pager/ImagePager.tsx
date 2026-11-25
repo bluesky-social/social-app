@@ -9,7 +9,6 @@
 // https://github.com/jobtoday/react-native-image-viewing
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {usePanGesture} from 'react-native-gesture-handler'
 import PagerView, {
   type PagerViewOnPageSelectedEvent,
@@ -34,7 +33,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {Image} from 'expo-image'
+import {NavigationBar} from 'expo-navigation-bar'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import {StatusBar} from 'expo-status-bar'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {type Dimensions} from '#/lib/media/types'
@@ -43,7 +44,7 @@ import {setSystemUITheme} from '#/alf/util/systemUI'
 import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS, IS_IPAD} from '#/env'
+import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
 import {
@@ -462,13 +463,13 @@ function ImageView({
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <SystemBars
-        style={{statusBar: 'light', navigationBar: 'light'}}
-        hidden={{
-          statusBar: isScaled || !showControls,
-          navigationBar: false,
-        }}
+      <StatusBar
+        animated
+        style="light"
+        // the edge effect keeps the status bar legible over a zoomed image
+        hidden={(isScaled && !IS_LIQUID_GLASS) || !showControls}
       />
+      <NavigationBar style="light" hidden={false} />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid

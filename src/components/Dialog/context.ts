@@ -24,11 +24,11 @@ export const Context = createContext<DialogContextProps>({
   isNativePopover: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
   disableDrag: false,
+  preventDismiss: false,
   setDisableDrag: () => {},
   isWithinDialog: false,
   isHeightConstrained: false,
-  shouldMeasureContentHeight: false,
-  setDesiredContentHeight: () => {},
+  setContentScrollViewTag: () => {},
 })
 Context.displayName = 'DialogContext'
 

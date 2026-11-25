@@ -3,6 +3,7 @@ import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -33,6 +34,10 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {
+  ShareSheet,
+  useShareSheetEnabled,
+} from '#/components/ShareDialog/ShareSheet'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -52,6 +57,8 @@ export function MoreOptionsMenu({
   const deleteListPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const optOutDialogControl = useDialogControl()
+  const shareSheetControl = useDialogControl()
+  const shareSheetEnabled = useShareSheetEnabled()
   const navigation = useNavigation<NavigationProp>()
 
   const {mutateAsync: removeSavedFeed} = useRemoveFeedMutation()
@@ -92,10 +99,16 @@ export function MoreOptionsMenu({
       },
     })
 
+  const shareLink = toShareUrl(
+    `/profile/${list.creator.did}/lists/${new AtUri(list.uri).rkey}`,
+  )
+
   const onPressShare = () => {
-    const {rkey} = new AtUri(list.uri)
-    const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
-    void shareUrl(url)
+    if (shareSheetEnabled) {
+      shareSheetControl.open()
+    } else {
+      void shareUrl(shareLink)
+    }
   }
 
   const onRemoveFromSavedFeeds = async () => {
@@ -122,7 +135,9 @@ export function MoreOptionsMenu({
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
-      navigation.navigate('Home')
+      navigation.dispatch(
+        getHomeNavigationAction(navigation.getState(), 'navigate'),
+      )
     }
   }
 
@@ -366,6 +381,22 @@ export function MoreOptionsMenu({
           $type: 'app.bsky.graph.defs#listView',
         }}
       />
+      {shareSheetEnabled && (
+        <ShareSheet
+          control={shareSheetControl}
+          subject={{
+            type: 'list',
+            uri: list.uri,
+            authorDid: list.creator.did,
+            url: shareLink,
+            title: l({
+              message: `“${list.name}” list by @${list.creator.handle} on Bluesky`,
+              comment:
+                'Prefilled subject line when sharing a list to email or Reddit',
+            }),
+          }}
+        />
+      )}
     </>
   )
 }

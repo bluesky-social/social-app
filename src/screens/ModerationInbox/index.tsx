@@ -17,6 +17,7 @@ import {logger} from '#/logger'
 import {
   useModerationInboxAccountStatusQuery,
   useModerationInboxActionedSubjectsQuery,
+  useModerationInboxCacheMutation,
   useModerationInboxReportsQuery,
   useModerationInboxUnreadCountQuery,
   useUpdateModerationInboxSeenMutation,
@@ -25,7 +26,6 @@ import {Pager, type PagerRef} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Inbox_Stroke2_Corner2_Rounded_Large as InboxIcon} from '#/components/icons/Inbox'
@@ -39,6 +39,10 @@ import {type tools} from '#/lexicons'
 import {AccountStatus} from './components/AccountStatus'
 import {FilterMenu} from './components/FilterMenu'
 import {type ActionedSubject} from './components/hooks/useActionedSubjectLabels'
+import {
+  getAccountEnforcement,
+  getHasActiveStrikes,
+} from './components/util/accountData'
 import {YourAccountRow} from './components/YourAccountRow'
 import {YourReportRow} from './components/YourReportRow'
 
@@ -48,7 +52,8 @@ type InboxReport = tools.ozone.inbox.listReports.$OutputBody['reports'][number]
 export function ModerationInboxScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<NavigationProp<CommonNavigatorParams, 'ModerationInbox'>>()
   const route = useRoute<RouteProp<CommonNavigatorParams, 'ModerationInbox'>>()
   const routeTab = route.params?.tab ?? 'reports'
   const initialPage = routeTab === 'account' ? 1 : 0
@@ -68,19 +73,14 @@ export function ModerationInboxScreen() {
     navigation.setParams({tab: index === 1 ? 'account' : 'reports'})
   }
 
-  const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
+  const unreadCountQuery = useModerationInboxUnreadCountQuery()
+  const unreadCounts = unreadCountQuery.data?.unreadCounts
 
   useFocusEffect(
     useCallback(() => {
-      if (isEnabled) {
-        ax.metric('moderation:inbox:view', {tab: routeTab})
-      }
-    }, [ax, isEnabled, routeTab]),
+      ax.metric('moderation:inbox:view', {tab: routeTab})
+    }, [ax, routeTab]),
   )
-
-  if (!isEnabled) {
-    return <NotFoundScreen />
-  }
 
   return (
     <Layout.Screen testID="moderationInboxScreen">
@@ -115,6 +115,12 @@ export function ModerationInboxScreen() {
             <TabBar
               testID="moderationInboxTabs"
               items={[l`Your reports`, l`Your account`]}
+              unread={[
+                (unreadCounts?.reports ?? 0) > 0,
+                (unreadCounts?.subjects ?? 0) +
+                  (unreadCounts?.accountStatus ?? 0) >
+                  0,
+              ]}
               align="left"
               {...props}
             />
@@ -255,6 +261,7 @@ function YourAccount() {
   const [isPTRing, setIsPTRing] = useState(false)
   const [filter, setFilter] = useState<ReportFilter>('all')
   const actionedSubjectsQuery = useModerationInboxActionedSubjectsQuery(filter)
+  const invalidateInbox = useModerationInboxCacheMutation()
   const accountStatusQuery = useModerationInboxAccountStatusQuery()
   const unreadCountQuery = useModerationInboxUnreadCountQuery()
   const markSeen = useUpdateModerationInboxSeenMutation()
@@ -276,11 +283,7 @@ function YourAccount() {
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await Promise.all([
-        actionedSubjectsQuery.refetch(),
-        accountStatusQuery.refetch(),
-        unreadCountQuery.refetch(),
-      ])
+      await invalidateInbox()
     } catch (err) {
       logger.error('Failed to refresh moderation inbox account', {error: err})
     } finally {
@@ -334,7 +337,13 @@ function YourAccount() {
           ) : undefined}
         </View>
       ) : undefined}
-      {accountStanding ? <AccountStatus status={accountStanding} /> : undefined}
+      {accountStanding ? (
+        <AccountStatus
+          status={accountStanding}
+          enforcement={getAccountEnforcement(accountStatusQuery.data)}
+          hasActiveStrikes={getHasActiveStrikes(accountStatusQuery.data)}
+        />
+      ) : undefined}
     </Layout.Center>
   )
 

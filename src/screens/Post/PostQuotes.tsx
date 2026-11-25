@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -22,6 +23,7 @@ export const PostQuotesScreen = ({route}: Props) => {
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const {data: post} = usePostQuery(uri)
+  useSetPostTitle(post?.author)
 
   const header = (
     <Layout.Header.Outer noBottomBorder>

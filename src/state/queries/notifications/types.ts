@@ -3,27 +3,8 @@ import {type app} from '#/lexicons'
 
 export type Notification = app.bsky.notification.listNotifications.Notification
 
-export type NotificationType =
-  StarterPackNotificationType | OtherNotificationType
-
-export type FeedNotification =
-  | (FeedNotificationBase & {
-      type: StarterPackNotificationType
-      subject?: app.bsky.graph.defs.StarterPackViewBasic
-    })
-  | (FeedNotificationBase & {
-      type: OtherNotificationType
-      subject?: app.bsky.feed.defs.PostView
-    })
-
-export interface FeedPage {
-  cursor: string | undefined
-  seenAt: Date
-  items: FeedNotification[]
-}
-
 /**
- * What the last unread check found, for the Notifications v2 "Refresh" pill.
+ * What the last unread check found, for the Notifications screen's "Refresh" pill.
  */
 export interface UnreadCheck {
   /**
@@ -38,18 +19,12 @@ export interface UnreadCheck {
   newestUnreadAt: Record<GroupedNotificationsFeed, number | undefined>
 }
 
-export interface CachedFeedPage {
-  /**
-   * if true, the cached page is recent enough to use as the response
-   */
-  usableInFeed: boolean
-  syncedAt: Date
-  data: FeedPage | undefined
-  unreadCount: number
-}
-
-type StarterPackNotificationType = 'starterpack-joined'
-type OtherNotificationType =
+/**
+ * The names the original notifications screen gave each kind, which metrics
+ * such as `notifications:bundleExpand` still use so they stay comparable.
+ */
+export type NotificationType =
+  | 'starterpack-joined'
   | 'post-like'
   | 'repost'
   | 'mention'
@@ -64,12 +39,3 @@ type OtherNotificationType =
   | 'subscribed-post'
   | 'contact-match'
   | 'unknown'
-
-type FeedNotificationBase = {
-  _reactKey: string
-  notification: Notification
-  additional?: Notification[]
-  subjectUri?: string
-  subject?:
-    app.bsky.feed.defs.PostView | app.bsky.graph.defs.StarterPackViewBasic
-}

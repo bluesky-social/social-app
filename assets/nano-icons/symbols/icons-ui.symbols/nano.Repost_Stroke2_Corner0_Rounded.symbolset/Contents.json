@@ -1,0 +1,15 @@
+{
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "symbol-rendering-intent": "template"
+  },
+  "symbols": [
+    {
+      "filename": "nano.Repost_Stroke2_Corner0_Rounded.svg",
+      "idiom": "universal"
+    }
+  ]
+}

@@ -125,37 +125,39 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
-    case Features.NotificationsV2Enable:
+    case Features.PostViewCountsEnable:
       return {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Redesigned notifications',
+            message: 'Post view counts',
             comment: 'Name for a feature flag',
           }),
         ),
         description: i18n._(
           msg({
-            message:
-              'Notifications sorted into tabs – people you follow, followers, replies and activity.',
-            comment: 'Description of a feature flag (Redesigned notifications)',
+            message: 'See how often your posts were seen.',
+            comment: 'Description of a feature flag (Post view counts)',
           }),
         ),
       }
-    case Features.ModerationInboxEnable:
+    case Features.WebListVirtualizationEnable:
+      // Only the web List is affected; native lists are already virtualized
+      if (!env.IS_WEB) return null
       return {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Moderation inbox',
+            message: 'Feed rendering improvements',
             comment: 'Name for a feature flag',
           }),
         ),
         description: i18n._(
           msg({
             message:
-              'Track your reports, review moderation decisions, and submit appeals.',
-            comment: 'Description of a feature flag (Moderation inbox)',
+              'Feeds and lists keep only nearby posts in the page, so performance stays steady however far you scroll.',
+            comment:
+              'Description of a feature flag (Feed rendering improvements)',
           }),
         ),
       }

@@ -90,7 +90,7 @@ jobs:
     outputs:
       source-sha: ${{ steps.source.outputs.sha }}
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-      version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+      version-code: ${{ steps.aab-version-code.outputs.version-code }}
     steps:
       # Temporary until fixed runner images roll out:
       # https://github.com/actions/runner-images/issues/15018
@@ -116,9 +116,9 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
 
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: "temurin"
           java-version: "17"
@@ -152,6 +152,26 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          version: "1.18.3"
+
+      # Read the version code straight from the AAB, like the iOS job reads
+      # CFBundleVersion from the IPA. `eas build:version:get` reads the global
+      # remote counter once the build has finished, so it can report a different
+      # build's number. Production OTAs and the Slack posts need the real one.
+      - name: 🔢 Read version code from AAB
+        id: aab-version-code
+        run: |
+          version_code="$(bundletool dump manifest --bundle=build.aab --xpath=/manifest/@android:versionCode)"
+          if ! [[ "$version_code" =~ ^[0-9]+$ ]]; then
+            echo "ERROR: could not read versionCode from AAB (got '$version_code')"
+            exit 1
+          fi
+          echo "AAB version code: $version_code"
+          echo "version-code=$version_code" >> "$GITHUB_OUTPUT"
+
       # Hands the built bundle off to the submit / universalApk jobs. Retention is
       # deliberately short (1 day) since it's only an intra-run handoff artifact.
       - name: 🚀 Upload AAB artifact
@@ -164,12 +184,12 @@ jobs:
 
       - name: 📝 Write build summary
         env:
-          REMOTE_VERSION_CODE: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          VERSION_CODE: ${{ steps.aab-version-code.outputs.version-code }}
         run: |
           {
             echo "### Android build number"
             echo
-            echo "\`$REMOTE_VERSION_CODE\`"
+            echo "\`$VERSION_CODE\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
@@ -197,7 +217,7 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
 
       - name: ⬇️ Download AAB artifact
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
@@ -218,6 +238,28 @@ jobs:
           payload-templated: true
           payload: |
             {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.version-code }}```"}
+
+      - name: 🔢 Record main testflight build number
+        if: ${{ github.ref == 'refs/heads/main' &&
+          needs.build.outputs.source-sha == github.sha &&
+          (inputs.profile || 'testflight-android') == 'testflight-android' }}
+        env:
+          BUILD_NUMBER: ${{ needs.build.outputs.version-code }}
+        run: |
+          [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] ||
+            (echo "::error::Refusing to record the non-numeric build number '$BUILD_NUMBER'" && exit 1)
+          echo "$BUILD_NUMBER" > android-build-number
+
+      - name: 🚀 Upload main testflight build number
+        if: ${{ github.ref == 'refs/heads/main' &&
+          needs.build.outputs.source-sha == github.sha &&
+          (inputs.profile || 'testflight-android') == 'testflight-android' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: testflight-android-build-number
+          path: android-build-number
+          retention-days: 90
+          if-no-files-found: error
 
   # Runs in parallel with submit: the QA APK shouldn't be blocked by a Play submission failure.
   universalApk:
@@ -241,7 +283,7 @@ jobs:
 
       # bundletool needs a JRE. ubuntu-latest ships a default JDK, but pin it explicitly
       # like the build job so the toolchain is deterministic.
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: "temurin"
           java-version: "17"

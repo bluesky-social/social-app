@@ -6,15 +6,16 @@ import {useNavigation} from '@react-navigation/native'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {getTabNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {useFeedFeedbackContext} from '#/features/feedFeedback'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
@@ -48,7 +49,7 @@ export function CustomFeedEmptyState() {
     if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
-      navigation.navigate('SearchTab')
+      navigation.dispatch(getTabNavigationAction('Search'))
       navigation.popToTop()
     }
   }, [navigation])

@@ -15,7 +15,7 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {useSupportPalette} from '../palette'
 import {formatLinkUrl, getLinkHost, getSupportProvider} from '../providers'
-import {useProfileLinksEnabled, useProfileViewLinks} from '../state'
+import {useProfileViewLinks} from '../state'
 import {type ProfileLink} from '../types'
 import {LinkFavicon, linkFaviconUrl} from './LinkFavicon'
 import {ProviderLogo} from './ProviderLogo'
@@ -29,9 +29,7 @@ const ICON_SIZE = 32
 export function useReportableProfileLinks(
   profile: app.bsky.actor.defs.ProfileViewDetailed,
 ): ProfileLink[] {
-  const enabled = useProfileLinksEnabled()
   const links = useProfileViewLinks(profile)
-  if (!enabled) return []
   return links.filter(link => link.uri && link.cid)
 }
 

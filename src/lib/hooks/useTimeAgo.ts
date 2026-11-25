@@ -189,3 +189,25 @@ export function formatDateDiff({
     }
   }
 }
+
+/**
+ * Like `formatDateDiff` of the time since `timestamp`, but reads as a phrase,
+ * e.g. "7m ago".
+ */
+export function formatTimeAgo(i18n: I18n, timestamp: string) {
+  const diff = dateDiff(timestamp, Date.now())
+  const formatted = formatDateDiff({diff, i18n})
+
+  // "now", and dates over a year old, read fine on their own
+  if (diff.unit === 'now' || (diff.unit === 'month' && diff.value >= 12)) {
+    return formatted
+  }
+
+  return i18n._(
+    defineMessage({
+      message: `${formatted} ago`,
+      comment:
+        'How long ago something happened, e.g. "7m ago". The time is already abbreviated and translated.',
+    }),
+  )
+}

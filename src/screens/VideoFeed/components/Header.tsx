@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFeedSourceInfoQuery} from '#/state/queries/feed'
@@ -151,7 +152,9 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
       if (navigation.canGoBack()) {
         navigation.goBack()
       } else {
-        navigation.navigate('Home')
+        navigation.dispatch(
+          getHomeNavigationAction(navigation.getState(), 'navigate'),
+        )
       }
     },
     [onPress, navigation],

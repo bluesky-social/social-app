@@ -6,12 +6,13 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.28.5",
+      "version": "12.16.1",
       "onFail": "warn"
     }
   },
   "scripts": {
     "start": "tsx ./src/bin.ts",
+    "test": "node --import tsx --test ./tests/*.test.ts",
     "dev": "LOG_ENABLED=true LOG_LEVEL=debug node --watch-path ./src --import tsx ./src/bin.ts",
     "build": "tsc && cp -r src/assets dist/",
     "install-fonts": "tsx scripts/install-fonts.ts",
@@ -28,7 +29,7 @@
     "pino": "^9.2.0",
     "prom-client": "^15.1.3",
     "react": "^19.2.6",
-    "satori": "^0.26.0",
+    "satori": "^0.40.0",
     "twemoji": "^14.0.2"
   },
   "devDependencies": {

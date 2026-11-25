@@ -110,7 +110,7 @@ export function useTrendingTopicSeen(
 }
 
 export function getTrendingTopicFeedUri(
-  topic: app.bsky.unspecced.defs.TrendView,
+  topic: Pick<app.bsky.unspecced.defs.TrendView, 'link'>,
 ): string | undefined {
   const match = topic.link.match(/^\/profile\/([^/]+)\/feed\/([^/?#]+)/)
 

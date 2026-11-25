@@ -1,7 +1,11 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {compress, probe, type VideoMetadata} from '@bsky.app/video-compressor'
 
-import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
+import {
+  SUPPORTED_MIME_TYPES,
+  type SupportedMimeTypes,
+  VIDEO_MAX_SIZE,
+} from '#/lib/constants'
 import {logger} from '#/logger'
 import {
   COMPRESSION_MAX_DIMENSION,
@@ -60,25 +64,51 @@ export async function compressVideo(
     }
   }
 
-  return compress(
-    file.uri,
-    {
-      targetBitrate: COMPRESSION_TARGET_BITRATE,
-      maxSize: COMPRESSION_MAX_DIMENSION,
-      codec: 'auto',
-      frameRateCap: 30,
-      mimeType: file.mimeType,
-      fileSize: file.fileSize,
-      // Force a transcode for unacceptable-format files regardless of size.
-      // The compressor's default threshold would otherwise pass small
-      // unacceptable-format files through unchanged and the server would
-      // reject them. Acceptable formats are already short-circuited above so
-      // they never reach this call.
-      passthroughBelowBytes: 0,
-      passthroughGif: false,
-    },
-    {onProgress, signal},
-  )
+  try {
+    return await compress(
+      file.uri,
+      {
+        targetBitrate: COMPRESSION_TARGET_BITRATE,
+        maxSize: COMPRESSION_MAX_DIMENSION,
+        codec: 'auto',
+        frameRateCap: 30,
+        mimeType: file.mimeType,
+        fileSize: file.fileSize,
+        // Force a transcode for unacceptable-format files regardless of size.
+        // The compressor's default threshold would otherwise pass small
+        // unacceptable-format files through unchanged and the server would
+        // reject them. Acceptable formats are already short-circuited above so
+        // they never reach this call.
+        passthroughBelowBytes: 0,
+        passthroughGif: false,
+      },
+      {onProgress, signal},
+    )
+  } catch (e) {
+    /*
+     * Like the web compressor, upload the original when encoding fails and
+     * the server can take the file as-is. Some iOS clips fail instantly and
+     * every time with "The operation could not be completed", which would
+     * otherwise block the post entirely.
+     */
+    if (
+      signal?.aborted ||
+      !isAcceptableFormat ||
+      file.fileSize == null ||
+      file.fileSize > VIDEO_MAX_SIZE
+    ) {
+      throw e
+    }
+    logger.error('Error compressing video, uploading original', {
+      safeMessage: e,
+    })
+    return {
+      uri: file.uri,
+      size: file.fileSize,
+      mimeType: file.mimeType ?? 'video/mp4',
+      passthroughReason: 'compress-error-fallback',
+    }
+  }
 }
 
 function toProbedMetadata(metadata: VideoMetadata): ProbedMetadata {

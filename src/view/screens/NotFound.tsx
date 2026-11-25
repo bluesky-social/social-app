@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {getTabNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -19,7 +20,7 @@ export const NotFoundScreen = () => {
     if (canGoBack) {
       navigation.goBack()
     } else {
-      navigation.navigate('HomeTab')
+      navigation.dispatch(getTabNavigationAction('Home'))
       navigation.dispatch(StackActions.popToTop())
     }
   }, [navigation, canGoBack])

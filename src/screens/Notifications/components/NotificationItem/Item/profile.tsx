@@ -40,9 +40,10 @@ import {Text} from '#/components/Typography'
 import {type Metrics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {AVATAR_SLOT_WIDTH} from './Avatar'
+import {AVATAR_SIZE} from './Avatar'
 import {SuppressHoverContext, useRowHover, useSuppressHover} from './hover'
 import {Card} from './media'
+import {ROW_GAP, ROW_GUTTER} from './Root'
 import {useDisplayName} from './text'
 
 type FollowLogContext = Metrics['profile:follow']['logContext'] &
@@ -113,6 +114,42 @@ function PillButton({
         {label}
       </Text>
     </Button>
+  )
+}
+
+/**
+ * How far a pill reaches above and below the line of `Item.PrimaryText`
+ * beside it, at the default font size. The pill is the taller of the two, so
+ * this centres it on the line without making the line any taller.
+ */
+const PILL_OVERHANG =
+  (PILL_HEIGHT - Math.round(tokens.fontSize.md * tokens.lineHeight.snug)) / 2
+
+/**
+ * A row's headline with a pill, e.g. `Item.FollowButton`, beside its first
+ * line. Whatever comes after it in `Item.Content` runs the full width of the
+ * row beneath the pill, rather than being cut short beside it. The pill is as
+ * far from the headline as `Item.Trailing` would put it, and centred on the
+ * headline's first line.
+ */
+export function HeadlineWithButton({
+  button,
+  children,
+}: {
+  /**
+   * The pill, e.g. `Item.FollowButton`.
+   */
+  button: React.ReactNode
+  /**
+   * The headline, as an `Item.PrimaryText`.
+   */
+  children: React.ReactNode
+}) {
+  return (
+    <View style={[a.flex_row, a.align_start, a.gap_lg]}>
+      <View style={[a.flex_1]}>{children}</View>
+      <View style={{marginVertical: -PILL_OVERHANG}}>{button}</View>
+    </View>
   )
 }
 
@@ -433,16 +470,12 @@ const ACTOR_AVATAR_SIZE = 32
 
 /**
  * How far an `ActorList` insets its people, so that their names line up with
- * the row's text above. `Item.Root` puts the text a padding, the avatar slot
- * and a gap in from its edge, and each person puts their name an avatar and
- * a gap in from theirs.
+ * the row's text above. `Item.Root` puts the text a padding, the avatar and
+ * a gap in from its edge, and each person puts their name an avatar and a
+ * gap in from theirs.
  */
 const ACTOR_LIST_INSET =
-  tokens.space.lg +
-  AVATAR_SLOT_WIDTH +
-  tokens.space.lg -
-  ACTOR_AVATAR_SIZE -
-  tokens.space.sm
+  ROW_GUTTER + AVATAR_SIZE + ROW_GAP - ACTOR_AVATAR_SIZE - tokens.space.sm
 
 /**
  * The expanded list of everyone in a grouped notification, each linking to
@@ -599,8 +632,7 @@ export function ActorListItem({
           a.align_center,
           a.gap_sm,
           a.py_sm,
-          a.pr_lg,
-          {paddingLeft: ACTOR_LIST_INSET},
+          {paddingLeft: ACTOR_LIST_INSET, paddingRight: ROW_GUTTER},
         ]}>
         <SubtleHover hover={hover} />
         <Pressable

@@ -233,9 +233,7 @@ export function Disable() {
             variant="solid"
             color="primary"
             onPress={handleManageEmail2FA}
-            disabled={
-              !token || token.length !== 11 || state.tokenStatus === 'pending'
-            }>
+            disabled={!isValidCode(token) || state.tokenStatus === 'pending'}>
             <ButtonText>
               <Trans>Disable 2FA</Trans>
             </ButtonText>

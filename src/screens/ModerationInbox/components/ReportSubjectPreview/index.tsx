@@ -2,13 +2,16 @@ import {View} from 'react-native'
 import {AtUri, isAtUriString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useSession} from '#/state/session'
 import {useReportSubjectLabel} from '#/screens/ModerationInbox/components/hooks/useReportSubjectLabel'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type tools} from '#/lexicons'
+import {place, site, social, type tools} from '#/lexicons'
+import {getAccountPreview} from '../util/accountData'
 import {AccountSubjectPreview} from './AccountSubjectPreview'
+import {AtmosphereSubjectPreview} from './AtmosphereSubjectPreview'
 import {ChatSubjectPreview} from './ChatSubjectPreview'
 import {FeedSubjectPreview} from './FeedSubjectPreview'
 import {ListSubjectPreview} from './ListSubjectPreview'
@@ -23,13 +26,18 @@ type Report = Pick<
 
 export function ReportSubjectPreview({
   report,
+  enforcement,
   allowOwnRecordSnapshot = false,
+  allowReportRecordSnapshot = false,
 }: {
   report: Report
+  enforcement?: tools.ozone.inbox.defs.EnforcementView
   allowOwnRecordSnapshot?: boolean
+  allowReportRecordSnapshot?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const {currentAccount, hasSession} = useSession()
   const subjectLabel = useReportSubjectLabel(report.subject)
   const uri =
     'uri' in report.subject &&
@@ -48,30 +56,79 @@ export function ReportSubjectPreview({
     'did' in report.subject &&
     typeof report.subject.did === 'string'
   ) {
-    preview = <AccountSubjectPreview did={report.subject.did} />
+    preview = (
+      <AccountSubjectPreview
+        did={report.subject.did}
+        account={
+          allowOwnRecordSnapshot &&
+          hasSession &&
+          report.subject.did === currentAccount?.did
+            ? getAccountPreview(report)
+            : undefined
+        }
+      />
+    )
   } else {
     switch (uri?.collection) {
       case 'app.bsky.feed.post':
         preview = (
           <PostSubjectPreview
             report={report}
+            enforcement={enforcement}
             uri={uri}
             subjectLabel={subjectLabel}
             allowOwnRecordSnapshot={allowOwnRecordSnapshot}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
           />
         )
         break
       case 'app.bsky.graph.starterpack':
-        preview = <StarterPackSubjectPreview report={report} uri={uri} />
+        preview = (
+          <StarterPackSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.feed.generator':
-        preview = <FeedSubjectPreview report={report} uri={uri} />
+        preview = (
+          <FeedSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.graph.list':
-        preview = <ListSubjectPreview report={report} uri={uri} />
+        preview = (
+          <ListSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.actor.status':
-        preview = <StatusSubjectPreview report={report} uri={uri} />
+        preview = (
+          <StatusSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
+        break
+      case site.standard.document.$type:
+      case site.standard.publication.$type:
+      case place.stream.livestream.$type:
+      case social.grain.gallery.$type:
+        preview = (
+          <AtmosphereSubjectPreview
+            report={report}
+            uri={uri}
+            subjectLabel={subjectLabel}
+          />
+        )
         break
       default:
         preview = (

@@ -40,20 +40,42 @@ import * as bsky from '#/types/bsky'
  * embed: either a quoted post or a group chat invite link.
  */
 export type MessageEmbedState =
-  {type: 'post'; uri: string} | {type: 'invite'; code: string}
+  | {
+      type: 'post'
+      uri: string
+      /**
+       * The post was attached by the share menu (it passed the post in when
+       * opening the chat), rather than pasted as a link.
+       */
+      fromShareMenu?: boolean
+      /** How the share menu picked the chat, for metrics. */
+      shareSource?: 'recentChat' | 'chatSearch'
+    }
+  | {type: 'invite'; code: string}
 
 export function useMessageEmbed() {
   const route =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<
+      NavigationProp<CommonNavigatorParams, 'MessagesConversation'>
+    >()
   const embedFromParams = route.params.embed
+  const embedFromParamsState: MessageEmbedState | undefined = embedFromParams
+    ? {
+        type: 'post',
+        uri: embedFromParams,
+        fromShareMenu: true,
+        shareSource: route.params.embedSource,
+      }
+    : undefined
 
   const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
-    embedFromParams ? {type: 'post', uri: embedFromParams} : undefined,
+    embedFromParamsState,
   )
 
-  if (embedFromParams && embed?.type !== 'post') {
-    setEmbed({type: 'post', uri: embedFromParams})
+  if (embedFromParamsState && embed?.type !== 'post') {
+    setEmbed(embedFromParamsState)
   }
 
   return {
@@ -63,7 +85,7 @@ export function useMessageEmbed() {
         if (!embedUrl) {
           // Only the post embed is reflected in the route param (used by the
           // share-to-DM intent flow); invites are local-only.
-          navigation.setParams({embed: ''})
+          navigation.setParams({embed: '', embedSource: undefined})
           setEmbed(undefined)
           return
         }

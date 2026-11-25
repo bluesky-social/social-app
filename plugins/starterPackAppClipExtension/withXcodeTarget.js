@@ -25,13 +25,21 @@ const withXcodeTarget = (config, {targetName}) => {
       '"AppClips"',
     )
 
-    const pbxGroup = pbxProject.addPbxGroup([
-      'AppDelegate.swift',
-      'ViewController.swift',
-      'Images.xcassets',
-      `${targetName}.entitlements`,
-      'Info.plist',
-    ])
+    /*
+     * The group needs a name. Other plugins (e.g. expo-widgets) find the main
+     * group by looking for one with neither a name nor a path, and an unnamed
+     * group also leaves an undefined `_comment` entry that they trip over.
+     */
+    const pbxGroup = pbxProject.addPbxGroup(
+      [
+        'AppDelegate.swift',
+        'ViewController.swift',
+        'Images.xcassets',
+        `${targetName}.entitlements`,
+        'Info.plist',
+      ],
+      targetName,
+    )
 
     pbxProject.addFile(`${targetName}/Info.plist`, pbxGroup.uuid)
     const configurations = pbxProject.pbxXCBuildConfigurationSection()

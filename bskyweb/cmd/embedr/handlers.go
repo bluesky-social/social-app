@@ -142,6 +142,11 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 
 	aturi, err := srv.parseBlueskyURL(c.Request().Context(), c.QueryParam("url"))
 	if err != nil {
+		if isHandleResolutionError(err) {
+			// Names internal addresses and ports; log it, don't return it.
+			log.Warn("handle resolution failed", "err", err)
+			return c.String(http.StatusBadRequest, "Expected 'url' to point at an account that can be resolved")
+		}
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Expected 'url' to be bsky.app URL or AT-URI: %v", err))
 	}
 	if aturi.Collection() != syntax.NSID("app.bsky.feed.post") {

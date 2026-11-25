@@ -51,6 +51,10 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {
+  ShareSheet,
+  useShareSheetEnabled,
+} from '#/components/ShareDialog/ShareSheet'
 import * as Toast from '#/components/Toast'
 import {useFullVerificationState} from '#/components/verification'
 import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
@@ -105,6 +109,8 @@ let ProfileMenu = ({
   const addToStarterPacksDialogControl = useDialogControl()
   const addToListsDialogControl = useDialogControl()
   const reportLinkDialogControl = useDialogControl()
+  const shareSheetControl = useDialogControl()
+  const shareSheetEnabled = useShareSheetEnabled()
   const reportableLinks = useReportableProfileLinks(profile)
 
   const showLoggedOutWarning = useMemo(() => {
@@ -310,7 +316,10 @@ let ProfileMenu = ({
               testID="profileHeaderDropdownShareBtn"
               label={IS_WEB ? l`Copy link to profile` : l`Share via...`}
               onPress={() => {
-                if (showLoggedOutWarning) {
+                if (shareSheetEnabled) {
+                  // the sheet shows the logged-out warning itself
+                  shareSheetControl.open()
+                } else if (showLoggedOutWarning) {
                   loggedOutWarningPromptControl.open()
                 } else {
                   onPressShare()
@@ -597,6 +606,25 @@ let ProfileMenu = ({
         profile={profile}
         onBlock={blockAccount}
       />
+      {shareSheetEnabled && (
+        <ShareSheet
+          control={shareSheetControl}
+          subject={{
+            type: 'profile',
+            uri: `at://${profile.did}`,
+            authorDid: profile.did,
+            url: toShareUrl(makeProfileLink(profile)),
+            title: l({
+              message: `@${profile.handle} on Bluesky`,
+              comment:
+                'Prefilled subject line when sharing a profile to email or Reddit',
+            }),
+            loggedInOnlyNotice: showLoggedOutWarning
+              ? l`This profile is only visible to logged-in users.`
+              : undefined,
+          }}
+        />
+      )}
       <Prompt.Basic
         control={loggedOutWarningPromptControl}
         title={l`Note about sharing`}

@@ -6,6 +6,7 @@ A collection of native utilities for the Bluesky Social app. This Expo module pr
 
 This module consolidates several native features into a single Expo module:
 
+- **AppLink**: App-only URL handoffs using iOS Universal Links and Android App Links
 - **PlatformInfo**: Platform-specific accessibility and audio session management
 - **Referrer**: Tracking how users arrive at the app (web referrers, app referrers, Google Play install referrer)
 - **SharedPrefs**: Shared preferences storage using native platform APIs (UserDefaults on iOS, SharedPreferences on Android)
@@ -13,6 +14,21 @@ This module consolidates several native features into a single Expo module:
 - **NotificationSettings**: iOS handler that routes the system "notification settings" intent into the app
 
 ## Modules
+
+### AppLink
+
+`AppLink.tryOpen(url): Promise<boolean>` asks the OS to open an HTTP(S) URL
+directly in a non-browser app, without opening a browser or showing an app
+chooser. It returns `false` when no app handles the URL; callers should continue
+through their normal browser flow on `false` or rejection.
+
+- iOS uses Universal Links with `universalLinksOnly`.
+- Android 11+ requires a non-browser default handler. Earlier Android versions
+  resolve the default handler and exclude browsers and the system chooser.
+- Web and native binaries built without the module return `false`.
+
+Adding this module requires rebuilding both native apps; an OTA update alone
+will keep the existing browser behavior on older binaries.
 
 ### PlatformInfo
 

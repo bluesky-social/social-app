@@ -10,7 +10,10 @@ import {
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -27,7 +30,8 @@ export function InviteScannerScreen() {
   const t = useTheme()
   const ax = useAnalytics()
   const insets = useSafeAreaInsets()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<NavigationProp<CommonNavigatorParams, 'InviteScanner'>>()
   const [permission, requestPermission] = useCameraPermissions()
   const [showError, setShowError] = useState(false)
   const [scannerEnabled, setScannerEnabled] = useState(true)

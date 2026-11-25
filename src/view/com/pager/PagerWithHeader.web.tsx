@@ -54,7 +54,7 @@ export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(initialPage ?? 0)
 
     const renderTabBar = useCallback(
       (props: RenderTabBarFnProps) => {

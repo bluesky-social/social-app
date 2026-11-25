@@ -28,7 +28,10 @@ export function Text({blend, style}: TextStyleProp & SkeletonProps) {
   )
   return (
     <View
-      style={[a.flex_1, {maxWidth: width, paddingVertical: lineHeight * 0.15}]}>
+      style={[
+        a.flex_grow,
+        {maxWidth: width, paddingVertical: lineHeight * 0.15},
+      ]}>
       <View
         style={[
           a.rounded_md,
@@ -114,7 +117,7 @@ export function Col({
   children,
   style,
 }: ViewStyleProp & {children?: React.ReactNode}) {
-  return <View style={[a.flex_1, style]}>{children}</View>
+  return <View style={[a.flex_grow, style]}>{children}</View>
 }
 
 export function Row({

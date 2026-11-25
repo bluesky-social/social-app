@@ -128,11 +128,15 @@ describe('useKeyboardHandlers (web)', () => {
     },
   )
 
-  it('stops listening on unmount', () => {
+  it('cancels pending navigation on unmount', () => {
     const {unmount} = setup()
     expect(dom.window.listenerCount('keydown')).toBe(1)
+    press('ArrowRight', button)
     unmount()
+    dom.flushFrames()
     expect(dom.window.listenerCount('keydown')).toBe(0)
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
   })
 
   it('stops listening when items drop to one', () => {
@@ -156,5 +160,19 @@ describe('useKeyboardHandlers (web)', () => {
     rerender({itemCount: 3, resetKey: 'reordered'})
     dom.flushFrames()
     expect(onSettle).not.toHaveBeenCalled()
+  })
+
+  it('cancels a pending move for a dot reveal and allows subsequent arrow keys', () => {
+    const {result, currentIndexRef} = setup()
+    press('ArrowRight', button)
+    result.current()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+
+    currentIndexRef.current = 1
+    press('ArrowRight', button)
+    dom.flushFrames()
+    expect(onSettle.mock.calls).toEqual([[2]])
   })
 })

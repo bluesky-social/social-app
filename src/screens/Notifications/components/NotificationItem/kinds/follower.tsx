@@ -10,7 +10,6 @@ import {type NotificationView} from '#/state/queries/notifications/grouped/types
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Notification'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -121,11 +120,7 @@ export function FollowerNotification({
       onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
       style={[a.align_center, a.py_sm]}
       testID={`notification-${notification.type}-${notification.id}`}>
-      {gtMobile ? (
-        <Item.Avatar profile={profile} icon={PersonPlusIcon} tone="follow" />
-      ) : (
-        <PlainAvatar profile={profile} />
-      )}
+      <PlainAvatar profile={profile} />
       <Item.Content
         // The avatar stack is taller than a line of text, so give it room
         style={showSocialProof ? a.gap_2xs : a.gap_0}>
@@ -157,8 +152,8 @@ export function FollowerNotification({
 }
 
 /**
- * The bare avatar the designs use on mobile, where the rows drop the follow
- * badge that `Item.Avatar` makes room for.
+ * The person's avatar, without a badge: the Followers tab lists people rather
+ * than reactions.
  */
 function PlainAvatar({profile}: {profile: bsky.profile.AnyProfileView}) {
   const moderationOpts = useModerationOpts()

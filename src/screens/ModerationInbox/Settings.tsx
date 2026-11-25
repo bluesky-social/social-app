@@ -6,23 +6,18 @@ import {
   useUpdateModerationInboxNotificationPreferencesMutation,
 } from '#/state/queries/moderation-inbox'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {NotFoundScreen} from '#/view/screens/NotFound'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {type tools} from '#/lexicons'
 
 export function ModerationInboxSettingsScreen() {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
 
-  const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
-  const preferencesQuery =
-    useModerationInboxNotificationPreferencesQuery(isEnabled)
+  const preferencesQuery = useModerationInboxNotificationPreferencesQuery()
   const updatePreferences =
     useUpdateModerationInboxNotificationPreferencesMutation()
   const preferences = preferencesQuery.data?.preferences
@@ -38,10 +33,6 @@ export function ModerationInboxSettingsScreen() {
   ) => {
     if (isDisabled) return
     updatePreferences.mutate({[key]: value})
-  }
-
-  if (!isEnabled) {
-    return <NotFoundScreen />
   }
 
   return (

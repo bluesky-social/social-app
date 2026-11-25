@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {ITEM_GAP} from '#/components/Gallery/const'
 import {isEditableTarget} from '#/components/Gallery/domUtils'
@@ -51,6 +51,8 @@ export function usePointerHandlers({
   itemCount,
   resetKey,
 }: NavigationHandlerArgs) {
+  const cancelRef = useRef<(() => void) | null>(null)
+
   useEffect(() => {
     if (itemCount <= 1) return
 
@@ -75,6 +77,17 @@ export function usePointerHandlers({
       overscrollX = 0
       el.style.transform = ''
     }
+
+    const cancel = () => {
+      stopTween?.()
+      stopTween = null
+      isMouseDown = false
+      isDragging = false
+      clearOverscroll()
+      el.style.cursor = 'grab'
+      el.style.userSelect = ''
+    }
+    cancelRef.current = cancel
 
     /*
      * We don't preventDefault on mousedown, since that would break focus and
@@ -144,17 +157,17 @@ export function usePointerHandlers({
 
       if (desiredScroll < 0) {
         // Overscroll at start — rubber band
-        scrollTo(0)
+        scrollTo({offset: 0})
         overscrollX = desiredScroll * OVERSCROLL_RESISTANCE
         el.style.transform = `translateX(${-overscrollX}px)`
       } else if (desiredScroll > maxScroll) {
         // Overscroll at end — rubber band
-        scrollTo(maxScroll)
+        scrollTo({offset: maxScroll})
         overscrollX = (desiredScroll - maxScroll) * OVERSCROLL_RESISTANCE
         el.style.transform = `translateX(${-overscrollX}px)`
       } else {
         // Normal scroll range
-        scrollTo(desiredScroll)
+        scrollTo({offset: desiredScroll})
         if (overscrollX !== 0) clearOverscroll()
       }
 
@@ -256,7 +269,7 @@ export function usePointerHandlers({
             SETTLE_DURATION,
           )(
             v => {
-              scrollTo(v)
+              scrollTo({offset: v})
             },
             () => {
               stopTween = null
@@ -295,13 +308,13 @@ export function usePointerHandlers({
 
       const maxScroll = el.scrollWidth - el.clientWidth
       const next = Math.max(0, Math.min(el.scrollLeft + e.deltaX, maxScroll))
-      scrollTo(next)
+      scrollTo({offset: next})
 
       // Keep the active index in sync so keyboard/lightbox stay correct, but
       // only settle when it actually changes - onSettle moves focus, which we
       // don't want to thrash on every wheel tick.
       const index = getIndexForOffset(itemWidthsRef.current, next, itemCount)
-      if (index !== localIndex) {
+      if (index !== currentIndexRef.current) {
         localIndex = index
         onSettle(index)
       }
@@ -319,10 +332,9 @@ export function usePointerHandlers({
       el.removeEventListener('wheel', onWheel)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
-      if (stopTween) stopTween()
-      clearOverscroll()
+      cancel()
+      cancelRef.current = null
       el.style.cursor = ''
-      el.style.userSelect = ''
     }
   }, [
     scrollRef,
@@ -333,4 +345,6 @@ export function usePointerHandlers({
     itemCount,
     resetKey,
   ])
+
+  return () => cancelRef.current?.()
 }

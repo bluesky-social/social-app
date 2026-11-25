@@ -48,6 +48,7 @@ export function GalleryStorybook() {
           height, and the strip is as tall as the tallest one.
         </Trans>
       </Text>
+      <PageDotsExample />
       <ImageContent />
       <ImageAdapter />
       <MixedContent />
@@ -57,6 +58,52 @@ export function GalleryStorybook() {
       <ConstrainedAndBleeding />
       <EmptyAndSingle />
     </View>
+  )
+}
+
+function PageDotsExample() {
+  const ref = useRef<Gallery.GalleryRef>(null)
+  const ids = [1, 2, 3, 4, 5]
+  const [snapToItems, setSnapToItems] = useState(false)
+  return (
+    <Section
+      titleText="Optional page dots"
+      descriptionText="One dot per item, even when several cards fit. On web, click a dot to left-align its card, stopping at the end of the gallery. Highlighting follows the scroll position, so an earlier dot may stay highlighted. Dots are read-only on native."
+      testID="galleryStorybook-dots">
+      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+        <Button
+          label="Reveal last card"
+          testID="galleryStorybook-dots-reveal"
+          color="secondary"
+          size="small"
+          onPress={() => ref.current?.scrollIntoView(ids.length - 1)}>
+          <ButtonText>Reveal last card</ButtonText>
+        </Button>
+        <Button
+          label="Toggle native snapping"
+          testID="galleryStorybook-dots-snap"
+          color="secondary"
+          size="small"
+          onPress={() => setSnapToItems(value => !value)}>
+          <ButtonText>Native snapping: {snapToItems ? 'on' : 'off'}</ButtonText>
+        </Button>
+      </View>
+      <Gallery.Root
+        ref={ref}
+        snapToItems={snapToItems}
+        label="Page dot example"
+        testID="galleryStorybook-dots-root"
+        footer={<Gallery.PageDots testID="galleryStorybook-dots-pagination" />}>
+        {ids.map(id => (
+          <Gallery.Item
+            key={id}
+            label={`Card ${id}`}
+            testID={`galleryStorybook-dots-card-${id}`}>
+            <Card width={240} height={120} title={`Card ${id}`} />
+          </Gallery.Item>
+        ))}
+      </Gallery.Root>
+    </Section>
   )
 }
 

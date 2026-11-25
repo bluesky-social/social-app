@@ -1,7 +1,7 @@
 import {type $Typed} from '@atproto/lex'
 
 import type * as Dialog from '#/components/Dialog'
-import {type app, type chat} from '#/lexicons'
+import {type app, type chat, type com} from '#/lexicons'
 
 export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'
@@ -24,6 +24,9 @@ export type ReportSubject =
   | $Typed<app.bsky.graph.defs.StarterPackView>
   | $Typed<app.bsky.feed.defs.PostView>
   | $Typed<app.bsky.actor.defs.ProfileLinkView>
+  | $Typed<app.bsky.embed.external.ViewArticle>
+  | $Typed<app.bsky.embed.external.ViewGallery>
+  | $Typed<com.atproto.repo.strongRef.Main>
   | ReportSubjectConvoMessage
   | ReportSubjectConvo
 
@@ -72,6 +75,18 @@ export type ParsedReportSubject =
       nsid: string
     }
   | {
+      type:
+        | 'article'
+        | 'photo'
+        | 'publication'
+        | 'gallery'
+        | 'livestream'
+        | 'record'
+      uri: string
+      cid: string
+      nsid: string
+    }
+  | {
       type: 'account'
       did: string
       nsid: string
@@ -87,9 +102,10 @@ export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   subject: ParsedReportSubject
   /**
-   * Called if the report was successfully submitted.
+   * Called if the report was successfully submitted, with the reason the user
+   * picked.
    */
-  onAfterSubmit?: () => void
+  onAfterSubmit?: (report: {reason: string | undefined}) => void
   /**
    * Called after the dialog finishes closing.
    */

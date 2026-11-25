@@ -106,7 +106,7 @@ function tokenizePathData(data, file) {
       index += afterComma[0].length
       PATH_TOKEN.lastIndex = index
       const next = PATH_TOKEN.exec(data)
-      if (!next || /[A-Za-z]/.test(next[0])) {
+      if (!next || /^[A-Za-z]$/.test(next[0])) {
         fail(file, `misplaced comma near ${JSON.stringify(data.slice(index, index + 16))}`)
       }
     }
@@ -114,7 +114,7 @@ function tokenizePathData(data, file) {
     PATH_TOKEN.lastIndex = index
     const match = PATH_TOKEN.exec(data)
     if (!match) fail(file, `malformed path data near ${JSON.stringify(data.slice(index, index + 16))}`)
-    tokens.push(/[A-Za-z]/.test(match[0]) ? match[0] : Number(match[0]))
+    tokens.push(/^[A-Za-z]$/.test(match[0]) ? match[0] : Number(match[0]))
     index = PATH_TOKEN.lastIndex
   }
   return tokens

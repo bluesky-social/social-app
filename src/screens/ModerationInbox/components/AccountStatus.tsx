@@ -9,55 +9,105 @@ import {ExclamationCircle_Stroke2_Corner0_Rounded as ExclamationCircleIcon} from
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type AccountEnforcement} from './util/accountData'
 
 export function AccountStatus({
   status,
+  enforcement,
+  hasActiveStrikes,
 }: {
   status: 'good' | 'warning' | 'atRisk'
+  enforcement?: AccountEnforcement
+  hasActiveStrikes?: boolean
 }) {
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {i18n, t: l} = useLingui()
   const ax = useAnalytics()
   const markSeen = useUpdateModerationInboxSeenMutation({silent: true})
 
   const control = Prompt.usePromptControl()
 
+  const isTakenDown = enforcement?.state === 'takendown'
+  const isSuspended = enforcement?.state === 'suspended'
   if (status === 'good') return null
 
-  const Icon = status === 'atRisk' ? ExclamationCircleIcon : CircleInfoIcon
-  const iconColor =
-    status === 'atRisk' ? t.palette.negative_500 : t.palette.yellow
+  const isSerious = status === 'atRisk' || isTakenDown || isSuspended
+  const Icon = isSerious ? ExclamationCircleIcon : CircleInfoIcon
+  const iconColor = isSerious ? t.palette.negative_500 : t.palette.yellow
 
-  const title =
-    status === 'atRisk'
-      ? l`Your account is at risk of permanent suspension`
-      : l`Your account has strikes against it`
-  const description =
-    status === 'atRisk' ? (
+  const title = isTakenDown
+    ? l`Your account has been suspended`
+    : isSuspended
+      ? l`Your account is temporarily suspended`
+      : status === 'atRisk' && enforcement
+        ? l`Your account is at risk of permanent suspension`
+        : status === 'atRisk'
+          ? l`Your account may be suspended or at risk of suspension`
+          : hasActiveStrikes
+            ? l`Your account has strikes against it`
+            : l`Your account has moderation actions`
+  const description = isTakenDown ? (
+    <Trans>
+      Your account is suspended on Bluesky. See your notices for details and
+      available appeal options.
+    </Trans>
+  ) : isSuspended ? (
+    <Trans>
+      Your account is temporarily suspended on Bluesky. See your notices for
+      details and available appeal options.
+    </Trans>
+  ) : status === 'atRisk' && enforcement && hasActiveStrikes ? (
+    <Trans>
+      We’ve taken action on your account for violating our Community Guidelines.
+      Your record now carries enough strikes that another violation could lead
+      to permanent suspension.
+    </Trans>
+  ) : status === 'atRisk' && enforcement ? (
+    <Trans>
+      Further violations of our Community Guidelines could lead to permanent
+      suspension.
+    </Trans>
+  ) : status === 'atRisk' ? (
+    <Trans>
+      Your account may already be suspended or at risk of suspension. See your
+      notices for details.
+    </Trans>
+  ) : hasActiveStrikes ? (
+    <Trans>
+      We’ve taken action on your account for violating our Community Guidelines,
+      and strikes have been added to your record. More violations will lead to
+      stronger enforcement, including suspension.
+    </Trans>
+  ) : (
+    <Trans>
+      We’ve taken action on your account. See your notices for details.
+    </Trans>
+  )
+  const scheduledEnd =
+    isSuspended && enforcement?.expiresAt ? (
       <Trans>
-        We’ve taken action on your account for violating our Community
-        Guidelines. Your record now carries enough strikes that another
-        violation could lead to permanent suspension.
+        Scheduled end:{' '}
+        {i18n.date(new Date(enforcement.expiresAt), {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        })}
+      </Trans>
+    ) : null
+  const disclaimer = hasActiveStrikes ? (
+    isTakenDown || isSuspended ? (
+      <Trans>
+        Your account has strikes against it. Strikes come off your record over
+        time.
       </Trans>
     ) : (
       <Trans>
-        We’ve taken action on your account for violating our Community
-        Guidelines, and strikes have been added to your record. More violations
-        will lead to stronger enforcement, including suspension.
+        Some account features may be restricted. Strikes come off your record
+        over time.
       </Trans>
     )
-  const disclaimer =
-    status === 'atRisk' ? (
-      <Trans>
-        Your standing may restrict certain features on your account. Strikes
-        come off your record over time.
-      </Trans>
-    ) : (
-      <Trans>
-        Your standing doesn’t restrict your account right now, and strikes come
-        off your record over time.
-      </Trans>
-    )
+  ) : !isTakenDown && !isSuspended ? (
+    <Trans>Some account features may be restricted.</Trans>
+  ) : null
 
   return (
     <>
@@ -91,7 +141,12 @@ export function AccountStatus({
           </View>
           <Prompt.TitleText>{title}</Prompt.TitleText>
           <Prompt.DescriptionText>{description}</Prompt.DescriptionText>
-          <Prompt.DescriptionText>{disclaimer}</Prompt.DescriptionText>
+          {scheduledEnd ? (
+            <Prompt.DescriptionText>{scheduledEnd}</Prompt.DescriptionText>
+          ) : null}
+          {disclaimer ? (
+            <Prompt.DescriptionText>{disclaimer}</Prompt.DescriptionText>
+          ) : null}
         </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action cta={l`Done`} onPress={() => control.close()} />

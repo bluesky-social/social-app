@@ -9,7 +9,6 @@ export {sameProfileLinks} from './record'
 export {
   useCanEditProfileLinks,
   useOwnProfileLinksQuery,
-  useProfileLinksEnabled,
   useProfileViewLinks,
   useSetOwnProfileLinksCache,
   useWriteProfileLinks,

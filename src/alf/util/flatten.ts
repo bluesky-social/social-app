@@ -40,13 +40,12 @@ interface PaddingStyle {
  * paddingTop/paddingBottom, etc.). Values are expected to be numbers — any
  * non-numeric `DimensionValue` (e.g. percentages) is treated as 0.
  */
-export function extractPadding(style: PaddingStyle | PaddingStyle[]) {
+export function extractPadding(style?: StyleProp<PaddingStyle>) {
   const s = flatten(style)
-  const base = num(s.padding)
   return {
-    paddingTop: num(s.paddingTop) || num(s.paddingVertical) || base,
-    paddingBottom: num(s.paddingBottom) || num(s.paddingVertical) || base,
-    paddingLeft: num(s.paddingLeft) || num(s.paddingHorizontal) || base,
-    paddingRight: num(s.paddingRight) || num(s.paddingHorizontal) || base,
+    paddingTop: num(s.paddingTop ?? s.paddingVertical ?? s.padding),
+    paddingBottom: num(s.paddingBottom ?? s.paddingVertical ?? s.padding),
+    paddingLeft: num(s.paddingLeft ?? s.paddingHorizontal ?? s.padding),
+    paddingRight: num(s.paddingRight ?? s.paddingHorizontal ?? s.padding),
   }
 }

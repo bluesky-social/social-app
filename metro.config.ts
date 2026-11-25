@@ -1,4 +1,5 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
+import {withNanoIcons} from 'react-native-nano-icons/metro'
 import {getBundleModeMetroConfig} from 'react-native-worklets/bundleMode/index.js'
 import {type CustomResolver} from '@expo/metro/metro-resolver'
 import {getDefaultConfig} from '@expo/metro-config'
@@ -80,5 +81,16 @@ let config = getSentryExpoConfig(import.meta.dirname, {
 })
 
 config = getBundleModeMetroConfig(config)
+
+/*
+ * The icon fonts are baked into the native binary, so a dev client built from
+ * an older commit lacks the glyphs the current glyphmaps point at, and those
+ * icons render blank. In development this serves the current fonts from the
+ * dev server, and nano-icons registers them at runtime when the binary's font
+ * doesn't match. When an SVG changes, it also rebuilds that font and its
+ * glyphmap in `assets/nano-icons/`, like `pnpm icons:generate` would. It does
+ * nothing in production, where the fonts must ship in the binary.
+ */
+config = withNanoIcons(config)
 
 export default config

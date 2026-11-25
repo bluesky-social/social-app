@@ -8,33 +8,65 @@ configure({asyncUtilTimeout: 20000})
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
-  // eslint-disable-next-line import-x/no-nodejs-modules
-  const {EventEmitter} = require('events')
+
+// The library's own mock keeps the real contexts (e.g. SafeAreaInsetsContext,
+// read by React Navigation) and supplies zero insets.
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default,
+)
+
+jest.mock('expo-file-system', () => {
+  const join = parts =>
+    parts
+      .map(part => (typeof part === 'string' ? part : part.uri))
+      .join('/')
+      .replace(/([^:]\/)\/+/g, '$1')
+
+  class File {
+    static downloadFileAsync = jest.fn()
+
+    constructor(...parts) {
+      this.uri = join(parts)
+      this.exists = true
+      this.size = 100
+      this.type = 'image/jpeg'
+    }
+
+    copy = jest.fn()
+    delete = jest.fn()
+    move = jest.fn(async destination => {
+      this.uri = destination.uri
+    })
+    write = jest.fn()
+  }
+
+  class Directory {
+    static pickDirectoryAsync = jest.fn()
+
+    constructor(...parts) {
+      this.uri = join(parts)
+      this.exists = true
+    }
+
+    create = jest.fn()
+    createFile = jest.fn(name => new File(this, name))
+    delete = jest.fn()
+    list = jest.fn(() => [])
+  }
+
   return {
-    __esModule: true,
-    default: EventEmitter,
+    Directory,
+    EncodingType: {Base64: 'base64'},
+    File,
+    Paths: {
+      availableDiskSpace: 100,
+      cache: new Directory('file://cache'),
+      document: new Directory('file://document'),
+      info: jest.fn(() => ({exists: true, isDirectory: false})),
+    },
   }
 })
-
-jest.mock('react-native-safe-area-context', () => {
-  const inset = {top: 0, right: 0, bottom: 0, left: 0}
-  return {
-    SafeAreaProvider: jest.fn().mockImplementation(({children}) => children),
-    SafeAreaConsumer: jest.fn().mockImplementation(
-      /** @param {{children: (i: typeof inset) => unknown}} props */
-      ({children}) => children(inset),
-    ),
-    useSafeAreaInsets: jest.fn().mockImplementation(() => inset),
-  }
-})
-
-jest.mock('expo-file-system/legacy', () => ({
-  getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
-  deleteAsync: jest.fn(),
-  moveAsync: jest.fn().mockResolvedValue(undefined),
-  createDownloadResumable: jest.fn(),
-}))
 
 jest.mock('expo-image-manipulator', () => {
   const createContext = () => {
@@ -75,18 +107,16 @@ jest.mock('expo-camera', () => ({
 
 jest.mock('expo-media-library', () => ({
   __esModule: true, // this property makes it work
+  Album: {
+    create: jest.fn(),
+    get: jest.fn(),
+  },
+  Asset: {
+    create: jest.fn(),
+  },
   default: jest.fn(),
   usePermissions: jest.fn(() => [true]),
   requestPermissionsAsync: jest.fn().mockResolvedValue({granted: true}),
-  saveToLibraryAsync: jest.fn().mockResolvedValue(undefined),
-}))
-
-jest.mock('expo-media-library/legacy', () => ({
-  __esModule: true,
-  default: jest.fn(),
-  usePermissions: jest.fn(() => [true]),
-  requestPermissionsAsync: jest.fn().mockResolvedValue({granted: true}),
-  saveToLibraryAsync: jest.fn().mockResolvedValue(undefined),
 }))
 
 jest.mock('@bsky.app/expo-guess-language', () => ({
@@ -117,6 +147,7 @@ jest.mock('expo-application', () => ({
 }))
 
 jest.mock('expo-modules-core', () => ({
+  requireOptionalNativeModule: jest.fn().mockReturnValue(null),
   requireNativeModule: jest.fn().mockImplementation(
     /** @param {string} moduleName */
     moduleName => {

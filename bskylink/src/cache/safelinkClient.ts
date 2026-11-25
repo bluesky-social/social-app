@@ -281,7 +281,9 @@ export class SafelinkClient {
       if (this.stopped) {
         return
       }
-      redirectLogger.error({error: err}, 'error getting Ozone agent')
+      // `err`, not `error`: pino's serializer for that key logs the message,
+      // stack and cause chain, where a plain object key drops them all.
+      redirectLogger.error({err}, 'error getting Ozone agent')
       this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
       return
     }
@@ -293,19 +295,26 @@ export class SafelinkClient {
     let res: ToolsOzoneSafelinkQueryEvents.Response
     try {
       const cursor = await this.getCursor()
-      res = await agent.tools.ozone.safelink.queryEvents({
-        cursor,
-        limit: 100,
-        sortDirection: 'asc',
-      })
+      const queryEvents = () =>
+        agent.tools.ozone.safelink.queryEvents({
+          cursor,
+          limit: 100,
+          sortDirection: 'asc',
+        })
+      try {
+        res = await queryEvents()
+      } catch (err) {
+        if (!isClosedConnection(err)) {
+          throw err
+        }
+        // The query is a read, so it is safe to send again on a new connection.
+        res = await queryEvents()
+      }
     } catch (err) {
       if (this.stopped) {
         return
       }
-      redirectLogger.error(
-        {error: err},
-        'error fetching safelink events from Ozone',
-      )
+      redirectLogger.error({err}, 'error fetching safelink events from Ozone')
       this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
       return
     }
@@ -366,10 +375,7 @@ export class SafelinkClient {
         .selectAll()
         .where('id', '=', 1)
         .executeTakeFirst()
-      if (!res) {
-        return ''
-      }
-      this.cursor = res.cursor
+      this.cursor = res?.cursor ?? ''
     }
     return this.cursor
   }
@@ -412,6 +418,25 @@ export class SafelinkClient {
     const u = new URL(input)
     return u.host.toLowerCase()
   }
+}
+
+/**
+ * True when a request failed because it went out on a kept-alive connection
+ * that the server had already closed. The fetch implementation (undici)
+ * reports that as a SocketError with code UND_ERR_SOCKET somewhere in the
+ * error's cause chain, and does not retry a POST by itself. Polling at about
+ * the server's idle timeout hits this regularly.
+ */
+export function isClosedConnection(err: unknown): boolean {
+  let current: unknown = err
+  for (let depth = 0; depth < 5 && current instanceof Error; depth++) {
+    const {code, cause} = current as {code?: unknown; cause?: unknown}
+    if (code === 'UND_ERR_SOCKET') {
+      return true
+    }
+    current = cause
+  }
+  return false
 }
 
 export class OzoneAgent {

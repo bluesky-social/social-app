@@ -24,11 +24,42 @@ export const sizes = {
   '4xl': 64,
 } as const
 
-export function useCommonSVGProps(props: Props) {
+/**
+ * Size tokens set the width; otherwise preserve explicit dimensions and infer
+ * the missing dimension from the viewBox. Icons default to a width of 20.
+ */
+export function useCommonSVGProps(props: Props, defaultViewBox = '0 0 24 24') {
   const t = useTheme()
-  const {fill, size, gradient, ...rest} = props
+  const {
+    fill,
+    size,
+    gradient,
+    viewBox = defaultViewBox,
+    width,
+    height,
+    ...rest
+  } = props
   const style = StyleSheet.flatten(rest.style)
-  const _size = Number(size ? sizes[size] : rest.width || sizes.md)
+  const bounds = viewBox
+    .trim()
+    .split(/[\s,]+/)
+    .map(Number)
+  const ratio =
+    bounds.length === 4 &&
+    bounds.every(Number.isFinite) &&
+    bounds[2] > 0 &&
+    bounds[3] > 0
+      ? bounds[2] / bounds[3]
+      : 1
+  const resolvedWidth = size
+    ? sizes[size]
+    : width !== undefined
+      ? Number(width)
+      : height !== undefined
+        ? Number(height) * ratio
+        : sizes.md
+  const resolvedHeight =
+    !size && height !== undefined ? Number(height) : resolvedWidth / ratio
   let _fill = fill || style?.color || t.palette.primary_500
   let gradientDef = null
 
@@ -55,7 +86,9 @@ export function useCommonSVGProps(props: Props) {
 
   return {
     fill: _fill,
-    size: _size,
+    width: resolvedWidth,
+    height: resolvedHeight,
+    viewBox,
     style,
     gradient: gradientDef,
     ...rest,

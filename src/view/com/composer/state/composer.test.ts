@@ -58,3 +58,36 @@ describe('composerReducer', () => {
     })
   })
 })
+
+describe('createComposerState', () => {
+  const quoteUri = 'at://did:plc:alice/app.bsky.feed.post/3kquote'
+
+  it('quotes the post at initQuoteUri', () => {
+    const state = createComposerState({
+      initText: undefined,
+      initMention: undefined,
+      initImageUris: undefined,
+      initQuoteUri: quoteUri,
+      initInteractionSettings: undefined,
+    })
+
+    expect(state.thread.posts[0].embed.quote).toEqual({
+      type: 'link',
+      uri: 'https://bsky.app/profile/did:plc:alice/post/3kquote',
+    })
+  })
+
+  it('prefers initQuoteUri over a post link in initText', () => {
+    const state = createComposerState({
+      initText: 'look https://bsky.app/profile/bob.test/post/3kother',
+      initMention: undefined,
+      initImageUris: undefined,
+      initQuoteUri: quoteUri,
+      initInteractionSettings: undefined,
+    })
+
+    expect(state.thread.posts[0].embed.quote?.uri).toBe(
+      'https://bsky.app/profile/did:plc:alice/post/3kquote',
+    )
+  })
+})

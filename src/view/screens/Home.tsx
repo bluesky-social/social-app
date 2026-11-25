@@ -49,7 +49,7 @@ import {
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -92,7 +92,7 @@ export function HomeScreen(props: Props) {
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
-      <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
+      <Layout.Screen testID="HomeScreen" noInsetTop={IS_NATIVE}>
         <HomeHeaderModeProvider>
           <HomeScreenReady
             {...props}

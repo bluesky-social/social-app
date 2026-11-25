@@ -1,0 +1,42 @@
+{
+  "id": "community.lexicon.location.address",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "country"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the location."
+        },
+        "region": {
+          "type": "string",
+          "description": "The administrative region of the country. For example, a state in the USA."
+        },
+        "street": {
+          "type": "string",
+          "description": "The street address."
+        },
+        "country": {
+          "type": "string",
+          "maxLength": 10,
+          "minLength": 2,
+          "description": "The ISO 3166 country code. Preferably the 2-letter code."
+        },
+        "locality": {
+          "type": "string",
+          "description": "The locality of the region. For example, a city in the USA."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "The postal code of the location."
+        }
+      },
+      "description": "A physical location in the form of a street address."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

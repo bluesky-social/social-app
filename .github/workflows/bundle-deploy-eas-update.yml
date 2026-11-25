@@ -123,7 +123,7 @@ jobs:
             echo "version-changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -164,7 +164,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@2287aefd4ddca2914fd85715cbe47124b7d9f360 # v0.4.0
+        uses: bluesky-social/github-actions/fingerprint-native@b8aac187f297a2cb3e84434d1e8dedd907918c9d # v0.5.1
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -202,11 +202,11 @@ jobs:
         run: pnpm icons:check
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        uses: expo/expo-github-action@5273c2136bd09c2a341fe3340d3e767ce5a13015 # 9.0.2
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
           packager: 'pnpm --dangerously-allow-all-builds'
           token: ${{ secrets.EXPO_TOKEN }}
 
@@ -254,6 +254,49 @@ jobs:
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
 
+      - name: ⬇️ Load main testflight build numbers
+        id: build-numbers
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed &&
+          (inputs.channel || 'testflight') == 'testflight' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          set -o pipefail
+          for platform in ios android; do
+            # A delayed submission or rerun must not displace a newer workflow run.
+            url=$(
+              gh api \
+                "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-$platform-build-number&per_page=100" \
+                --jq ".artifacts[] | select(
+                  .expired == false and
+                  .workflow_run.head_branch == \"main\" and
+                  .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
+                ) | [.workflow_run.id, .archive_download_url] | @tsv" \
+                2>/dev/null |
+              while IFS=$'\t' read -r run_id artifact_url; do
+                created_at=$(gh api --cache 1h \
+                  "repos/${GITHUB_REPOSITORY}/actions/runs/$run_id" \
+                  --jq '.created_at' 2>/dev/null) || exit 1
+                printf '%s\t%s\n' "$created_at" "$artifact_url"
+              done |
+              sort | tail -n 1 | cut -f 2
+            ) || url=""
+
+            number=""
+            if [ -n "$url" ] && [ "$url" != "null" ]; then
+              curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o "$platform.zip" "$url" \
+                && number=$(unzip -p "$platform.zip" "$platform-build-number" 2>/dev/null) || true
+            fi
+            if [[ "$number" =~ ^[0-9]+$ ]]; then
+              echo "$platform build number: $number"
+              echo "$platform=$number" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::No $platform build number recorded from main; stamping with the global EAS counter."
+            fi
+          done
+
       - name: 🚀 Publish OTA to denis (S3)
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
@@ -263,8 +306,8 @@ jobs:
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
           # When set (required for production), these take precedence over the
           # global EAS counters inside the use-build-number wrapper
-          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
-          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber || steps.build-numbers.outputs.ios }}
+          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode || steps.build-numbers.outputs.android }}
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS
@@ -279,7 +322,7 @@ jobs:
       profile: testflight
       testFlightGroup: "QA Team"
       # OTA rebuilds don't need the xlarge builder used for releases
-      runner: macos-26
+      runner: xcode-27
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
     # so this workflow never hands the reusable workflow the entire repo secret store.
     secrets:
@@ -311,7 +354,9 @@ jobs:
     uses: $/.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
-      runner: ubuntu-latest
+      # No runner override: the build keeps the reusable workflow's 32-core default.
+      # Building React Native from source gets killed mid-Gradle on ubuntu-latest
+      # (Ubuntu 26.04), and the post-build jobs already run on ubuntu-latest.
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
     # so this workflow never hands the reusable workflow the entire repo secret store.
     secrets:

@@ -26,7 +26,7 @@ import {type app} from '#/lexicons'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
 import {buildProfileRow, GERM_KEY} from '../row'
-import {useProfileLinksEnabled, useProfileViewLinks} from '../state'
+import {useProfileViewLinks} from '../state'
 import {type ProfileLink} from '../types'
 import {LinkHoverPreview} from './LinkHoverPreview'
 import {ProfileLinkPill} from './LinkPill'
@@ -57,24 +57,27 @@ export function ProfileHeaderLinks({
 }) {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const enabled = useProfileLinksEnabled()
   const isOwnProfile = currentAccount?.did === profile.did
   const viewLinks = useProfileViewLinks(profile)
-  const links = !enabled || hidden ? [] : viewLinks
+  const links = hidden ? [] : viewLinks
   const supportLinkCount = links.filter(link =>
     getSupportProvider(link.url),
   ).length
+  const linkUris = links.flatMap(link => (link.uri ? [link.uri] : []))
+  const linkUrisKey = linkUris.join()
 
   useEffect(() => {
     if (links.length === 0) return
     ax.metric('profile:links:impression', {
+      profileDid: profile.did,
       linkCount: links.length,
       supportLinkCount,
+      linkUris,
       isOwnProfile,
     })
     // Once per profile and set of links, not on every render.
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile.did, links.length, supportLinkCount])
+  }, [profile.did, linkUrisKey, links.length, supportLinkCount])
 
   if (links.length === 0) {
     // the header is a column, so a lone button would stretch to full width
@@ -124,6 +127,8 @@ function ProfileLinksRow({
 
   const logClick = (link: ProfileLink) => {
     ax.metric('profile:links:click', {
+      profileDid: profile.did,
+      linkUri: link.uri,
       domain: getLinkHost(link.url),
       supportProvider: getSupportProvider(link.url)?.name,
       isOwnProfile,
@@ -132,8 +137,11 @@ function ProfileLinksRow({
 
   const showPreview = (link: ProfileLink) => {
     ax.metric('profile:links:preview', {
+      profileDid: profile.did,
+      linkUri: link.uri,
       domain: getLinkHost(link.url),
       supportProvider: getSupportProvider(link.url)?.name,
+      isOwnProfile,
     })
     setActiveLink(link)
     previewControl.open()
@@ -265,9 +273,30 @@ function CappedPillRow({
   }
   const hiddenCount = folded && !expanded ? items.length - folded.size : 0
 
+  /*
+   * A pill measures up to a physical pixel differently out of flow than in
+   * the row, since Yoga snaps its edges to the pixel grid. Folding or showing
+   * it must not change its size, or a row that fits to within a pixel would
+   * flip between the two forever, so ignore changes under 1dp.
+   */
   const measure = (key: string) => (e: LayoutChangeEvent) => {
     const w = e.nativeEvent.layout.width
-    setSizes(prev => (prev[key] === w ? prev : {...prev, [key]: w}))
+    setSizes(prev =>
+      prev[key] != null && Math.abs(prev[key] - w) < 1
+        ? prev
+        : {...prev, [key]: w},
+    )
+  }
+
+  /*
+   * Keep the widest "+N" seen. Digits differ in width (in Inter "+7" is
+   * narrower than "+6"), so reserving only what the current count needs lets
+   * the row fold a pill, shrink the label, fit the pill back, widen the label
+   * and fold it again, every frame.
+   */
+  const measureMore = (e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width
+    setMoreWidth(prev => Math.max(prev, w))
   }
 
   let revealIndex = 0
@@ -318,7 +347,7 @@ function CappedPillRow({
         <Animated.View
           exiting={FadeOut.duration(120)}
           layout={LinearTransition.duration(300).easing(EASE_OUT)}
-          onLayout={e => setMoreWidth(e.nativeEvent.layout.width)}>
+          onLayout={measureMore}>
           <MorePill count={hiddenCount} onPress={onExpand} />
         </Animated.View>
       ) : null}

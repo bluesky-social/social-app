@@ -11,3 +11,9 @@ export const PILL_RIGHT_ARROW = 10
 export const PILL_RIGHT_GRIP = 8
 /** Right edge when the pill ends in plain text. */
 export const PILL_RIGHT_TEXT = 12
+
+/**
+ * Border on the dashed "Add" pills. Solid pills have none, so the dashed ones
+ * take this off their padding to come out the same size.
+ */
+export const PILL_DASHED_BORDER = 1

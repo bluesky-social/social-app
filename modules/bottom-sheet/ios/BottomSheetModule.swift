@@ -57,8 +57,8 @@ public class BottomSheetModule: Module {
       Prop("maxHeight") { (view: SheetView, prop: Double?) in
         view.maxHeight = prop.map { CGFloat($0) }
       }
-      Prop("desiredContentHeight") { (view: SheetView, prop: Double?) in
-        view.desiredContentHeight = prop.map { CGFloat($0) }
+      Prop("contentScrollViewTag") { (view: SheetView, prop: Int?) in
+        view.contentScrollViewTag = prop
       }
 
       Prop("preventDismiss") { (view: SheetView, prop: Bool) in
