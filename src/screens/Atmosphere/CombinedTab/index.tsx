@@ -178,7 +178,14 @@ function CombinedFeedRow({
 }) {
   switch (row.kind) {
     case 'activity':
-      return <ActivityRow row={row.row} position={position} />
+      return (
+        <ActivityRow
+          row={row.row}
+          position={position}
+          divider={false}
+          style={a.py_md}
+        />
+      )
     case 'recommended':
       return (
         <RecommendedRow
@@ -230,11 +237,8 @@ function RecommendedRow({
   position: number
   feedback: AtmosphereFeedback | undefined
 }) {
-  const t = useTheme()
   return (
-    <View
-      testID="combinedRecommendedRow"
-      style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
+    <View testID="combinedRecommendedRow" style={[a.gap_md, a.px_lg, a.py_md]}>
       {eyebrow && <RecommendedEyebrow />}
       <ActivityContentHider moderation={moderation}>
         <AtmosphereContentItem
@@ -318,7 +322,13 @@ function SectionHeader({
   return (
     <View
       testID={testID}
-      style={[a.gap_2xs, a.px_lg, first ? a.pt_2xl : a.pt_4xl]}>
+      style={[
+        a.gap_2xs,
+        a.px_lg,
+        first
+          ? a.pt_2xl
+          : [a.mt_md, a.pt_4xl, a.border_t, t.atoms.border_contrast_low],
+      ]}>
       {subtitle && (
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           {subtitle}

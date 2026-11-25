@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
@@ -34,16 +34,26 @@ import {LivestreamCard} from './LivestreamCard'
 export function ActivityRow({
   row,
   position,
+  divider = true,
+  style,
 }: {
   row: ActivityRowModel
   /** 0-based, in the list. */
   position: number
+  /** Whether to draw a border below the row. */
+  divider?: boolean
+  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   return (
     <View
       testID={row.kind === 'card' ? 'activityRow' : 'activityWarningRow'}
-      style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
+      style={[
+        a.gap_md,
+        a.p_lg,
+        divider && [a.border_b, t.atoms.border_contrast_low],
+        style,
+      ]}>
       {row.kind === 'card' ? (
         <ActivityCard row={row} position={position} />
       ) : (
