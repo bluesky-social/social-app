@@ -117,6 +117,7 @@ export function ActivityContentCard({
         <Document
           view={content.view}
           recommenders={recommenders}
+          hideMeta
           onPressCallback={onPress}
           onShareCallback={onShare}
         />

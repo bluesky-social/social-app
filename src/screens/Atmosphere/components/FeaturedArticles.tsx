@@ -60,6 +60,7 @@ function Article({article}: {article: app.bsky.embed.external.ViewArticle}) {
   return (
     <Document
       variant="compact"
+      hideMeta
       view={article}
       onPressCallback={source => {
         logPress('external', source)

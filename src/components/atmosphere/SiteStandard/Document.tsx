@@ -48,6 +48,8 @@ type DocumentProps = ssTypes.PublicApiProps & {
   variant?: 'default' | 'compact'
   /** Shown ahead of the view's `knownLikers`. */
   recommenders?: DocumentRecommenders
+  /** Leaves out the date and reading time. */
+  hideMeta?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -69,6 +71,7 @@ function DocumentCard({
   view,
   variant = 'default',
   recommenders,
+  hideMeta = false,
   onPressCallback,
   onShareCallback,
   style,
@@ -185,23 +188,26 @@ function DocumentCard({
         <KnownLikers view={view} leadingProfiles={recommenders?.actors} />
         {/*
          * Takes the spare width and sits against the menu, so a long line
-         * truncates instead of pushing into it.
+         * truncates instead of pushing into it. Still spaces out the menu when
+         * the line is hidden.
          */}
         <View style={[a.flex_1, a.align_end, a.px_xs, {minWidth: 0}]}>
-          <MetaLine
-            date={view.createdAt}
-            details={[
-              !!view.readingTime &&
-                l({
-                  message: plural(view.readingTime, {
-                    one: '# min read',
-                    other: '# min read',
+          {!hideMeta && (
+            <MetaLine
+              date={view.createdAt}
+              details={[
+                !!view.readingTime &&
+                  l({
+                    message: plural(view.readingTime, {
+                      one: '# min read',
+                      other: '# min read',
+                    }),
+                    comment:
+                      'How long it takes to read an article, in minutes, e.g. “5 min read”.',
                   }),
-                  comment:
-                    'How long it takes to read an article, in minutes, e.g. “5 min read”.',
-                }),
-            ]}
-          />
+              ]}
+            />
+          )}
         </View>
         <AtmosphereCardMenu
           inline

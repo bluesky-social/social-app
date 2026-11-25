@@ -224,6 +224,11 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
+        <H2>Document compact, hidden meta</H2>
+        <Document variant="compact" view={document} hideMeta />
+      </View>
+
+      <View style={[a.gap_md]}>
         <H2>Document compact, no reading time or recommenders</H2>
         <Document
           variant="compact"
