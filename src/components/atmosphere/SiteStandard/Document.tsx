@@ -21,6 +21,7 @@ import {
 } from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {InlineLinkText, Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -135,6 +136,7 @@ function DocumentCard({
           label={label}
           style={[a.w_full, a.aspect_card, t.atoms.bg_contrast_25]}>
           {image}
+          <MediaInsetBorder style={[a.rounded_0]} />
         </Link>
       )}
       <View style={[a.flex_row, a.align_start, a.px_md, a.pt_md]}>
@@ -172,6 +174,7 @@ function DocumentCard({
               {width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE},
             ]}>
             {image}
+            <MediaInsetBorder />
           </Link>
         )}
       </View>

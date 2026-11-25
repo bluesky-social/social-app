@@ -57,6 +57,9 @@ jest.mock(
   }),
 )
 jest.mock('#/components/atmosphere/MetaLine', () => ({MetaLine: () => null}))
+jest.mock('#/components/MediaInsetBorder', () => ({
+  MediaInsetBorder: () => null,
+}))
 jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
   AtmosphereCardMenu: () => null,
 }))
