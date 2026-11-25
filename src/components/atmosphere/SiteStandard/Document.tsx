@@ -213,6 +213,11 @@ function PublicationHeader({
   const {t: l} = useLingui()
   const t = useTheme()
   const handle = author && sanitizeHandle(author.handle, '@')
+  const publicationLabel = l({
+    message: `Open publication: ${publication.title}`,
+    comment:
+      'Accessibility label for a link to the publication an article was published in. {title} is its name, written by its author.',
+  })
 
   return (
     <View
@@ -224,17 +229,21 @@ function PublicationHeader({
         a.py_sm,
         t.atoms.bg_contrast_25,
       ]}>
-      <PublicationIcon view={publication} size={32} />
+      <Link
+        testID="documentPublicationIcon"
+        to={publication.uri}
+        shouldProxy
+        label={publicationLabel}
+        accessibilityHint=""
+        style={[a.rounded_sm]}>
+        <PublicationIcon view={publication} size={32} />
+      </Link>
       <View style={[a.flex_1, a.gap_2xs]}>
         <InlineLinkText
           testID="documentPublication"
           to={publication.uri}
           shouldProxy
-          label={l({
-            message: `Open publication: ${publication.title}`,
-            comment:
-              'Accessibility label for a link to the publication an article was published in. {title} is its name, written by its author.',
-          })}
+          label={publicationLabel}
           emoji
           numberOfLines={1}
           style={[a.text_xs, a.font_bold, a.leading_tight, t.atoms.text]}>

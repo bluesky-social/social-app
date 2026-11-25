@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
@@ -12,31 +12,67 @@ import {
   useAtmosphereLike,
 } from '#/components/atmosphere/likes'
 import {Button} from '#/components/Button'
+import {HoverTooltip} from '#/components/HoverTooltip'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
   Heart2_Stroke2_Corner0_Rounded as HeartIcon,
 } from '#/components/icons/Heart2'
-import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
+import {
+  Sparkle_Stroke2_Corner0_Rounded as SparkleIcon,
+  Sparkle_Stroke2_Corner0_Rounded_Filled as SparkleFilledIcon,
+} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
 
 /** Space between the pill's edge and its icon. */
 const PILL_INSET = 8
 
+/** Eases in gently and settles softly, like something with a little weight. */
+const NATURAL_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
 type Icon = React.ComponentType<SVGIconProps>
 
-const ICONS: Record<
+const KINDS: Record<
   AtmosphereLikeKind,
   {
     icon: Icon
     /** Once liked. */
     activeIcon: Icon
-    /** Hovered, focused or pressed while not yet liked. */
-    hoverIcon?: Icon
+    /** Web only, and left out when the user prefers reduced motion. */
+    iconMotion: {rest: StyleProp<ViewStyle>; hovered: StyleProp<ViewStyle>}
   }
 > = {
-  favorite: {icon: HeartIcon, activeIcon: HeartFilledIcon},
-  recommend: {icon: SparkleIcon, activeIcon: SparkleIcon},
+  favorite: {
+    icon: HeartIcon,
+    activeIcon: HeartFilledIcon,
+    // A subtle zoom in on hover, and back out after.
+    iconMotion: {
+      rest: web({
+        transitionProperty: 'transform',
+        transitionDuration: '200ms',
+        transitionTimingFunction: NATURAL_EASING,
+      }),
+      hovered: {transform: [{scale: 1.15}]},
+    },
+  },
+  recommend: {
+    icon: SparkleIcon,
+    activeIcon: SparkleFilledIcon,
+    /*
+     * One full turn on hover. Only the hovered state transitions, so leaving
+     * snaps back to 0deg, which looks the same as 360deg, instead of
+     * unwinding.
+     */
+    iconMotion: {
+      rest: undefined,
+      hovered: web({
+        transform: [{rotate: '360deg'}],
+        transitionProperty: 'transform',
+        transitionDuration: '600ms',
+        transitionTimingFunction: NATURAL_EASING,
+      }),
+    },
+  },
 }
 
 /**
@@ -60,8 +96,15 @@ export function LikeButton({
   const shownCount = likeCount > 0 ? count : undefined
   let countLabel: string
   let action: string
+  let tooltip: string
   switch (kind) {
     case 'favorite':
+      tooltip = l({
+        message: 'Favorite',
+        context: 'tooltip',
+        comment:
+          'Tooltip shown when hovering the heart button on a photo gallery. Favoriting is like liking a post. Keep it short; it names the action, not its state.',
+      })
       countLabel = l({
         message: plural(likeCount, {
           one: `${count} favorite`,
@@ -82,6 +125,12 @@ export function LikeButton({
           })
       break
     case 'recommend':
+      tooltip = l({
+        message: 'Recommend',
+        context: 'tooltip',
+        comment:
+          'Tooltip shown when hovering the sparkle button on an article. Recommending is like liking a post. Keep it short; it names the action, not its state.',
+      })
       countLabel = l({
         message: plural(likeCount, {
           one: `${count} recommendation`,
@@ -114,25 +163,27 @@ export function LikeButton({
 
   return (
     <>
-      <Button
-        testID={testID}
-        label={l({
-          message: `${action}, ${countLabel}`,
-          comment:
-            'Accessibility label for a like button, e.g. “Favorite, 3 favorites” or “Recommend, 3 recommendations”. Both parts are already translated.',
-        })}
-        hitSlop={4}
-        style={[a.rounded_full, {marginLeft: -PILL_INSET}]}
-        onPress={toggle}>
-        {({hovered, focused, pressed}) => (
-          <LikePill
-            kind={kind}
-            liked={isLiked}
-            count={shownCount}
-            hovered={hovered || focused || pressed}
-          />
-        )}
-      </Button>
+      <HoverTooltip label={tooltip}>
+        <Button
+          testID={testID}
+          label={l({
+            message: `${action}, ${countLabel}`,
+            comment:
+              'Accessibility label for a like button, e.g. “Favorite, 3 favorites” or “Recommend, 3 recommendations”. Both parts are already translated.',
+          })}
+          hitSlop={4}
+          style={[a.rounded_full, {marginLeft: -PILL_INSET}]}
+          onPress={toggle}>
+          {({hovered, focused, pressed}) => (
+            <LikePill
+              kind={kind}
+              liked={isLiked}
+              count={shownCount}
+              hovered={hovered || focused || pressed}
+            />
+          )}
+        </Button>
+      </HoverTooltip>
       <AtmosphereFirstActionWelcomeDialog
         control={firstActionWelcomeDialogControl}
       />
@@ -161,12 +212,8 @@ function LikePill({
   const t = useTheme()
   const reducedMotion = useReducedMotion()
   const highlighted = liked || hovered
-  const icons = ICONS[kind]
-  const Icon = liked
-    ? icons.activeIcon
-    : hovered
-      ? (icons.hoverIcon ?? icons.icon)
-      : icons.icon
+  const config = KINDS[kind]
+  const Icon = liked ? config.activeIcon : config.icon
   const color = highlighted
     ? t.palette.primary_700
     : t.atoms.text_contrast_medium.color
@@ -193,11 +240,7 @@ function LikePill({
       <View
         style={[
           !reducedMotion &&
-            web([
-              a.transition_transform,
-              a.transition_timing_default,
-              hovered && {transform: [{scale: 1.15}]},
-            ]),
+            web([config.iconMotion.rest, hovered && config.iconMotion.hovered]),
         ]}>
         <Icon size="sm" fill={color} />
       </View>
