@@ -29,6 +29,7 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {FeaturedAppsInterstitial} from './FeaturedAppsInterstitial'
 import {LiveNowRow} from './LiveNowRow'
 import {type CombinedDateBucket, type CombinedRow} from './mix'
 import {useCombinedFeedQuery} from './useCombinedFeedQuery'
@@ -38,7 +39,11 @@ import {useCombinedFeedQuery} from './useCombinedFeedQuery'
  * recommended activity mixed in and then filling the feed once activity runs
  * out. In development as its own tab.
  */
-export function CombinedTab() {
+export function CombinedTab({
+  onPressSeeMoreApps,
+}: {
+  onPressSeeMoreApps?: () => void
+}) {
   const {t: l} = useLingui()
   const {
     data,
@@ -134,6 +139,7 @@ export function CombinedTab() {
         <CombinedFeedRow
           row={item}
           position={index}
+          onPressSeeMoreApps={onPressSeeMoreApps}
           feedback={
             item.kind === 'recommended'
               ? feedback.forItem(item.item)
@@ -170,11 +176,13 @@ function CombinedFeedRow({
   row,
   position,
   feedback,
+  onPressSeeMoreApps,
 }: {
   row: CombinedRow
   /** 0-based, in the list. */
   position: number
   feedback: AtmosphereFeedback | undefined
+  onPressSeeMoreApps?: () => void
 }) {
   switch (row.kind) {
     case 'activity':
@@ -202,8 +210,12 @@ function CombinedFeedRow({
         <RecommendedHeader caughtUp={row.caughtUp} first={position === 0} />
       )
     case 'interstitial':
-      // None are produced yet.
-      return null
+      switch (row.interstitial.type) {
+        case 'featuredApps':
+          return (
+            <FeaturedAppsInterstitial onPressSeeMore={onPressSeeMoreApps} />
+          )
+      }
   }
 }
 

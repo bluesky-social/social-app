@@ -109,15 +109,15 @@ describe('mixCombinedPages', () => {
     const {pages} = mixCombinedPages({
       activityPages: [['a1', 'a2', 'a3', 'a4'].map(activity)],
       recommendations: [],
-      interstitials: [{key: 'photos', type: 'popularPhotos'}],
+      interstitials: [{key: 'apps', type: 'featuredApps'}],
       isLastPage: false,
       random,
     })
     expect(describeRows(pages[0])).toEqual([
       'a1',
       'a2',
+      'interstitial:apps',
       'a3',
-      'interstitial:photos',
       'a4',
     ])
   })

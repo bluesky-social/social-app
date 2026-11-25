@@ -51,7 +51,17 @@ function AtmosphereScreenInner() {
   const tabMetrics = useTabMetrics(TABS)
 
   const sections = [
-    {title: l`Combined`, component: <CombinedTab />},
+    {
+      title: l`Combined`,
+      component: (
+        <CombinedTab
+          onPressSeeMoreApps={() => {
+            tabMetrics.onSeeMoreApps(APPS_TAB_INDEX)
+            pagerRef.current?.setPage(APPS_TAB_INDEX)
+          }}
+        />
+      ),
+    },
     {title: l`For You`, component: <AtmosphereForYouTab />},
     {title: l`Activity`, component: <ActivityTab />},
     {

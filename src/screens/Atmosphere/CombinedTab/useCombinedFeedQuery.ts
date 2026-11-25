@@ -35,9 +35,13 @@ import {
 import {type ForYouItem} from '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery'
 import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {mixCombinedPages, seededRandom} from './mix'
+import {type CombinedInterstitial, mixCombinedPages, seededRandom} from './mix'
 
 const useCombinedFeedQueryRoot = 'useCombinedFeedQuery'
+
+const INTERSTITIALS: CombinedInterstitial[] = [
+  {key: 'featuredApps', type: 'featuredApps'},
+]
 
 export type Livestream = Extract<ActivityContent, {type: 'livestream'}>
 
@@ -164,6 +168,7 @@ export function useCombinedFeedQuery() {
         }
       }
       const mixed = mixCombinedPages({
+        interstitials: INTERSTITIALS,
         activityPages: activityPages.map(rows =>
           rows.filter(
             row => row.kind !== 'card' || row.content.type !== 'livestream',

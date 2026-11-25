@@ -6,17 +6,17 @@ const MIN_RECOMMENDATION_GAP = 3
 /** Most activity rows before each mixed-in recommendation. */
 const MAX_RECOMMENDATION_GAP = 10
 /** Rows before the first interstitial. */
-const FIRST_INTERSTITIAL_AFTER = 3
+const FIRST_INTERSTITIAL_AFTER = 2
 /** Rows between interstitials after the first. */
 const INTERSTITIAL_EVERY = 15
 
 /**
- * A full-width module between feed rows, such as a carousel of popular
- * photos. Nothing produces these yet; the mixing leaves room for them.
+ * A full-width module between feed rows, such as the featured apps carousel.
+ * It loads its own data, and renders nothing if there's none.
  */
 export type CombinedInterstitial = {
   key: string
-  type: 'popularPhotos'
+  type: 'featuredApps'
 }
 
 /**
