@@ -1,4 +1,5 @@
 import assert from 'node:assert'
+import {createHash} from 'node:crypto'
 
 import {type AppBskyGraphDefs, AtUri} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
@@ -9,6 +10,7 @@ import {
   StarterPack,
   STARTERPACK_HEIGHT,
   STARTERPACK_WIDTH,
+  getStarterPackTitle,
 } from '../components/StarterPack.js'
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
@@ -18,10 +20,12 @@ import {
   handler,
   hideAvatarLabels,
   originVerifyMiddleware,
+  type RenderErrorContext,
 } from './util.js'
 import * as bsky from '../types/bsky/index.js'
 
 export default function (ctx: AppContext, app: Express) {
+  const fontHashes = new WeakMap<Buffer, string>()
   return app.get(
     '/start/:actor/:rkey',
     originVerifyMiddleware(ctx),
@@ -70,6 +74,23 @@ export default function (ctx: AppContext, app: Express) {
           )
           .slice(0, 7),
       )
+      let stage: RenderErrorContext['stage'] = 'satori'
+      /* Build diagnostics only on failure; keep font bytes out of the log. */
+      res.locals.renderErrorContext = () => ({
+        stage,
+        starterPackUri: uri.toString(),
+        title: getStarterPackTitle(starterPack),
+        imageCount: images.size,
+        version: ctx.cfg.service.version,
+        fonts: ctx.fonts.map(({name, weight, data}) => {
+          let sha256 = fontHashes.get(data)
+          if (sha256 === undefined) {
+            sha256 = createHash('sha256').update(data).digest('hex')
+            fontHashes.set(data, sha256)
+          }
+          return {name, weight, sha256}
+        }),
+      })
       const svg = await satori(
         <StarterPack starterPack={starterPack} images={images} />,
         {
@@ -84,6 +105,7 @@ export default function (ctx: AppContext, app: Express) {
           },
         },
       )
+      stage = 'resvg'
       const output = await resvg.renderAsync(svg)
       res.statusCode = 200
       res.setHeader('content-type', 'image/png')
