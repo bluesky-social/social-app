@@ -52,7 +52,7 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
     <View style={[a.flex_row, a.align_center, a.gap_md]}>
       <PreviewableUserAvatar
         type="user"
-        size={42}
+        size={32}
         profile={actor}
         moderation={moderation?.ui('avatar')}
         onBeforePress={logProfilePress}
