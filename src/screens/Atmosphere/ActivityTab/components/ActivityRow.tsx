@@ -115,6 +115,7 @@ export function ActivityContentCard({
     case 'article':
       return (
         <Document
+          variant="compact"
           view={content.view}
           recommenders={recommenders}
           hideMeta
