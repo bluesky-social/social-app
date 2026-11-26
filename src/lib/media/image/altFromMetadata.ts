@@ -1,4 +1,5 @@
 import {MAX_ALT_TEXT} from '#/lib/constants'
+import {readFileDescriptions} from '#/lib/media/image/fileDescription'
 import {getAssetExif} from '#/lib/media/media-library'
 import {IS_NATIVE} from '#/env'
 
@@ -62,24 +63,42 @@ export function getAltFromExif(exif: unknown): string | undefined {
 }
 
 /**
- * Like `getAltFromExif`, but on native also reads the asset from the photo
- * library when the picker's copy has no description: on iOS the copy that
- * `expo-image-picker` hands back can lose the IPTC caption.
+ * The same, read from the file's own bytes, for web, where the picker returns
+ * no metadata. XMP comes first: it has the IPTC field meant for alt text.
+ */
+export function getAltFromFile(buffer: ArrayBuffer): string | undefined {
+  const {altText, description, imageDescription} = readFileDescriptions(buffer)
+  return clean(altText) ?? clean(description) ?? clean(imageDescription)
+}
+
+/**
+ * Like `getAltFromExif`, plus two fallbacks. On native it reads the asset from
+ * the photo library when the picker's copy has no description: on iOS the copy
+ * that `expo-image-picker` hands back can lose the IPTC caption. On web, where
+ * there is no metadata at all, it reads the picked file.
  */
 export async function resolveAltFromMetadata({
   exif,
   assetId,
+  file,
 }: {
   exif?: unknown
   assetId?: string | null
+  file?: Blob | null
 }): Promise<string | undefined> {
   const alt = getAltFromExif(exif)
-  if (alt || !IS_NATIVE || !assetId) return alt
+  if (alt) return alt
 
   try {
-    return getAltFromExif(await getAssetExif(assetId))
+    if (IS_NATIVE && assetId) {
+      return getAltFromExif(await getAssetExif(assetId))
+    }
+    if (!IS_NATIVE && file) {
+      return getAltFromFile(await file.arrayBuffer())
+    }
   } catch {
-    // No photo library access, or the asset is gone: start with empty alt text.
-    return undefined
+    // No photo library access, the asset is gone, or the file can't be read:
+    // start with empty alt text.
   }
+  return undefined
 }
