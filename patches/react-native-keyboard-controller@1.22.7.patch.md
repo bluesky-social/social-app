@@ -2,9 +2,11 @@
 
 ## Stop the KeyboardAvoidingView initial state from clobbering keyboard events
 
-Upstream PR: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1685
-(this patch is the same change, minus its unit test). Remove this patch once a
-release includes it.
+Upstream PR: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1802
+(this patch is its `src/` changes at `b6274e485`, minus the unit test and docs).
+It supersedes our earlier upstream PR
+https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1685,
+which this patch used to carry. Remove this patch once a release includes #1802.
 
 Fixes APP-3472: on Android, the composer's footer (media buttons, language,
 character counter) intermittently stays behind the keyboard after the composer
@@ -40,45 +42,37 @@ and reset the state to "closed, height 0":
 
 ### Fix
 
-- Seed inside `runOnUI`, reading the provider's values on the UI thread, and
-  skip the seed if this hook has already handled a keyboard event
-  (`hasReceivedEvent`). This covers both orderings.
-- Also refresh `heightWhenOpened` from an `onEnd` where the keyboard ended fully
-  open (`height > 0 && progress === 1`), in case `onStart` fired before the
-  handler was registered.
-- Same guard for the `padding` seed in `useTranslateAnimation` (only affects
-  `behavior="translate-with-padding"`, which we don't use).
+- `useKeyboardHandler` gets a new `onSync` callback (`src/hooks/index.ts`),
+  called from a `runOnUI` job when the handler is attached. It reads the
+  provider's current height and progress on the UI thread when the job runs,
+  not as a JS snapshot taken at mount, so a late job reports the keyboard's
+  real state instead of a stale "closed".
+- `useKeyboardAnimation` and `useTranslateAnimation` seed from `onSync`
+  instead of the `useLayoutEffect`.
+- `onEnd` also refreshes `heightWhenOpened` when the keyboard ended open
+  (`height > 0`). This covers a sync that lands between `onStart` and `onEnd`
+  (it reads a mid-animation height, which is 0 on Android because the provider
+  only updates on move), and an `onStart` dispatched before the handler was
+  attached.
 
 ### Validation
 
-Pixel 8 emulator (API 34), Reanimated 4.7.1, composer opens checked via the
-accessibility tree: footer above the keyboard on open, back at the bottom after
-Back, above the keyboard again after refocusing.
+Pixel 8 emulator (API 34), composer opens, footer position checked from
+screenshots: above the keyboard on open, back at the bottom after Back, above
+the keyboard again after refocusing.
 
-Deterministic orderings (seed deferred to run right after the first
-`onStart`/`onEnd`), 10 opens each:
+Deterministic orderings (seed / `onSync` deferred to run right after the first
+`onStart` or `onEnd`), 10 opens each:
 
-| `hooks.ts`              | ordering | open  | dismiss | refocus |
-| ----------------------- | -------- | ----- | ------- | ------- |
-| stock                   | 1        | 0/10  | 10/10   | 10/10   |
-| stock                   | 2        | 10/10 | 0/10    | 10/10   |
-| `onEnd` repair only[^1] | 1        | 10/10 | 10/10   | 10/10   |
-| `onEnd` repair only[^1] | 2        | 10/10 | 0/10    | 10/10   |
-| this patch              | 1        | 10/10 | 10/10   | 10/10   |
-| this patch              | 2        | 10/10 | 10/10   | 10/10   |
+| `hooks.ts`    | ordering         | open  | dismiss | refocus |
+| ------------- | ---------------- | ----- | ------- | ------- |
+| stock         | after `onStart`  | 0/10  | 10/10   | 10/10   |
+| stock         | after `onEnd`    | 10/10 | 0/10    | 10/10   |
+| stock         | natural          | 10/10 | 10/10   | 10/10   |
+| this patch    | after `onStart`  | 10/10 | 10/10   | 10/10   |
+| this patch    | after `onEnd`    | 10/10 | 10/10   | 10/10   |
+| this patch    | natural          | 10/10 | 10/10   | 10/10   |
 
-[^1]: The approach in https://github.com/bluesky-social/social-app/pull/12029.
-
-Natural timing (no forced delays, 40 opens each): stock 39/40 passed, with the
-one failure being the one open where the seed landed after `onStart`. This
-patch passed 40/40, including 3 opens where the seed landed after `onStart` and
-was skipped. The natural rate depends heavily on load, so the deterministic
-table is the real evidence.
-
-Not tested on device: iOS (the simulator wasn't available) and
-`translate-with-padding`. Both are covered by the upstream unit test.
-
-Only `src/` is patched. Metro resolves the package's `react-native` entry
-(`src/index`); Jest would use `lib/commonjs`, but no tests exercise this hook.
-The login, signup and phone input screens use the same `KeyboardAvoidingView`
-but don't auto-focus on mount.
+Not tested: iOS, `behavior` values other than `height`, and whether the view
+tracks the keyboard or snaps at the end when the sync lands mid-animation (the
+end state is correct either way).
