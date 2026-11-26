@@ -74,7 +74,7 @@ export function useLogContentAction() {
   const ax = useAnalytics()
   const content = useAtmosphereContentContext()
   return (action: {
-    kind: 'recommend' | 'favorite'
+    kind: 'recommend' | 'favorite' | 'subscribe'
     action: 'add' | 'remove'
     source: 'card' | 'photoDialog'
   }) => {

@@ -1596,7 +1596,7 @@ export type Events = {
    * counts intent, not records written.
    */
   'atmosphere:content:action': AtmosphereContentMetricContext & {
-    kind: 'recommend' | 'favorite'
+    kind: 'recommend' | 'favorite' | 'subscribe'
     action: 'add' | 'remove'
     source: 'card' | 'photoDialog'
   }

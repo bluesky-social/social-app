@@ -3,7 +3,11 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {act, renderHook} from '@testing-library/react-native'
 
-import {useAtmosphereLike} from '#/components/atmosphere/likes'
+import {
+  toSubscribableView,
+  useAtmosphereLike,
+} from '#/components/atmosphere/likes'
+import {type app, site} from '#/lexicons'
 
 const mockCreate = jest.fn()
 
@@ -58,4 +62,51 @@ test('shares an optimistic like across views with different counts', async () =>
 
   expect(a.result.current).toMatchObject({isLiked: true, likeCount: 6})
   expect(b.result.current).toMatchObject({isLiked: true, likeCount: 10})
+})
+
+/**
+ * Publication views from some endpoints leave out `viewer` when the appview
+ * couldn't look up the viewer's subscription. Subscribing then could create
+ * a duplicate record, so it waits for a known (if empty) `viewer`.
+ */
+test('subscribes only when the viewer’s subscription is known', async () => {
+  mockCreate.mockResolvedValue({uri: 'at://did:plc:viewer/subscription/1'})
+  const publication = {
+    uri: 'https://example.com',
+    title: 'Field Notes',
+    description: '',
+    subscriptionCount: 3,
+    associatedRefs: [
+      {uri: 'at://did:plc:author/site.standard.publication/abc', cid: 'cid'},
+    ],
+  } satisfies app.bsky.embed.external.ViewArticlePublication
+  const unknown = renderHook(
+    () =>
+      useAtmosphereLike(toSubscribableView(publication), 'subscribe', 'card'),
+    {wrapper},
+  )
+  expect(unknown.result.current.canLike).toBe(false)
+
+  const known = renderHook(
+    () =>
+      useAtmosphereLike(
+        toSubscribableView({...publication, viewer: {}}),
+        'subscribe',
+        'card',
+      ),
+    {wrapper},
+  )
+  expect(known.result.current.canLike).toBe(true)
+
+  await act(() => {
+    known.result.current.toggle()
+    return Promise.resolve()
+  })
+
+  expect(mockCreate).toHaveBeenCalledWith(
+    site.standard.graph.subscription,
+    expect.objectContaining({publication: publication.associatedRefs[0].uri}),
+    {repo: 'did:plc:viewer'},
+  )
+  expect(known.result.current).toMatchObject({isLiked: true, likeCount: 4})
 })

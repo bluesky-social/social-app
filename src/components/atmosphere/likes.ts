@@ -18,20 +18,37 @@ import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentAction} from '#/screens/Atmosphere/metrics/context'
 import {useAtmosphereFirstActionWelcome} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import * as Toast from '#/components/Toast'
-import {type com, site, social} from '#/lexicons'
+import {type app, type com, site, social} from '#/lexicons'
 
 /**
  * The like-style records the viewer can write for external views: a
- * recommend of a standard.site document, or a favorite of a Grain gallery.
- * The appview returns the viewer's record for either as `viewer.like`.
+ * recommend of a standard.site document, a favorite of a Grain gallery, or a
+ * subscription to a standard.site publication. The appview returns the
+ * viewer's record for the first two as `viewer.like`, and for a publication as
+ * `viewer.subscription` (see `toSubscribableView`).
  */
-export type AtmosphereLikeKind = 'recommend' | 'favorite'
+export type AtmosphereLikeKind = 'recommend' | 'favorite' | 'subscribe'
 
 /** The parts of an article or gallery view a like needs. */
 export type LikeableView = {
   likeCount?: number
   viewer?: {like?: AtUriString}
   associatedRefs?: com.atproto.repo.strongRef.Main[]
+}
+
+/**
+ * A publication's subscription in the shape of a like, so subscribing shares
+ * the like plumbing.
+ */
+export function toSubscribableView(
+  view: app.bsky.embed.external.ViewArticlePublication,
+): LikeableView {
+  return {
+    likeCount: view.subscriptionCount,
+    // Keeps an unknown viewer unknown, so `canLike` stays false.
+    viewer: view.viewer && {like: view.viewer.subscription},
+    associatedRefs: view.associatedRefs,
+  }
 }
 
 const KINDS: Record<
@@ -68,6 +85,17 @@ const KINDS: Record<
       ),
     delete: (client, repo, rkey) =>
       client.delete(social.grain.favorite, {repo, rkey}),
+  },
+  subscribe: {
+    subjectCollection: site.standard.publication.$type,
+    create: (client, repo, publication) =>
+      client.create(
+        site.standard.graph.subscription,
+        {publication, createdAt: toDatetimeString(new Date())},
+        {repo},
+      ),
+    delete: (client, repo, rkey) =>
+      client.delete(site.standard.graph.subscription, {repo, rkey}),
   },
 }
 
@@ -204,18 +232,28 @@ export function useAtmosphereLike(
             safeMessage: e,
           })
         }
-        Toast.show(
-          kind === 'recommend'
-            ? l({
-                message: 'Couldn’t update your recommendation',
-                context: 'toast',
-              })
-            : l({
-                message: 'Couldn’t update your favorite',
-                context: 'toast',
-              }),
-          {type: 'error'},
-        )
+        let message: string
+        switch (kind) {
+          case 'recommend':
+            message = l({
+              message: 'Couldn’t update your recommendation',
+              context: 'toast',
+            })
+            break
+          case 'favorite':
+            message = l({
+              message: 'Couldn’t update your favorite',
+              context: 'toast',
+            })
+            break
+          case 'subscribe':
+            message = l({
+              message: 'Couldn’t update your subscription',
+              context: 'toast',
+            })
+            break
+        }
+        Toast.show(message, {type: 'error'})
       }
     })
 

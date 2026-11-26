@@ -32,8 +32,11 @@ const NATURAL_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
 type Icon = React.ComponentType<SVGIconProps>
 
+/** Subscribing has its own button, on publication cards. */
+type LikeButtonKind = Exclude<AtmosphereLikeKind, 'subscribe'>
+
 const KINDS: Record<
-  AtmosphereLikeKind,
+  LikeButtonKind,
   {
     icon: Icon
     /** Once liked. */
@@ -85,7 +88,7 @@ export function LikeButton({
   testID,
 }: {
   view: LikeableView
-  kind: AtmosphereLikeKind
+  kind: LikeButtonKind
   testID?: string
 }) {
   const {t: l, i18n} = useLingui()
@@ -202,7 +205,7 @@ function LikePill({
   count,
   hovered = false,
 }: {
-  kind: AtmosphereLikeKind
+  kind: LikeButtonKind
   liked: boolean
   /** Formatted, or undefined to show the icon alone. */
   count?: string

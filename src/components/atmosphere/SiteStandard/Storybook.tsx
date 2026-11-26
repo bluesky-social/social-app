@@ -2,10 +2,7 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Document} from '#/components/atmosphere/SiteStandard/Document'
-import {
-  Publication,
-  PublicationCard,
-} from '#/components/atmosphere/SiteStandard/Publication'
+import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {H1, H2} from '#/components/Typography'
 import {type app, site} from '#/lexicons'
 
@@ -116,6 +113,17 @@ const leafletDocument = {
   publisher: leafletPublication,
 } satisfies app.bsky.embed.external.ViewArticle
 
+const subscribedLeafletPublication = {
+  ...leafletPublication,
+  description: 'A weekly round up of what’s happening in the atmosphere.',
+  subscriptionCount: 31,
+  subscribers: likers,
+  viewer: {
+    knownSubscribers: likers.slice(0, 2),
+    knownSubscriberCount: 2,
+  },
+} satisfies app.bsky.embed.external.ViewArticlePublication
+
 export function SiteStandardStorybook() {
   return (
     <View testID="siteStandardStorybook" style={[a.gap_lg]}>
@@ -181,18 +189,36 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Publication</H2>
-        <Publication view={publication} />
+        <H2>Publication, Leaflet, known subscribers</H2>
+        <PublicationCard view={subscribedLeafletPublication} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Publication card</H2>
+        <H2>Publication, subscribed</H2>
+        <PublicationCard
+          view={{
+            ...subscribedLeafletPublication,
+            viewer: {
+              ...subscribedLeafletPublication.viewer,
+              subscription: `at://${author.did}/${site.standard.graph.subscription.$type}/storybook`,
+            },
+          }}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, subscribers but none known</H2>
+        <PublicationCard view={{...subscribedLeafletPublication, viewer: {}}} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, no subscribers or app</H2>
+        <PublicationCard view={{...publication, viewer: {}}} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, unknown viewer state (no Subscribe)</H2>
         <PublicationCard view={publication} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Publication with containerStyle</H2>
-        <Publication view={publication} containerStyle={[a.px_lg, a.py_md]} />
       </View>
     </View>
   )
