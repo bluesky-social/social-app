@@ -47,9 +47,11 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
+import {usePostZoomSource} from '#/screens/PostThread/zoomSource'
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {ZoomTransitionEnabler} from '#/components/ZoomTransitionEnabler'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {
@@ -73,6 +75,7 @@ export function PostThread({uri}: {uri: string}) {
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const anchorPostSource = usePostSource(uri)
+  const zoomSourceId = usePostZoomSource(uri)
   /*
    * Only the anchor is the feed item the user tapped, so only it reports feed
    * feedback. Parents and replies get the feed for analytics but no item.
@@ -571,6 +574,17 @@ export function PostThread({uri}: {uri: string}) {
 
   return (
     <PostThreadContextProvider context={thread.context}>
+      {/*
+       * On iOS, a thread opened from a feed item or quote embed zooms out of
+       * it, and back into it on close. Only a back swipe dismisses, so
+       * vertical drags stay with the list.
+       */}
+      {zoomSourceId && (
+        <ZoomTransitionEnabler
+          sourceIdentifier={zoomSourceId}
+          dismissGesture="horizontal"
+        />
+      )}
       <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

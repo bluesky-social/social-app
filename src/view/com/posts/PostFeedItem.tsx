@@ -1,6 +1,7 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useId, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
+import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
@@ -28,6 +29,7 @@ import {
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {stashPostZoomSource} from '#/screens/PostThread/zoomSource'
 import {atoms as a, select, useTheme} from '#/alf'
 import {
   GalleryBleed,
@@ -188,6 +190,7 @@ let FeedItemInner = ({
   const {currentAccount} = useSession()
 
   const [hover, setHover] = useState(false)
+  const zoomSourceId = useId()
 
   const [href] = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -270,6 +273,7 @@ let FeedItemInner = ({
       feedDescriptor,
     })
     unstableCacheProfileView(queryClient, post.author)
+    stashPostZoomSource({post, identifier: zoomSourceId})
     stashPostSource({
       feedSourceInfo,
       post: {
@@ -336,133 +340,136 @@ let FeedItemInner = ({
   }, [post, currentAccount?.did, threadgateHiddenReplies])
 
   return (
-    <GalleryBleed>
-      <Link
-        testID={`feedItem-by-${post.author.handle}`}
-        style={outerStyles}
-        href={href}
-        noFeedback
-        accessible={false}
-        onBeforePress={onBeforePress}
-        dataSet={{feedContext}}
-        onPointerEnter={() => {
-          setHover(true)
-        }}
-        onPointerLeave={() => {
-          setHover(false)
-        }}>
-        <SubtleHover hover={hover} />
-        <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-          <View style={{width: 42}}>
-            {isThreadChild && (
-              <View
-                style={[
-                  styles.replyLine,
-                  {
-                    backgroundColor: select(t.name, {
-                      light: t.palette.contrast_100,
-                      dim: t.palette.contrast_200,
-                      dark: t.palette.contrast_200,
-                    }),
-                    marginBottom: 4,
-                  },
-                ]}
-              />
-            )}
-          </View>
-
-          <View style={[a.pt_sm, a.flex_shrink]}>
-            {reason && (
-              <PostFeedReason
-                reason={reason}
-                moderation={moderation}
-                onOpenReposter={onOpenReposter}
-              />
-            )}
-          </View>
-        </View>
-
-        <View style={styles.layout}>
-          <View style={styles.layoutAvi}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              onBeforePress={onOpenAuthor}
-              live={live}
-            />
-            {isThreadParent && (
-              <View
-                style={[
-                  styles.replyLine,
-                  {
-                    backgroundColor: select(t.name, {
-                      light: t.palette.contrast_100,
-                      dim: t.palette.contrast_200,
-                      dark: t.palette.contrast_200,
-                    }),
-                    marginTop: live ? 8 : 4,
-                  },
-                ]}
-              />
-            )}
-          </View>
-          <View
-            style={[
-              styles.layoutContent,
-              maybeApplyGalleryOffsetStyles('meta', {
-                post,
-                modui: moderation.ui('contentList'),
-                additionalCauses: additionalPostAlerts,
-              }),
-            ]}>
-            <PostMeta
-              author={post.author}
-              moderation={moderation}
-              timestamp={post.indexedAt}
-              postHref={href}
-              onOpenAuthor={onOpenAuthor}
-            />
-            {showReplyTo &&
-              (parentAuthor || isParentBlocked || isParentNotFound) && (
-                <PostRepliedTo
-                  parentAuthor={parentAuthor}
-                  isParentBlocked={isParentBlocked}
-                  isParentNotFound={isParentNotFound}
+    // On iOS, the thread zooms out of this item (see `stashPostZoomSource`)
+    <ZoomTransition.Source identifier={zoomSourceId}>
+      <GalleryBleed>
+        <Link
+          testID={`feedItem-by-${post.author.handle}`}
+          style={outerStyles}
+          href={href}
+          noFeedback
+          accessible={false}
+          onBeforePress={onBeforePress}
+          dataSet={{feedContext}}
+          onPointerEnter={() => {
+            setHover(true)
+          }}
+          onPointerLeave={() => {
+            setHover(false)
+          }}>
+          <SubtleHover hover={hover} />
+          <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
+            <View style={{width: 42}}>
+              {isThreadChild && (
+                <View
+                  style={[
+                    styles.replyLine,
+                    {
+                      backgroundColor: select(t.name, {
+                        light: t.palette.contrast_100,
+                        dim: t.palette.contrast_200,
+                        dark: t.palette.contrast_200,
+                      }),
+                      marginBottom: 4,
+                    },
+                  ]}
                 />
               )}
-            <PostContent
-              moderation={moderation}
-              richText={richText}
-              postNumbering={postNumbering}
-              postEmbed={post.embed}
-              postAuthor={post.author}
-              onOpenEmbed={onOpenEmbed}
-              post={post}
-              additionalPostAlerts={additionalPostAlerts}
-              feedDescriptor={feedDescriptor}
-            />
-            <PostControls
-              post={post}
-              record={record}
-              richText={richText}
-              onPressReply={onPressReply}
-              logContext="FeedItem"
-              threadgateRecord={threadgateRecord}
-              onShowLess={onShowLess}
-            />
-            <KnownLikers
-              post={post}
-              feature={Features.PostFeedKnownLikersEnable}
-              outerStyle={[a.py_sm]}
-            />
+            </View>
+
+            <View style={[a.pt_sm, a.flex_shrink]}>
+              {reason && (
+                <PostFeedReason
+                  reason={reason}
+                  moderation={moderation}
+                  onOpenReposter={onOpenReposter}
+                />
+              )}
+            </View>
           </View>
 
-          <DiscoverDebug feedContext={feedContext} />
-        </View>
-      </Link>
-    </GalleryBleed>
+          <View style={styles.layout}>
+            <View style={styles.layoutAvi}>
+              <PreviewableUserAvatar
+                size={42}
+                profile={post.author}
+                moderation={moderation.ui('avatar')}
+                type={post.author.associated?.labeler ? 'labeler' : 'user'}
+                onBeforePress={onOpenAuthor}
+                live={live}
+              />
+              {isThreadParent && (
+                <View
+                  style={[
+                    styles.replyLine,
+                    {
+                      backgroundColor: select(t.name, {
+                        light: t.palette.contrast_100,
+                        dim: t.palette.contrast_200,
+                        dark: t.palette.contrast_200,
+                      }),
+                      marginTop: live ? 8 : 4,
+                    },
+                  ]}
+                />
+              )}
+            </View>
+            <View
+              style={[
+                styles.layoutContent,
+                maybeApplyGalleryOffsetStyles('meta', {
+                  post,
+                  modui: moderation.ui('contentList'),
+                  additionalCauses: additionalPostAlerts,
+                }),
+              ]}>
+              <PostMeta
+                author={post.author}
+                moderation={moderation}
+                timestamp={post.indexedAt}
+                postHref={href}
+                onOpenAuthor={onOpenAuthor}
+              />
+              {showReplyTo &&
+                (parentAuthor || isParentBlocked || isParentNotFound) && (
+                  <PostRepliedTo
+                    parentAuthor={parentAuthor}
+                    isParentBlocked={isParentBlocked}
+                    isParentNotFound={isParentNotFound}
+                  />
+                )}
+              <PostContent
+                moderation={moderation}
+                richText={richText}
+                postNumbering={postNumbering}
+                postEmbed={post.embed}
+                postAuthor={post.author}
+                onOpenEmbed={onOpenEmbed}
+                post={post}
+                additionalPostAlerts={additionalPostAlerts}
+                feedDescriptor={feedDescriptor}
+              />
+              <PostControls
+                post={post}
+                record={record}
+                richText={richText}
+                onPressReply={onPressReply}
+                logContext="FeedItem"
+                threadgateRecord={threadgateRecord}
+                onShowLess={onShowLess}
+              />
+              <KnownLikers
+                post={post}
+                feature={Features.PostFeedKnownLikersEnable}
+                outerStyle={[a.py_sm]}
+              />
+            </View>
+
+            <DiscoverDebug feedContext={feedContext} />
+          </View>
+        </Link>
+      </GalleryBleed>
+    </ZoomTransition.Source>
   )
 }
 FeedItemInner = memo(FeedItemInner)
