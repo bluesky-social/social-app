@@ -6,6 +6,16 @@ export function getIsReducedMotionEnabled(): boolean {
 }
 
 /**
+ * Tells Android that the first screen's content is on screen, which ends time
+ * to full display in startup benchmarks and Play's startup vitals. Only the
+ * first call per process does anything.
+ * @platform android
+ */
+export function reportFullyDrawn(): void {
+  throw new NotImplementedError()
+}
+
+/**
  * Set whether the app's audio should mix with other apps' audio. Will also resume background music playback when `false`
  * if it was previously playing.
  * @param mixWithOthers

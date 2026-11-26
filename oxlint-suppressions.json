@@ -30,14 +30,6 @@
       "count": 4
     }
   },
-  "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
-    "typescript/no-unsafe-call": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 3
-    }
-  },
   "modules/expo-bluesky-swiss-army/src/Referrer/index.android.ts": {
     "typescript/no-unsafe-call": {
       "count": 2
