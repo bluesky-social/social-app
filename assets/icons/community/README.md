@@ -8,11 +8,13 @@ The icons in this directory are the marks of third-party services that appear in
 | `Pckt.svg`, `PcktFull.svg` | [pckt](https://pckt.blog) |
 | `StandardSite.svg` | [Standard.site](https://standard.site) |
 | `germ_logo.webp` | [Germ Network](https://germnetwork.com) |
+| `Apoiase.svg` | [Apoia.se](https://apoia.se/) |
 | `BigCartel.svg` | [Big Cartel](https://www.bigcartel.com) |
 | `Boosty.svg` | [Boosty](https://boosty.to) |
 | `Booth.svg` | [BOOTH](https://booth.pm) |
 | `BuyMeACoffee.svg` | [Buy Me a Coffee](https://buymeacoffee.com) |
 | `CashApp.svg` | [Cash App](https://cash.app) |
+| `Catarse.svg` | [Catarse](https://catarse.com.br/) |
 | `Chuffed.svg` | [Chuffed](https://chuffed.org) |
 | `Crowdfundr.svg` | [Crowdfundr](https://crowdfundr.com) |
 | `Donorbox.svg` | [Donorbox](https://donorbox.org) |
@@ -28,9 +30,11 @@ The icons in this directory are the marks of third-party services that appear in
 | `Inprint.svg` | [INPRNT](https://www.inprnt.com) |
 | `ItchIo.svg` | [itch.io](https://itch.io) |
 | `JustGiving.svg` | [JustGiving](https://www.justgiving.com) |
+| `Kickante.svg` | [Kickante](https://www.kickante.com.br/) |
 | `Kickstarter.svg` | [Kickstarter](https://www.kickstarter.com) |
 | `KoFi.svg` | [Ko-fi](https://ko-fi.com) |
 | `Liberapay.svg` | [Liberapay](https://liberapay.com) |
+| `Livepix.svg` | [LivePix](https://livepix.gg/) |
 | `OpenCollective.svg` | [Open Collective](https://opencollective.com) |
 | `Patreon.svg` | [Patreon](https://www.patreon.com) |
 | `PayPal.svg` | [PayPal](https://www.paypal.com) |
@@ -41,6 +45,7 @@ The icons in this directory are the marks of third-party services that appear in
 | `Substack.svg` | [Substack](https://substack.com) |
 | `SubscribeStar.svg` | [SubscribeStar](https://www.subscribestar.com) |
 | `Throne.svg` | [Throne](https://throne.com) |
+| `Vakinha.svg` | [Vakinha.com.br](https://www.vakinha.com.br/) |
 | `Venmo.svg` | [Venmo](https://venmo.com) |
 | `Vgen.svg` | [VGen](https://vgen.co) |
 | `Zeffy.svg` | [Zeffy](https://www.zeffy.com) |

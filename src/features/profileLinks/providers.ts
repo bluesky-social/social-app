@@ -5,12 +5,14 @@ import {definitelyUrl} from '#/lib/strings/url-helpers'
  * module stays free of native imports.
  */
 export type SupportProviderLogoName =
+  | 'Apoiase'
   | 'BackerKit'
   | 'BigCartel'
   | 'Boosty'
   | 'Booth'
   | 'BuyMeACoffee'
   | 'CashApp'
+  | 'Catarse'
   | 'Chuffed'
   | 'Crowdfundr'
   | 'Donorbox'
@@ -25,9 +27,11 @@ export type SupportProviderLogoName =
   | 'Inprint'
   | 'ItchIo'
   | 'JustGiving'
+  | 'Kickante'
   | 'Kickstarter'
   | 'KoFi'
   | 'Liberapay'
+  | 'Livepix'
   | 'OpenCollective'
   | 'Patreon'
   | 'PayPal'
@@ -37,6 +41,7 @@ export type SupportProviderLogoName =
   | 'Stripe'
   | 'Substack'
   | 'Throne'
+  | 'Vakinha'
   | 'Venmo'
   | 'Vgen'
   | 'Zeffy'
@@ -61,12 +66,15 @@ export type SupportProvider = {
  * `assets/icons/community/`. Adult platforms are excluded per T&S.
  */
 export const SUPPORT_PROVIDERS: SupportProvider[] = [
+  {name: 'Apoie.se', logo: 'Apoiase', domain: 'apoie.se'},
   {name: 'BackerKit', logo: 'BackerKit', domain: 'backerkit.com'},
   {name: 'Big Cartel', logo: 'BigCartel', domain: 'bigcartel.com'},
   {name: 'Boosty', logo: 'Boosty', domain: 'boosty.to'},
   {name: 'BOOTH', logo: 'Booth', domain: 'booth.pm'},
   {name: 'Buy Me a Coffee', logo: 'BuyMeACoffee', domain: 'buymeacoffee.com'},
   {name: 'Cash App', logo: 'CashApp', domain: 'cash.app'},
+  {name: 'Catarse', logo: 'Catarse', domain: 'catarse.me'},
+  {name: 'Catarse', logo: 'Catarse', domain: 'catarse.com.br'},
   {
     name: 'Chuffed',
     logo: 'Chuffed',
@@ -102,6 +110,7 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
   },
   {name: 'itch.io', logo: 'ItchIo', domain: 'itch.io'},
   {name: 'JustGiving', logo: 'JustGiving', domain: 'justgiving.com'},
+  {name: 'Kickante', logo: 'Kickante', domain: 'kickante.com.br'},
   {name: 'Kickstarter', logo: 'Kickstarter', domain: 'kickstarter.com'},
   {name: 'Ko-fi', logo: 'KoFi', domain: 'ko-fi.com'},
   {name: 'Liberapay', logo: 'Liberapay', domain: 'liberapay.com'},
@@ -110,6 +119,7 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
     logo: 'OpenCollective',
     domain: 'opencollective.com',
   },
+  {name: 'LivePix', logo: 'Livepix', domain: 'livepix.gg'},
   {name: 'Patreon', logo: 'Patreon', domain: 'patreon.com'},
   {
     name: 'PayPal',
@@ -125,6 +135,7 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
   {name: 'Stripe', logo: 'Stripe', domain: 'donate.stripe.com'},
   {name: 'Substack', logo: 'Substack', domain: 'substack.com'},
   {name: 'Throne', logo: 'Throne', domain: 'throne.com'},
+  {name: 'Vakinha', logo: 'Vakinha', domain: 'vakinha.com.br'},
   {name: 'Venmo', logo: 'Venmo', domain: 'venmo.com'},
   {name: 'VGen', logo: 'Vgen', domain: 'vgen.co'},
   {name: 'Zeffy', logo: 'Zeffy', domain: 'zeffy.com'},
