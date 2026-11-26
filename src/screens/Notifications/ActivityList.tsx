@@ -4,6 +4,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
+import {parseActivityListPosts} from '#/screens/Notifications/components/NotificationItem/links'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -17,7 +18,7 @@ export function NotificationsActivityListScreen({
     params: {posts},
   },
 }: Props) {
-  const uris = decodeURIComponent(posts)
+  const uris = parseActivityListPosts(decodeURIComponent(posts)).join(',')
   const {t: l} = useLingui()
 
   return (
