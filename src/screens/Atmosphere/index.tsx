@@ -15,8 +15,9 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
-import {AtmosphereDiscoverTab} from './DiscoverTab'
+import {CombinedTab} from './CombinedTab'
 import {AtmosphereExploreTab} from './ExploreTab'
+import {AtmosphereForYouTab} from './ForYouTab'
 import {AtmosphereMetricsScope} from './metrics/context'
 import {type AtmosphereTab} from './metrics/types'
 import {useTabMetrics} from './metrics/useTabMetrics'
@@ -24,7 +25,13 @@ import {useTabMetrics} from './metrics/useTabMetrics'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
 /** In pager order, matching the sections below. */
-const TABS: AtmosphereTab[] = ['discover', 'following', 'explore', 'apps']
+const TABS: AtmosphereTab[] = [
+  'combined',
+  'discover',
+  'following',
+  'explore',
+  'apps',
+]
 const APPS_TAB_INDEX = TABS.indexOf('apps')
 
 export function AtmosphereScreen({}: Props) {
@@ -44,8 +51,19 @@ function AtmosphereScreenInner() {
   const tabMetrics = useTabMetrics(TABS)
 
   const sections = [
-    {title: l`Discover`, component: <AtmosphereDiscoverTab />},
-    {title: l`Following`, component: <ActivityTab />},
+    {
+      title: l`Combined`,
+      component: (
+        <CombinedTab
+          onPressSeeMoreApps={() => {
+            tabMetrics.onSeeMoreApps(APPS_TAB_INDEX)
+            pagerRef.current?.setPage(APPS_TAB_INDEX)
+          }}
+        />
+      ),
+    },
+    {title: l`For You`, component: <AtmosphereForYouTab />},
+    {title: l`Activity`, component: <ActivityTab />},
     {
       title: l`Explore`,
       component: (

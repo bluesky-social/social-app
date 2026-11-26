@@ -118,7 +118,7 @@ beforeEach(() => {
 })
 
 describe.each([
-  ['Following', 'activityList', 'tab', 'following'],
+  ['Activity', 'activityList', 'tab', 'following'],
   ['Activity list', 'atmosphereActivityList', 'activityList', undefined],
 ] as const)('%s pagination', (name, testID, surface, tab) => {
   function setup() {
@@ -129,7 +129,7 @@ describe.each([
       <QueryClientProvider client={queryClient}>
         <I18nProvider i18n={i18n}>
           <AtmosphereMetricsScope tab="following" surface="tab" isActive>
-            {name === 'Following' ? (
+            {name === 'Activity' ? (
               <ActivityTab />
             ) : (
               <AtmosphereActivityListScreen

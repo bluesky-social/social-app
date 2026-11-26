@@ -1563,7 +1563,7 @@ export type Events = {
     endReason: 'switched' | 'blurred' | 'backgrounded'
   }
   /**
-   * Discover, Following and the activity list only. Each uri
+   * For You, Activity and the activity list only. Each uri
    * counts once until its list is unmounted, regardless of position or
    * activity group. Switching tabs does not reset the count.
    *
@@ -1587,11 +1587,23 @@ export type Events = {
    */
   'atmosphere:content:press': AtmosphereContentMetricContext & {
     destination: 'external' | 'photoDialog'
+    /** The card itself, or its call-to-action button, e.g. "Read". */
+    source: 'card' | 'cta'
+  }
+  /**
+   * The signed-in user recommended or favorited content, or undid it. Logged
+   * per accepted press; rapid presses can cancel each other's writes, so this
+   * counts intent, not records written.
+   */
+  'atmosphere:content:action': AtmosphereContentMetricContext & {
+    kind: 'recommend' | 'favorite' | 'subscribe'
+    action: 'add' | 'remove'
+    source: 'card' | 'photoDialog'
   }
   /** The user pressed a link to someone's profile. */
   'atmosphere:profile:press': AtmosphereMetricContext & {
     profileDid: string
-    source: 'activityHeader' | 'cardMenu' | 'photoDialog'
+    source: 'activityHeader' | 'cardMenu' | 'photoDialog' | 'liveNowRow'
   }
   /** The user pressed a section's "See more", which switches tabs. */
   'atmosphere:section:seeMore': AtmosphereMetricContext & {
@@ -1647,7 +1659,7 @@ export type Events = {
   /** The user pulled to refresh a tab or activity list. */
   'atmosphere:content:refresh': AtmosphereMetricContext
   /**
-   * Following or the activity list added a page after the initial load.
+   * Activity or the activity list added a page after the initial load.
    * Initial/cached pages and refetches with no added pages do not count.
    * This does not mean the user saw the new items.
    */
@@ -1678,7 +1690,7 @@ export type Events = {
     /** `report` only: the collection of the record being reported. */
     reportCollection?: string
   }
-  /** The user opened an activity group's "View all" list. */
+  /** The user opened an activity group's full list via its content count. */
   'atmosphere:activity:viewAll': AtmosphereMetricContext & {
     subjectCount: number
     collection: string

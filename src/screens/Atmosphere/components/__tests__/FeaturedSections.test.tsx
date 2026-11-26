@@ -5,7 +5,7 @@ import {
   AtmosphereFeedbackProvider,
 } from '#/screens/Atmosphere/feedback'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
-import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
+import {Document} from '#/components/atmosphere/SiteStandard/Document'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {type app} from '#/lexicons'
 import {FeaturedArticles} from '../FeaturedArticles'
@@ -85,16 +85,9 @@ function mockCard(prefix: string, prop: string) {
     )
   }
 }
-jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => ({
-  DocumentCompact: jest.fn(mockCard('article', 'view')),
+jest.mock('#/components/atmosphere/SiteStandard/Document', () => ({
+  Document: jest.fn(mockCard('article', 'view')),
 }))
-jest.mock('#/components/Divider', () => {
-  const {View} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    Divider: () => <View testID="articleDivider" />,
-  }
-})
 jest.mock('../LivestreamCard', () => ({
   LivestreamCard: mockCard('livestream', 'livestream'),
 }))
@@ -196,9 +189,9 @@ describe('FeaturedArticles', () => {
         />
       </AtmosphereMetricsScope>,
     )
-    const props = jest.mocked(DocumentCompact).mock.calls.at(-1)?.[0]
+    const props = jest.mocked(Document).mock.calls.at(-1)?.[0]
     act(() => {
-      props?.onPressCallback?.()
+      props?.onPressCallback?.('cta')
       props?.onShareCallback?.()
     })
     expect(sendFeedback.mock.calls).toEqual([
@@ -214,10 +207,11 @@ describe('FeaturedArticles', () => {
       authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
       position: 0,
       destination: 'external',
+      source: 'cta',
     })
   })
 
-  it('renders compact documents in response order with dividers only between rows', () => {
+  it('renders compact documents in response order', () => {
     render(<FeaturedArticles articles={articles} />)
 
     expect(screen.getByText('Featured articles')).toBeTruthy()
@@ -225,10 +219,9 @@ describe('FeaturedArticles', () => {
     expect(screen.queryByTestId('atmosphereArticlesGallery')).toBeNull()
     expect(slides()).toHaveLength(0)
     expect(
-      screen
-        .getAllByTestId(/^(article-|articleDivider$)/)
-        .map(row => row.props.testID),
-    ).toEqual(['article-a1', 'articleDivider', 'article-a2'])
+      screen.getAllByTestId(/^article-/).map(row => row.props.testID),
+    ).toEqual(['article-a1', 'article-a2'])
+    expect(jest.mocked(Document).mock.calls.at(-1)?.[0].variant).toBe('compact')
     expect(screen.getByTestId('article-a1').props.tabIndex).toBeUndefined()
   })
 
@@ -237,7 +230,6 @@ describe('FeaturedArticles', () => {
 
     expect(screen.queryByText('Featured articles')).toBeNull()
     expect(screen.queryByTestId('atmosphereArticlesList')).toBeNull()
-    expect(screen.queryByTestId('articleDivider')).toBeNull()
   })
 })
 

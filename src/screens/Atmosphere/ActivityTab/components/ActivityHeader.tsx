@@ -13,13 +13,10 @@ import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useAlf, useTheme} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {
-  matchStandardSiteHostByPublication,
-  matchStandardSiteHostByUrl,
-  type StandardSiteHost,
-} from '#/components/atmosphere/SiteStandard/publishers'
+  type AtmosphereProvider,
+  getAtmosphereProvider,
+} from '#/components/atmosphere/providers'
 import {sizes} from '#/components/icons/common'
-import {GrainMark} from '#/components/icons/community/Grain'
-import {Streamplace} from '#/components/icons/community/Streamplace'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -55,7 +52,7 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
     <View style={[a.flex_row, a.align_center, a.gap_md]}>
       <PreviewableUserAvatar
         type="user"
-        size={42}
+        size={32}
         profile={actor}
         moderation={moderation?.ui('avatar')}
         onBeforePress={logProfilePress}
@@ -95,68 +92,74 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
   )
 }
 
-type ActivityApp = {name: string; Icon?: StandardSiteHost['Icon']}
-
 /**
- * The app an activity happened on, inferred only from the activity's own
- * collection. Graph records (recommends, subscriptions) can be written from
- * any app, so they never name one, regardless of what they point at.
+ * The app an activity happened on, as attributed by the appview. Only records
+ * that are published on an app name one. Graph records (recommends,
+ * subscriptions) can be written from any app, so they never name one,
+ * regardless of what they point at.
  */
 function getActivityApp({
   collection,
   content,
-}: ActivityCardRow): ActivityApp | undefined {
+}: ActivityCardRow): AtmosphereProvider | undefined {
   switch (collection) {
     case site.standard.document.$type:
-      // Publishing happens on the article's publisher. For actor groups this
-      // is the newest article.
+      // For actor groups this is the newest article.
       if (content.type !== 'article') return undefined
-      return (
-        (content.view.publisher
-          ? matchStandardSiteHostByPublication(content.view.publisher)
-          : matchStandardSiteHostByUrl(content.view.uri)) ?? undefined
-      )
+      break
     case social.grain.gallery.$type:
-      return {name: 'Grain', Icon: GrainMark}
+      if (content.type !== 'gallery') return undefined
+      break
     case place.stream.livestream.$type:
-      return {name: 'Streamplace', Icon: Streamplace}
+      if (content.type !== 'livestream') return undefined
+      break
     default:
       return undefined
   }
+  return getAtmosphereProvider(content.view.providerId)
 }
 
 /** Centers the app marks on text_sm's cap height rather than its baseline. */
 const INLINE_ICON_OFFSET = 1.5
 
-function AppName({
+export function AppName({
   app,
+  color,
+  size = 'sm',
   children,
 }: {
-  app: ActivityApp
+  app: AtmosphereProvider
+  /** Defaults to the surrounding metadata's text color. */
+  color?: string
+  /**
+   * Must match the surrounding text, since `Text` applies its own default
+   * size rather than inheriting.
+   */
+  size?: 'xs' | 'sm'
   children: React.ReactNode
 }) {
   const t = useTheme()
+  const textColor = color ?? t.atoms.text_contrast_medium.color
   const {fonts} = useAlf()
   const nativeFontScale = useNativeFontScale()
-  const scaleMultiplier = fonts.scaleMultiplier * nativeFontScale
+  const textSize = size === 'xs' ? a.text_xs : a.text_sm
+  /** The icon and its offset are tuned for text_sm. */
+  const sizeRatio = textSize.fontSize / a.text_sm.fontSize
+  const scaleMultiplier = fonts.scaleMultiplier * nativeFontScale * sizeRatio
   /** Inline views do not inherit the surrounding text's font scaling. */
   const iconSize = PixelRatio.roundToNearestPixel(sizes.xs * scaleMultiplier)
 
   return (
-    <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
-      {app.Icon ? (
-        <>
-          <app.Icon
-            width={iconSize}
-            fill={t.atoms.text_contrast_medium.color}
-            style={{
-              transform: [{translateY: INLINE_ICON_OFFSET * scaleMultiplier}],
-            }}
-          />
-          {/* Keep the icon and name on the same line. */}
-          {'\u00a0'}
-        </>
-      ) : null}
+    <Text style={[textSize, a.font_semi_bold, {color: textColor}]}>
+      <app.Icon
+        width={iconSize}
+        fill={textColor}
+        style={{
+          transform: [{translateY: INLINE_ICON_OFFSET * scaleMultiplier}],
+        }}
+      />
+      {/* Keep the icon and name on the same line. */}
+      {'\u00a0'}
       {children}
     </Text>
   )

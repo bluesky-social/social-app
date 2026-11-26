@@ -45,7 +45,7 @@ export const exploreResponseFixture = {
           publisher: publication,
           associatedProfiles: [author],
           likeCount: 1,
-          likers: [author],
+          viewer: {knownLikers: [author], knownLikerCount: 1},
         },
       },
       {
@@ -73,7 +73,7 @@ export const exploreResponseFixture = {
         associatedProfiles: [author],
         ...(index === 0 ? {photoCount: 42} : {}),
         likeCount: 2,
-        likers: [author],
+        viewer: {knownLikers: [author], knownLikerCount: 1},
       },
     })),
   },

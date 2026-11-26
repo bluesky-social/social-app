@@ -94,6 +94,10 @@ jest.mock('#/state/session', () => ({
 jest.mock('#/ageAssurance', () => ({
   useAgeAssurance: () => ({Access: {Full: 'full'}, state: {access: 'full'}}),
 }))
+jest.mock('#/components/atmosphere/AtmosphereFirstActionWelcomeDialog', () => ({
+  useAtmosphereFirstActionWelcome: () => ({control: {}, onCreate: () => {}}),
+  AtmosphereFirstActionWelcomeDialog: () => null,
+}))
 jest.mock('#/components/Dialog', () => ({
   useDialogControl: () => ({open: mockOpenPhotoDialog}),
 }))

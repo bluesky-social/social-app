@@ -4,7 +4,7 @@ import {act, render} from '@testing-library/react-native'
 
 import {AtmosphereActivityListScreen} from '#/screens/Atmosphere/ActivityList'
 import {ActivityTab} from '#/screens/Atmosphere/ActivityTab'
-import {AtmosphereDiscoverTab} from '#/screens/Atmosphere/DiscoverTab'
+import {AtmosphereForYouTab} from '#/screens/Atmosphere/ForYouTab'
 import {AtmosphereMetricsScope} from '../context'
 
 const mockMetric = jest.fn()
@@ -92,7 +92,7 @@ jest.mock('#/screens/Atmosphere/ActivityList/useActivityListQuery', () => ({
   useActivityListQuery: () => ({data: {pages: [mockData]}}),
 }))
 jest.mock(
-  '#/screens/Atmosphere/DiscoverTab/useAtmosphereRecommendedActivityQuery',
+  '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery',
   () => ({
     useAtmosphereRecommendedActivityQuery: () => ({data: {items: mockData}}),
   }),
@@ -122,17 +122,17 @@ beforeEach(() => {
   mockSetFocused = undefined
 })
 
-it('flushes Discover rows on activation, excluding blurred content', () => {
+it('flushes For You rows on activation, excluding blurred content', () => {
   mockData = [blurred, normal]
   const tree = (isActive: boolean) => (
     <I18nProvider i18n={i18n}>
       <AtmosphereMetricsScope tab="discover" surface="tab" isActive={isActive}>
-        <AtmosphereDiscoverTab />
+        <AtmosphereForYouTab />
       </AtmosphereMetricsScope>
     </I18nProvider>
   )
   const screen = render(tree(false))
-  const seen = screen.getByTestId('atmosphereDiscoverTab').props.onItemSeen as (
+  const seen = screen.getByTestId('atmosphereForYouTab').props.onItemSeen as (
     item: unknown,
     index: number,
   ) => void
@@ -156,7 +156,7 @@ it('flushes Discover rows on activation, excluding blurred content', () => {
   ])
 })
 
-it('flushes Following cards on activation without a second List callback', () => {
+it('flushes Activity cards on activation without a second List callback', () => {
   const warning = {kind: 'warning', key: 'warning'}
   const hidden = {kind: 'card', key: 'hidden', ...blurred}
   const card = {

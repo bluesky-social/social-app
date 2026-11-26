@@ -76,6 +76,8 @@ export function article(
     uri: `https://${host}/post`,
     title: 'Why I switched from Goodreads to Hardcover',
     description: 'POLL: What book tracking app do YOU use?',
+    // Hosted publications are attributed to their app's domain, e.g. pckt.blog
+    providerId: host.split('.').slice(-2).join('.'),
     publisher: {
       uri: `https://${host}`,
       title: 'Debbie’s Blatherings',
@@ -91,6 +93,7 @@ export function publication(): $Typed<app.bsky.embed.external.ViewArticlePublica
     uri: 'https://paul.leaflet.pub',
     title: 'Paul’s Leaflets',
     description: '',
+    providerId: 'leaflet.pub',
   }
 }
 
@@ -102,6 +105,7 @@ export function gallery(
     uri: 'https://grain.social/manton/gallery/1',
     title: '168th street station.',
     description: '',
+    providerId: 'grain.social',
     items: [
       {
         $type: 'app.bsky.embed.external#viewGalleryImage',
@@ -122,6 +126,7 @@ export function livestream(
     uri: 'https://stream.place/pdx.atproto.camp',
     title: 'October ’26 Meetup',
     description: 'Tonight we hung out',
+    providerId: 'stream.place',
     active: false,
     startedAt: '2026-11-09T00:00:00.000Z',
     endedAt: '2026-11-09T03:50:23.000Z',
@@ -173,8 +178,8 @@ export function item({
 }
 
 /**
- * Published documents are their own subjects; anything else targets one of
- * Paul's articles.
+ * Content records are their own subjects; graph records target Paul's
+ * articles or publications.
  */
 export function actorGroup({
   actor,
@@ -193,9 +198,11 @@ export function actorGroup({
       ref: strongRef(uri),
       indexedAt: INDEXED_AT,
       subject:
-        collection === NSID.document
-          ? uri
-          : recordUri(paul, NSID.document, String(i)),
+        collection === NSID.recommend
+          ? recordUri(paul, NSID.document, String(i))
+          : collection === NSID.subscription
+            ? recordUri(paul, 'site.standard.publication', String(i))
+            : uri,
     }
   })
   return {

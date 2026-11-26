@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
+import {GalleryCardStorybook} from '#/screens/Atmosphere/ActivityTab/components/GalleryCardStorybook'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {SiteStandardStorybook} from '#/components/atmosphere/SiteStandard/Storybook'
 import {Button, ButtonText} from '#/components/Button'
@@ -87,6 +88,9 @@ export default function Storybook() {
               </Button>
             </View>
 
+            <GalleryCardStorybook />
+            <SiteStandardStorybook />
+
             <Button
               color="primary"
               size="small"
@@ -150,7 +154,6 @@ export default function Storybook() {
             <Admonitions />
             <Settings />
             <GalleryStorybook />
-            <SiteStandardStorybook />
 
             <Button
               color="primary"

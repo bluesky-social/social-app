@@ -211,18 +211,6 @@
           "description": "Deprecated. Retained for compatibility."
         },
         "url": { "type": "string", "format": "uri", "maxLength": 4096 },
-        "appStoreUrl": {
-          "type": "string",
-          "format": "uri",
-          "maxLength": 4096,
-          "description": "Optional link to the app on the Apple App Store."
-        },
-        "googlePlayUrl": {
-          "type": "string",
-          "format": "uri",
-          "maxLength": 4096,
-          "description": "Optional link to the app on Google Play."
-        },
         "category": { "type": "string", "maxLength": 4096 },
         "profile": {
           "type": "ref",

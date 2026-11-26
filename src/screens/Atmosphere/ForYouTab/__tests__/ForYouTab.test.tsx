@@ -14,9 +14,9 @@ import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {DISCOVER_FEEDBACK} from '#/screens/Atmosphere/const'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {app} from '#/lexicons'
-import {AtmosphereDiscoverTab} from '../index'
+import {AtmosphereForYouTab} from '../index'
 import {
-  type DiscoverItem,
+  type ForYouItem,
   useAtmosphereRecommendedActivityQuery,
 } from '../useAtmosphereRecommendedActivityQuery'
 
@@ -121,7 +121,7 @@ jest.mock('#/screens/Atmosphere/ActivityTab/components/ActivityRow', () => {
         <Pressable
           accessibilityLabel={content.view.title}
           accessibilityState={{disabled: !sendFeedback}}
-          testID="discoverFeedbackCard"
+          testID="forYouFeedbackCard"
           accessibilityHint=""
           onPress={() => sendFeedback?.('app.bsky.feed.defs#clickthroughItem')}>
           <Text>{content.view.title}</Text>
@@ -151,7 +151,7 @@ function tab(isActive = true) {
   return (
     <I18nProvider i18n={i18n}>
       <AtmosphereMetricsScope tab="discover" surface="tab" isActive={isActive}>
-        <AtmosphereDiscoverTab />
+        <AtmosphereForYouTab />
       </AtmosphereMetricsScope>
     </I18nProvider>
   )
@@ -184,13 +184,13 @@ it('renders cards in order, with refresh but no load-more handler', async () => 
   const refresh = createDeferrable()
   refetch.mockReturnValueOnce(refresh.complete)
   const screen = renderTab()
-  const list = () => screen.getByTestId('atmosphereDiscoverTab')
+  const list = () => screen.getByTestId('atmosphereForYouTab')
 
   expect(screen.getByText('nux')).toBeTruthy()
-  expect(screen.getAllByTestId('atmosphereDiscoverCard')).toHaveLength(2)
+  expect(screen.getAllByTestId('atmosphereForYouCard')).toHaveLength(2)
   expect(
     screen
-      .getAllByTestId('atmosphereDiscoverCard')
+      .getAllByTestId('atmosphereForYouCard')
       .map(card => card.findByType(Text).props.children as string),
   ).toEqual([gallery().title, article().title])
   expect(list().props.onEndReached).toBeUndefined()
@@ -268,21 +268,21 @@ it('shows loading, retryable errors, and an empty state', () => {
   setQuery({isError: true})
   screen.rerender(
     <I18nProvider i18n={i18n}>
-      <AtmosphereDiscoverTab />
+      <AtmosphereForYouTab />
     </I18nProvider>,
   )
   fireEvent.press(screen.getByText(errorMessage))
   expect(refetch).toHaveBeenCalledTimes(1)
-  expect(screen.queryByTestId('atmosphereDiscoverEmpty')).toBeNull()
+  expect(screen.queryByTestId('atmosphereForYouEmpty')).toBeNull()
 
   setQuery({data: {items: [], recIdStr: '123'}})
   screen.rerender(
     <I18nProvider i18n={i18n}>
-      <AtmosphereDiscoverTab />
+      <AtmosphereForYouTab />
     </I18nProvider>,
   )
   expect(screen.getByText('nux')).toBeTruthy()
-  expect(screen.getByTestId('atmosphereDiscoverEmpty')).toBeTruthy()
+  expect(screen.getByTestId('atmosphereForYouEmpty')).toBeTruthy()
   expect(screen.queryByLabelText('Loading recommendations')).toBeNull()
 })
 
@@ -307,24 +307,24 @@ const DOCUMENT_REF = {
   cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
 }
 
-function recommended(reqId = REQUEST_ID): DiscoverItem {
+function recommended(reqId = REQUEST_ID): ForYouItem {
   return {
     reqId,
     content: {
       type: 'article',
       view: article(undefined, {associatedRefs: [DOCUMENT_REF]}),
     },
-    moderation: {} as DiscoverItem['moderation'],
+    moderation: {} as ForYouItem['moderation'],
   }
 }
 
-function setBatch(item: DiscoverItem) {
+function setBatch(item: ForYouItem) {
   setQuery({data: {items: [item], recIdStr: item.reqId}})
 }
 
-function seen(screen: ReturnType<typeof renderTab>, item: DiscoverItem) {
-  const onItemSeen = screen.getByTestId('atmosphereDiscoverTab').props
-    .onItemSeen as (item: DiscoverItem, position: number) => void
+function seen(screen: ReturnType<typeof renderTab>, item: ForYouItem) {
+  const onItemSeen = screen.getByTestId('atmosphereForYouTab').props
+    .onItemSeen as (item: ForYouItem, position: number) => void
   act(() => onItemSeen(item, 0))
 }
 
@@ -332,7 +332,7 @@ function flushFeedback() {
   act(() => jest.advanceTimersByTime(10e3))
 }
 
-it('batches attributed record impressions through Discover without changing content analytics', () => {
+it('batches attributed record impressions through For You without changing content analytics', () => {
   const item = recommended()
   setBatch(item)
   const screen = renderTab()
@@ -377,7 +377,7 @@ it('disables item feedback and impressions when the Discover feed URI is undefin
   setBatch(item)
   const screen = renderTab()
   expect(
-    screen.getByTestId('discoverFeedbackCard').props.accessibilityState,
+    screen.getByTestId('forYouFeedbackCard').props.accessibilityState,
   ).toEqual({disabled: true})
   seen(screen, item)
   fireEvent.press(screen.getByText(item.content.view.title))
@@ -420,7 +420,7 @@ it('defers inactive impressions until activation, retaining only current eligibl
 
   const next = {
     ...recommended(),
-    moderation: {blur: true} as DiscoverItem['moderation'],
+    moderation: {blur: true} as ForYouItem['moderation'],
   }
   setBatch(next)
   screen.rerender(tab())
@@ -441,7 +441,7 @@ it.each(['signed out', 'missing request', 'missing record', 'blurred'])(
     if (condition === 'signed out') mockHasSession = false
     if (condition === 'missing record') item.content.view.associatedRefs = []
     if (condition === 'blurred')
-      item.moderation = {blur: true} as DiscoverItem['moderation']
+      item.moderation = {blur: true} as ForYouItem['moderation']
     setBatch(item)
     const screen = renderTab()
     seen(screen, item)
@@ -452,7 +452,7 @@ it.each(['signed out', 'missing request', 'missing record', 'blurred'])(
 
 it('targets the gallery record rather than its photos or external URL', () => {
   const galleryUri = 'at://did:web:writer.test/social.grain.gallery/1'
-  const item: DiscoverItem = {
+  const item: ForYouItem = {
     ...recommended(),
     content: {
       type: 'gallery',

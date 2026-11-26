@@ -77,13 +77,17 @@ jest.mock('./ActivityTab', () => {
   const {View} = jest.requireActual('react-native')
   return {ActivityTab: () => <View testID="activityTab" />}
 })
-jest.mock('./DiscoverTab', () => {
+jest.mock('./ForYouTab', () => {
   const {View} = jest.requireActual('react-native')
-  return {AtmosphereDiscoverTab: () => <View testID="atmosphereDiscoverTab" />}
+  return {AtmosphereForYouTab: () => <View testID="atmosphereForYouTab" />}
 })
 jest.mock('./AppsTab', () => {
   const {View} = jest.requireActual('react-native')
   return {AtmosphereAppsTab: () => <View testID="atmosphereAppsTab" />}
+})
+jest.mock('./CombinedTab', () => {
+  const {View} = jest.requireActual('react-native')
+  return {CombinedTab: () => <View testID="combinedTab" />}
 })
 jest.mock('#/view/com/pager/Pager', () => {
   const React = jest.requireActual<typeof import('react')>('react')
@@ -218,20 +222,24 @@ describe('AtmosphereScreen', () => {
     expect(mockMetric).not.toHaveBeenCalled()
   })
 
-  it('defaults to Discover and switches between tabs', () => {
+  it('defaults to Combined and switches between tabs', () => {
     const screen = renderScreen()
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Discover', 'Following', 'Explore', 'Apps'])
+    ).toEqual(['Combined', 'For You', 'Activity', 'Explore', 'Apps'])
     expect(
-      screen.getByRole('tab', {name: 'Discover'}).props.accessibilityState,
+      screen.getByRole('tab', {name: 'Combined'}).props.accessibilityState,
     ).toEqual({selected: true})
-    expect(screen.getByTestId('atmosphereDiscoverTab')).toBeTruthy()
+    expect(screen.getByTestId('combinedTab')).toBeTruthy()
 
-    fireEvent.press(screen.getByRole('tab', {name: 'Following'}))
+    fireEvent.press(screen.getByRole('tab', {name: 'For You'}))
+    expect(screen.getByTestId('atmosphereForYouTab')).toBeTruthy()
+    expect(screen.queryByTestId('combinedTab')).toBeNull()
+
+    fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
     expect(screen.getByTestId('activityTab')).toBeTruthy()
-    expect(screen.queryByTestId('atmosphereDiscoverTab')).toBeNull()
+    expect(screen.queryByTestId('atmosphereForYouTab')).toBeNull()
 
     fireEvent.press(screen.getByRole('tab', {name: 'Explore'}))
     expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
@@ -249,7 +257,8 @@ describe('AtmosphereScreen', () => {
         .filter(([event]) => event === 'atmosphere:tab:displayed')
         .map(([, payload]) => payload),
     ).toEqual([
-      {tab: 'discover', reason: 'focus'},
+      {tab: 'combined', reason: 'focus'},
+      {tab: 'discover', previousTab: 'combined', reason: 'tap'},
       {tab: 'following', previousTab: 'discover', reason: 'tap'},
       {tab: 'explore', previousTab: 'following', reason: 'tap'},
       {tab: 'apps', previousTab: 'explore', reason: 'seeMoreApps'},

@@ -178,6 +178,7 @@ describe('content attribution', () => {
       surface: 'photoDialog',
       ...ITEM,
       destination: 'photoDialog',
+      source: 'card',
     })
   })
 })

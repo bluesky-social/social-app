@@ -70,8 +70,8 @@ export function mapExploreProfiles(
 }
 
 /**
- * A view with its profiles mapped: owners, likers and subscribers, and the
- * same for an article's publisher.
+ * A view with its profiles mapped: owners, subscribers, and the viewer's
+ * known likers and subscribers, and the same for an article's publisher.
  */
 export function mapViewProfiles<V extends MappableView | undefined>(
   view: V,
@@ -101,19 +101,28 @@ export function findProfiles(
 /** The parts of an external view that hold profiles. */
 type OwnedView = {
   associatedProfiles?: Profile[]
-  likers?: Profile[]
   subscribers?: Profile[]
+  viewer?: {knownLikers?: Profile[]; knownSubscribers?: Profile[]}
   publisher?: OwnedView
 }
 
 function mapOwnedView(view: OwnedView, map: ProfileMapper): OwnedView {
+  const viewer = view.viewer
   return {
     ...view,
     ...(view.associatedProfiles && {
       associatedProfiles: view.associatedProfiles.map(map),
     }),
-    ...(view.likers && {likers: view.likers.map(map)}),
     ...(view.subscribers && {subscribers: view.subscribers.map(map)}),
+    ...(viewer && {
+      viewer: {
+        ...viewer,
+        ...(viewer.knownLikers && {knownLikers: viewer.knownLikers.map(map)}),
+        ...(viewer.knownSubscribers && {
+          knownSubscribers: viewer.knownSubscribers.map(map),
+        }),
+      },
+    }),
     ...(view.publisher && {publisher: mapOwnedView(view.publisher, map)}),
   }
 }

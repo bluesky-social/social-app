@@ -35,7 +35,7 @@ const useAtmosphereRecommendedActivityQueryRoot =
 type RecommendedActivity =
   app.bsky.unspecced.getAtmosphereRecommendedActivity.$OutputBody
 
-export type DiscoverItem = {
+export type ForYouItem = {
   /** Kept on each row so stale visibility callbacks cannot use a new request. */
   reqId: string
   content: ActivityContent
@@ -44,7 +44,7 @@ export type DiscoverItem = {
 
 /**
  * A single batch in recommendation order. Keep the raw response in the cache
- * and apply profile shadows and moderation in `select`, as on Following.
+ * and apply profile shadows and moderation in `select`, as on Activity.
  */
 export function useAtmosphereRecommendedActivityQuery() {
   const client = useAppviewClient()
@@ -85,7 +85,7 @@ export function useAtmosphereRecommendedActivityQuery() {
       return {
         ...data,
         items: moderationOpts
-          ? data.items.flatMap(({view}): DiscoverItem[] => {
+          ? data.items.flatMap(({view}): ForYouItem[] => {
               const content = toViewContent(
                 mapViewProfiles(view, applyProfileShadow),
               )

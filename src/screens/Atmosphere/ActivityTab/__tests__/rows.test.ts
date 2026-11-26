@@ -95,7 +95,7 @@ describe('toActivityRows', () => {
       activityCount: 16,
       content: {type: 'article'},
     })
-    // View all lists the recommended articles, not the recommend records.
+    // The group lists the recommended articles, not the recommend records.
     expect(row.subjectUris).toHaveLength(16)
     expect(row.subjectUris?.[0]).toBe(recordUri(paul, NSID.document, '0'))
   })

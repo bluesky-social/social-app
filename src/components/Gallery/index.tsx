@@ -24,7 +24,7 @@ import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, web} from '#/alf'
 import {Bleed, useGalleryBleed} from '#/components/Gallery/Bleed'
 import {ITEM_GAP} from '#/components/Gallery/const'
-import {GalleryContext} from '#/components/Gallery/context'
+import {GalleryContext, useGalleryContext} from '#/components/Gallery/context'
 import {type GalleryRef} from '#/components/Gallery/types'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers'
@@ -40,6 +40,7 @@ import {IS_ANDROID, IS_WEB} from '#/env'
 export {Bleed, useGalleryBleed}
 export {PageDots} from '#/components/Gallery/PageDots'
 export {ITEM_GAP}
+export {useGalleryContext}
 export type {GalleryRef}
 
 type Size = {width: number; height: number}
@@ -418,11 +419,22 @@ export function Root({
   }
 
   const activeFocusIndex = Math.min(focusIndex, Math.max(0, itemCount - 1))
+  const endIndex = getIndexForOffset(
+    itemWidths,
+    getMaxOffset(itemWidths, itemCount, viewportWidth),
+    itemCount,
+  )
   const rovingEnabled = IS_WEB && !screenReaderEnabled
 
   return (
     <GalleryContext.Provider
-      value={{label, itemKeys: keys, activeIndex: pageIndex, revealIndex}}>
+      value={{
+        label,
+        itemKeys: keys,
+        activeIndex: pageIndex,
+        endIndex,
+        revealIndex,
+      }}>
       <View style={a.w_full}>
         <View
           ref={contentRef}

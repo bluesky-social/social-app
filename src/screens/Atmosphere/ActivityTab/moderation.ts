@@ -42,8 +42,8 @@ export function isActivityHidden(moderation: ModerationUI): boolean {
 }
 
 /**
- * Actors we leave out of a card's supporting cast, such as the avatars in a
- * related-activity pill. They still count toward "+N".
+ * Actors we leave out of a card's supporting cast, such as the people named
+ * in an article's social proof. They still count toward "+N".
  */
 export function isActorHidden(
   actor: bsky.profile.AnyProfileView,

@@ -82,6 +82,13 @@ without including it in slide counting or height measurements. Use it for
 </Gallery.Root>
 ```
 
+Footer content can read `Gallery.useGalleryContext()`: `itemKeys`,
+`activeIndex` (the leading item, as the page dots show it), `endIndex` (the
+leading item once scrolled all the way, so `activeIndex < endIndex` means there
+is further to go), and `revealIndex(index)`, which scrolls that item to the
+front as far as the content allows, as user navigation. Lay it out absolutely
+to overlay the slides, e.g. for a counter or a "next" button.
+
 `snapToItems` opts into slide snapping on iOS and Android. Snap positions use
 measured item widths and the gap, so variable-width slides work too. Positions
 near the end are clamped to the scrollable range; the last slide can still be

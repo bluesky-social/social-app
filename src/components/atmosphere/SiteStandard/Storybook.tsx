@@ -2,14 +2,7 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Document} from '#/components/atmosphere/SiteStandard/Document'
-import {
-  DocumentCompact,
-  DocumentCompactCard,
-} from '#/components/atmosphere/SiteStandard/DocumentCompact'
-import {
-  Publication,
-  PublicationCard,
-} from '#/components/atmosphere/SiteStandard/Publication'
+import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {H1, H2} from '#/components/Typography'
 import {type app, site} from '#/lexicons'
 
@@ -21,6 +14,26 @@ const author = {
   handle: 'riley.example.com',
   displayName: 'Riley Rivers',
 } satisfies app.bsky.actor.defs.ProfileViewBasic
+
+const likers = [
+  {
+    did: 'did:plc:liker1liker1liker1liker1l',
+    handle: 'danielle.example.com',
+    displayName: 'danielle yuhan',
+    avatar: IMAGE,
+  },
+  {
+    did: 'did:plc:liker2liker2liker2liker2l',
+    handle: 'sam.example.com',
+    displayName: 'Sam Okafor',
+    avatar: IMAGE,
+  },
+  {
+    did: 'did:plc:liker3liker3liker3liker3l',
+    handle: 'jo.example.com',
+    avatar: IMAGE,
+  },
+] satisfies app.bsky.actor.defs.ProfileViewBasic[]
 
 const publication = {
   uri: 'https://example.com/field-notes',
@@ -44,7 +57,8 @@ const document = {
   image: IMAGE,
   createdAt: '2026-01-15T12:00:00.000Z',
   readingTime: 5,
-  likeCount: 23,
+  viewer: {knownLikers: likers, knownLikerCount: 5},
+  likeCount: 27,
   publisher: publication,
   associatedRefs: [
     {
@@ -56,25 +70,64 @@ const document = {
   associatedProfiles: [author],
 } satisfies app.bsky.embed.external.ViewArticle
 
+const singleKnownLikerDocument = {
+  ...document,
+  likeCount: 12,
+  viewer: {knownLikers: likers.slice(0, 1), knownLikerCount: 1},
+} satisfies app.bsky.embed.external.ViewArticle
+
+/* Recommended, but by nobody the viewer follows. */
+const noKnownLikersDocument = {
+  ...document,
+  viewer: {},
+} satisfies app.bsky.embed.external.ViewArticle
+
+const noLikersDocument = {
+  ...document,
+  likeCount: 0,
+  viewer: {},
+} satisfies app.bsky.embed.external.ViewArticle
+
+const noImageDocument = {
+  ...document,
+  image: undefined,
+} satisfies app.bsky.embed.external.ViewArticle
+
+const noPublicationDocument = {
+  ...noLikersDocument,
+  image: undefined,
+  publisher: undefined,
+} satisfies app.bsky.embed.external.ViewArticle
+
+const leafletPublication = {
+  ...publication,
+  uri: 'https://fieldnotes.leaflet.pub',
+  providerId: 'leaflet.pub',
+  theme: {accent: '#4a7318', accentForeground: '#ffffff'},
+} satisfies app.bsky.embed.external.ViewArticlePublication
+
+const leafletDocument = {
+  ...document,
+  uri: 'https://fieldnotes.leaflet.pub/looking-closely',
+  providerId: 'leaflet.pub',
+  publisher: leafletPublication,
+} satisfies app.bsky.embed.external.ViewArticle
+
+const subscribedLeafletPublication = {
+  ...leafletPublication,
+  description: 'A weekly round up of what’s happening in the atmosphere.',
+  subscriptionCount: 31,
+  subscribers: likers,
+  viewer: {
+    knownSubscribers: likers.slice(0, 2),
+    knownSubscriberCount: 2,
+  },
+} satisfies app.bsky.embed.external.ViewArticlePublication
+
 export function SiteStandardStorybook() {
   return (
     <View testID="siteStandardStorybook" style={[a.gap_lg]}>
       <H1>SiteStandard v2</H1>
-
-      <View style={[a.gap_md]}>
-        <H2>Document compact</H2>
-        <DocumentCompact view={document} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document compact card</H2>
-        <DocumentCompactCard view={document} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document compact with containerStyle</H2>
-        <DocumentCompact view={document} containerStyle={[a.px_lg, a.py_md]} />
-      </View>
 
       <View style={[a.gap_md]}>
         <H2>Document</H2>
@@ -82,18 +135,90 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Publication</H2>
-        <Publication view={publication} />
+        <H2>Document, Leaflet publication</H2>
+        <Document view={leafletDocument} />
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Publication card</H2>
+        <H2>Document, no image</H2>
+        <Document view={noImageDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document, no publication or recommenders</H2>
+        <Document view={noPublicationDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document, one known recommender</H2>
+        <Document view={singleKnownLikerDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document, Activity tab related activity first</H2>
+        <Document
+          view={document}
+          recommenders={{actors: likers.slice(1, 2), actorCount: 1}}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document, Activity tab related activity only</H2>
+        <Document
+          view={noKnownLikersDocument}
+          recommenders={{actors: likers, actorCount: likers.length}}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact</H2>
+        <Document variant="compact" view={document} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact, hidden meta</H2>
+        <Document variant="compact" view={document} hideMeta />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact, no reading time or recommenders</H2>
+        <Document
+          variant="compact"
+          view={{...noLikersDocument, readingTime: undefined}}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, Leaflet, known subscribers</H2>
+        <PublicationCard view={subscribedLeafletPublication} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, subscribed</H2>
+        <PublicationCard
+          view={{
+            ...subscribedLeafletPublication,
+            viewer: {
+              ...subscribedLeafletPublication.viewer,
+              subscription: `at://${author.did}/${site.standard.graph.subscription.$type}/storybook`,
+            },
+          }}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, subscribers but none known</H2>
+        <PublicationCard view={{...subscribedLeafletPublication, viewer: {}}} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, no subscribers or app</H2>
+        <PublicationCard view={{...publication, viewer: {}}} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Publication, unknown viewer state (no Subscribe)</H2>
         <PublicationCard view={publication} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Publication with containerStyle</H2>
-        <Publication view={publication} containerStyle={[a.px_lg, a.py_md]} />
       </View>
     </View>
   )

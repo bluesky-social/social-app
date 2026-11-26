@@ -39,7 +39,7 @@ export function AppDialog({
   const {t: l} = useLingui()
   const metricsSnapshot = useAtmosphereMetricsSnapshot()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`${app.title} details`}
