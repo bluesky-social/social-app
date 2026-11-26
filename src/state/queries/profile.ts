@@ -196,18 +196,32 @@ export function useProfileUpdateMutation() {
           if ('pronouns' in updates) {
             next.pronouns = updates.pronouns || undefined
           }
+          if ('avatarAlt' in updates) {
+            next.avatarAlt = updates.avatarAlt || undefined
+          }
+          if ('bannerAlt' in updates) {
+            next.bannerAlt = updates.bannerAlt || undefined
+          }
         }
+        // alt text describes one specific image, so a new image without
+        // its own alt text must not inherit the old description
+        const keepsAlt = (field: 'avatarAlt' | 'bannerAlt') =>
+          typeof updates !== 'function' && field in updates
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
           next.avatar = res.blob
+          if (!keepsAlt('avatarAlt')) next.avatarAlt = undefined
         } else if (newUserAvatar === null) {
           next.avatar = undefined
+          next.avatarAlt = undefined
         }
         if (newUserBannerPromise) {
           const res = await newUserBannerPromise
           next.banner = res.blob
+          if (!keepsAlt('bannerAlt')) next.bannerAlt = undefined
         } else if (newUserBanner === null) {
           next.banner = undefined
+          next.bannerAlt = undefined
         }
         return next
       })
@@ -249,6 +263,20 @@ export function useProfileUpdateMutation() {
             if (
               'pronouns' in updates &&
               (fresh.pronouns || undefined) !== (updates.pronouns || undefined)
+            ) {
+              return false
+            }
+            if (
+              'avatarAlt' in updates &&
+              (fresh.avatarAlt || undefined) !==
+                (updates.avatarAlt || undefined)
+            ) {
+              return false
+            }
+            if (
+              'bannerAlt' in updates &&
+              (fresh.bannerAlt || undefined) !==
+                (updates.bannerAlt || undefined)
             ) {
               return false
             }

@@ -196,6 +196,12 @@
           "type": "string",
           "format": "uri"
         },
+        "avatarAlt": {
+          "type": "string",
+          "description": "Alt text description of the avatar image, for accessibility.",
+          "maxGraphemes": 2000,
+          "maxLength": 20000
+        },
         "handle": {
           "type": "string",
           "format": "handle"
@@ -633,6 +639,12 @@
           "type": "string",
           "format": "uri"
         },
+        "avatarAlt": {
+          "type": "string",
+          "description": "Alt text description of the avatar image, for accessibility.",
+          "maxGraphemes": 2000,
+          "maxLength": 20000
+        },
         "handle": {
           "type": "string",
           "format": "handle"
@@ -844,9 +856,21 @@
           "type": "string",
           "format": "uri"
         },
+        "avatarAlt": {
+          "type": "string",
+          "description": "Alt text description of the avatar image, for accessibility.",
+          "maxGraphemes": 2000,
+          "maxLength": 20000
+        },
         "banner": {
           "type": "string",
           "format": "uri"
+        },
+        "bannerAlt": {
+          "type": "string",
+          "description": "Alt text description of the banner image, for accessibility.",
+          "maxGraphemes": 2000,
+          "maxLength": 20000
         },
         "handle": {
           "type": "string",

@@ -38,11 +38,13 @@ import {IS_ANDROID, IS_NATIVE} from '#/env'
 export function UserBanner({
   type,
   banner,
+  alt,
   moderation,
   onSelectNewBanner,
 }: {
   type?: 'labeler' | 'default'
   banner?: string | null
+  alt?: string
   moderation?: ModerationUI
   onSelectNewBanner?: (img: PickerImage | null) => void
 }) {
@@ -226,6 +228,9 @@ export function UserBanner({
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}
+      accessibilityLabel={alt}
+      accessibilityHint=""
+      alt={alt}
       accessibilityIgnoresInvertColors
       useAppleWebpCodec
     />

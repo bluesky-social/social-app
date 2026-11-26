@@ -73,6 +73,8 @@ interface BaseUserAvatarProps {
 
 interface UserAvatarProps extends BaseUserAvatarProps {
   type: UserAvatarType
+  /** Alt text from the profile record, for screen readers. */
+  alt?: string
   moderation?: ModerationUI
   usePlainRNImage?: boolean
   noBorder?: boolean
@@ -221,6 +223,7 @@ let UserAvatar = ({
   shape: overrideShape,
   size,
   avatar,
+  alt,
   moderation,
   usePlainRNImage = false,
   onLoad,
@@ -314,6 +317,9 @@ let UserAvatar = ({
         <RNImage
           accessibilityIgnoresInvertColors
           testID="userAvatarImage"
+          accessible={!!alt}
+          accessibilityLabel={alt}
+          accessibilityHint=""
           style={aviStyle}
           resizeMode="cover"
           source={{
@@ -325,6 +331,10 @@ let UserAvatar = ({
       ) : (
         <ExpoImage
           testID="userAvatarImage"
+          accessible={!!alt}
+          accessibilityLabel={alt}
+          accessibilityHint=""
+          alt={alt}
           style={aviStyle}
           contentFit="cover"
           source={{

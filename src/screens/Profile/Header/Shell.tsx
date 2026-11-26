@@ -81,6 +81,7 @@ let ProfileHeaderShell = ({
       uri: string,
       thumbRef: AnimatedRef,
       type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
+      alt?: string,
     ) => {
       openLightbox({
         images: [
@@ -102,6 +103,7 @@ let ProfileHeaderShell = ({
                     height: 1000,
                   },
             thumbDimensions: null,
+            alt,
             type,
           },
         ],
@@ -134,7 +136,7 @@ let ProfileHeaderShell = ({
       const avatar = profile.avatar
       const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi'
       if (avatar && !(modui.blur && modui.noOverride)) {
-        _openLightbox(avatar, aviRef, type)
+        _openLightbox(avatar, aviRef, type, profile.avatarAlt)
       }
     }
   }, [
@@ -152,9 +154,9 @@ let ProfileHeaderShell = ({
     const modui = moderation.ui('banner')
     const banner = profile.banner
     if (banner && !(modui.blur && modui.noOverride)) {
-      _openLightbox(banner, bannerRef, 'image')
+      _openLightbox(banner, bannerRef, 'image', profile.bannerAlt)
     }
-  }, [profile.banner, moderation, _openLightbox, bannerRef])
+  }, [profile.banner, profile.bannerAlt, moderation, _openLightbox, bannerRef])
 
   return (
     <View style={t.atoms.bg} pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
@@ -166,7 +168,9 @@ let ProfileHeaderShell = ({
           testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
           label={
             profile.banner
-              ? l`View profile banner`
+              ? profile.bannerAlt
+                ? l`View profile banner: ${profile.bannerAlt}`
+                : l`View profile banner`
               : l`Profile banner placeholder`
           }
           onPress={isPlaceholderProfile ? undefined : onPressBanner}
@@ -223,6 +227,7 @@ let ProfileHeaderShell = ({
             <UserBanner
               type={profile.associated?.labeler ? 'labeler' : 'default'}
               banner={profile.banner}
+              alt={profile.bannerAlt}
               moderation={moderation.ui('banner')}
             />
           )}
@@ -260,7 +265,11 @@ let ProfileHeaderShell = ({
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
           accessibilityRole="image"
-          accessibilityLabel={l`View ${profile.handle}'s avatar`}
+          accessibilityLabel={
+            profile.avatarAlt
+              ? l`View ${profile.handle}'s avatar: ${profile.avatarAlt}`
+              : l`View ${profile.handle}'s avatar`
+          }
           accessibilityHint="">
           <View
             style={[
@@ -281,6 +290,7 @@ let ProfileHeaderShell = ({
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
                 size={live.isActive ? 88 : 90}
                 avatar={profile.avatar}
+                alt={profile.avatarAlt}
                 moderation={moderation.ui('avatar')}
                 noBorder
               />
