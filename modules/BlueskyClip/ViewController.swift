@@ -33,6 +33,13 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
     webView.contentMode = .scaleToFill
     webView.navigationDelegate = self
     self.view.addSubview(webView)
+    // Follow the root view so the page resizes with iPad rotation and Stage Manager.
+    NSLayoutConstraint.activate([
+      webView.topAnchor.constraint(equalTo: self.view.topAnchor),
+      webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+      webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+      webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+    ])
     self.webView = webView
     self.webView?.load(URLRequest(url: URL(string: "https://bsky.app/?splash=true&clip=true")!))
   }
