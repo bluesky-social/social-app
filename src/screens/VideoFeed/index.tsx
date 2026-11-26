@@ -99,6 +99,7 @@ import * as ReportDialogMetadataContext from '#/components/moderation/ReportDial
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {ZoomTransitionEnabler} from '#/components/ZoomTransitionEnabler'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID} from '#/env'
 import {
@@ -453,8 +454,23 @@ function Feed() {
 
   const renderEndMessage = useCallback(() => <EndMessage />, [])
 
+  /*
+   * Zoom back into the card for whichever video is showing, not just the one
+   * that was tapped. If that card isn't on screen, UIKit falls back to a zoom
+   * with no source.
+   */
+  const zoomSourceUri =
+    videos.at(currentIndex)?.post.uri ?? params.initialPostUri
+
   return (
     <FeedFeedbackProvider value={feedFeedback}>
+      {params.zoomTransition && (
+        <ZoomTransitionEnabler
+          sourceIdentifier={zoomSourceUri}
+          // Vertical swipes page between videos, so only a back swipe dismisses
+          dismissGesture="horizontal"
+        />
+      )}
       <GestureDetector gesture={scrollGesture}>
         <List
           disableTabletLayout

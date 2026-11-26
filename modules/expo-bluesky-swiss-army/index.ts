@@ -6,6 +6,7 @@ import * as Share from './src/Share'
 import * as SharedPrefs from './src/SharedPrefs'
 import VisibilityView from './src/VisibilityView'
 import * as WidgetInfo from './src/WidgetInfo'
+import * as ZoomTransition from './src/ZoomTransition'
 
 export {
   AppLink,
@@ -16,4 +17,5 @@ export {
   SharedPrefs,
   VisibilityView,
   WidgetInfo,
+  ZoomTransition,
 }
