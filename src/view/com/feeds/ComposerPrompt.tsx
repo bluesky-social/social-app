@@ -10,6 +10,7 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {resolveAltFromMetadata} from '#/lib/media/image/altFromMetadata'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
@@ -76,14 +77,17 @@ export function ComposerPrompt() {
       }
 
       if (assets.length > 0) {
-        const imageUris = assets
-          .filter(asset => asset.mimeType?.startsWith('image/'))
-          .slice(0, MAX_GALLERY_IMAGES)
-          .map(asset => ({
-            uri: asset.uri,
-            width: asset.width,
-            height: asset.height,
-          }))
+        const imageUris = await Promise.all(
+          assets
+            .filter(asset => asset.mimeType?.startsWith('image/'))
+            .slice(0, MAX_GALLERY_IMAGES)
+            .map(async asset => ({
+              uri: asset.uri,
+              width: asset.width,
+              height: asset.height,
+              altText: await resolveAltFromMetadata(asset),
+            })),
+        )
 
         if (imageUris.length > 0) {
           openComposer({imageUris, logContext: 'Fab'})
