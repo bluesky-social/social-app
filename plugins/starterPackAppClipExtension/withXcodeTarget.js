@@ -1,6 +1,10 @@
 const {IOSConfig, withXcodeProject} = require('expo/config-plugins')
 
-const BUILD_PHASE_FILES = ['AppDelegate.swift', 'ViewController.swift']
+const BUILD_PHASE_FILES = [
+  'AppDelegate.swift',
+  'SceneDelegate.swift',
+  'ViewController.swift',
+]
 
 const withXcodeTarget = (config, {targetName}) => {
   return withXcodeProject(config, config => {
@@ -33,6 +37,7 @@ const withXcodeTarget = (config, {targetName}) => {
     const pbxGroup = pbxProject.addPbxGroup(
       [
         'AppDelegate.swift',
+        'SceneDelegate.swift',
         'ViewController.swift',
         'Images.xcassets',
         `${targetName}.entitlements`,
@@ -44,8 +49,9 @@ const withXcodeTarget = (config, {targetName}) => {
     pbxProject.addFile(`${targetName}/Info.plist`, pbxGroup.uuid)
     const configurations = pbxProject.pbxXCBuildConfigurationSection()
     for (const key in configurations) {
-      if (typeof configurations[key].buildSettings !== 'undefined') {
-        const buildSettingsObj = configurations[key].buildSettings
+      const configuration = configurations[key]
+      if (typeof configuration !== 'string') {
+        const buildSettingsObj = configuration.buildSettings
         if (
           typeof buildSettingsObj.PRODUCT_NAME !== 'undefined' &&
           buildSettingsObj.PRODUCT_NAME === `"${targetName}"`

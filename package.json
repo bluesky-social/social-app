@@ -311,6 +311,7 @@
     "@types/psl": "1.1.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/xcode": "^3.0.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "babel-jest": "^30.5.2",
     "babel-plugin-module-resolver": "^5.0.2",

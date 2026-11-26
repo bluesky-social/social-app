@@ -17,7 +17,8 @@ BlueskyClip provides a minimal, on-demand iOS app experience for viewing and joi
 
 The App Clip is a standalone iOS target with its own minimal Swift implementation:
 
-- **AppDelegate.swift**: Standard app delegate that sets up the view controller and handles URL routing (both direct URL opens and universal links)
+- **AppDelegate.swift**: Application entry point
+- **SceneDelegate.swift**: Creates the scene's window and view controller, and handles invocation URLs on cold and warm launches (both direct URL opens and universal links)
 - **ViewController.swift**: Main view controller that manages the WKWebView, detects starter pack URLs, and communicates with the web layer
 
 ### Communication Flow
@@ -115,7 +116,8 @@ The main app detects App Clip-originated starter packs through `useStarterPackEn
 
 ```
 modules/BlueskyClip/
-├── AppDelegate.swift         # App lifecycle and URL handling
+├── AppDelegate.swift         # Application entry point
+├── SceneDelegate.swift       # Scene window and invocation URL handling
 ├── ViewController.swift      # WebView management and message handling
 └── Images.xcassets/          # App Clip icon assets
     ├── AppIcon.appiconset/
