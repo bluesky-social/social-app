@@ -1,6 +1,7 @@
 import {
   createPlaybackDurationTracker,
   hasPlaybackStarted,
+  LOOP_SEAM_WINDOW_MS,
   type PlaybackDurationSegment,
 } from '../analytics'
 
@@ -29,9 +30,17 @@ describe('createPlaybackDurationTracker', () => {
     })
 
   beforeEach(() => {
+    jest.useFakeTimers()
     time = 0
     segments = []
   })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  /** Lets a held pause or stall end its segment. */
+  const settle = () => jest.advanceTimersByTime(LOOP_SEAM_WINDOW_MS)
 
   it('emits non-overlapping segments across pause and resume', () => {
     const tracker = createTracker()
@@ -54,12 +63,14 @@ describe('createPlaybackDurationTracker', () => {
         segmentIndex: 0,
         durationMs: 1_000,
         endReason: 'paused',
+        loop: 0,
       },
       {
         playbackSessionId: 'session',
         segmentIndex: 1,
         durationMs: 500,
         endReason: 'deactivated',
+        loop: 0,
       },
     ])
   })
@@ -74,8 +85,95 @@ describe('createPlaybackDurationTracker', () => {
     time = 1_000
     tracker.observeProgress(0)
     tracker.setPlaying(false)
+    settle()
 
     expect(segments[0]?.durationMs).toBe(1_000)
+  })
+
+  it('splits segments at each loop and numbers the loops', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    // A 3 second video looping twice, observed once a second.
+    for (let second = 1; second <= 8; second++) {
+      time = second * 1_000
+      tracker.observeProgress(second % 3)
+    }
+    tracker.setPlaying(false)
+    settle()
+
+    expect(
+      segments.map(({loop, durationMs, endReason}) => [
+        loop,
+        durationMs,
+        endReason,
+      ]),
+    ).toEqual([
+      [0, 3_000, 'looped'],
+      [1, 3_000, 'looped'],
+      [2, 2_000, 'paused'],
+    ])
+    expect(segments.map(segment => segment.segmentIndex)).toEqual([0, 1, 2])
+  })
+
+  it('counts a replay after the video ends as a new loop', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.flush('ended')
+    // The user presses play again from the start.
+    tracker.observeProgress(0.2)
+    time = 2_000
+    tracker.observeProgress(1)
+    tracker.setPlaying(false)
+    settle()
+
+    expect(segments.map(({loop, endReason}) => [loop, endReason])).toEqual([
+      [0, 'ended'],
+      [1, 'paused'],
+    ])
+  })
+
+  it('does not count a seek within the video as a loop', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(10)
+    time = 1_000
+    tracker.observeProgress(5)
+    time = 2_000
+    tracker.observeProgress(6)
+    tracker.setPlaying(false)
+    settle()
+
+    expect(segments).toEqual([
+      expect.objectContaining({durationMs: 2_000, loop: 0}),
+    ])
+  })
+
+  it('splits without losing time between observations', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.split('muteChanged')
+    time = 2_000
+    tracker.observeProgress(2)
+    tracker.setPlaying(false)
+    settle()
+
+    expect(
+      segments.map(({durationMs, endReason}) => [durationMs, endReason]),
+    ).toEqual([
+      [1_000, 'muteChanged'],
+      [1_000, 'paused'],
+    ])
   })
 
   it('does not count stalled playback or a suspended timer gap', () => {
@@ -88,6 +186,7 @@ describe('createPlaybackDurationTracker', () => {
     time = 10_000
     tracker.observeProgress(1)
     tracker.setPlaying(false)
+    settle()
 
     expect(segments).toEqual([])
   })
@@ -102,6 +201,7 @@ describe('createPlaybackDurationTracker', () => {
     tracker.setActive(false)
     tracker.setActive(false)
     tracker.setPlaying(false)
+    settle()
 
     expect(segments).toHaveLength(1)
   })
@@ -118,6 +218,7 @@ describe('createPlaybackDurationTracker', () => {
     time = 32_000
     tracker.observeProgress(32)
     tracker.setPlaying(false)
+    settle()
 
     expect(segments).toEqual([
       {
@@ -125,12 +226,14 @@ describe('createPlaybackDurationTracker', () => {
         segmentIndex: 0,
         durationMs: 30_000,
         endReason: 'checkpoint',
+        loop: 0,
       },
       {
         playbackSessionId: 'session',
         segmentIndex: 1,
         durationMs: 2_000,
         endReason: 'paused',
+        loop: 0,
       },
     ])
   })
@@ -168,5 +271,118 @@ describe('createPlaybackDurationTracker', () => {
     tracker.flush('unmounted')
 
     expect(segments).toEqual([])
+  })
+
+  it('ends a loop seam pause as looped', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    time = 2_000
+    tracker.observeProgress(2)
+    // The player stops for a moment at the end, then restarts from the top.
+    tracker.setPlaying(false)
+    tracker.setPlaying(true)
+    time = 2_200
+    tracker.observeProgress(0.1)
+    time = 3_200
+    tracker.observeProgress(1.1)
+    tracker.setActive(false)
+
+    expect(
+      segments.map(({loop, durationMs, endReason}) => [
+        loop,
+        durationMs,
+        endReason,
+      ]),
+    ).toEqual([
+      [0, 2_000, 'looped'],
+      [1, 1_000, 'deactivated'],
+    ])
+  })
+
+  it('ends a loop seam stall as looped', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.setBuffering(true)
+    time = 1_800
+    tracker.setBuffering(false)
+    tracker.observeProgress(0)
+    time = 2_800
+    tracker.observeProgress(1)
+    tracker.flush('unmounted')
+
+    expect(segments.map(({loop, endReason}) => [loop, endReason])).toEqual([
+      [0, 'looped'],
+      [1, 'unmounted'],
+    ])
+  })
+
+  it('ends a pause that lasts past the seam window as paused', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.setPlaying(false)
+    jest.advanceTimersByTime(LOOP_SEAM_WINDOW_MS - 1)
+    expect(segments).toEqual([])
+    jest.advanceTimersByTime(1)
+
+    expect(
+      segments.map(({durationMs, endReason}) => [durationMs, endReason]),
+    ).toEqual([[1_000, 'paused']])
+  })
+
+  it('ends a quick pause and resume without a wrap as paused', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.setPlaying(false)
+    tracker.setPlaying(true)
+    time = 1_500
+    tracker.observeProgress(1.2)
+
+    expect(segments.map(({loop, endReason}) => [loop, endReason])).toEqual([
+      [0, 'paused'],
+    ])
+  })
+
+  it('keeps a held pause as paused when the player deactivates', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.setPlaying(false)
+    tracker.setActive(false)
+    settle()
+
+    expect(segments.map(({endReason}) => endReason)).toEqual(['paused'])
+  })
+
+  it('sends a held pause as backgrounded so it goes out right away', () => {
+    const tracker = createTracker()
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    time = 1_000
+    tracker.observeProgress(1)
+    tracker.setPlaying(false)
+    tracker.flush('backgrounded')
+    settle()
+
+    expect(segments.map(({endReason}) => endReason)).toEqual(['backgrounded'])
   })
 })

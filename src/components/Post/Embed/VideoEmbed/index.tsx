@@ -6,7 +6,11 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
-import {createPlaybackDurationTracker} from '#/lib/media/video/analytics'
+import {
+  createBoundPlaybackDurationTracker,
+  getVideoMediaKey,
+  sendVideoWatchSegment,
+} from '#/lib/media/video/feedFeedback'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -18,6 +22,8 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
+import {useVideoWatchBinding} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {GifPresentationControls} from './GifPresentationControls'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
@@ -55,7 +61,11 @@ export function VideoEmbed({embed, post}: Props) {
 
   const contents = (
     <ErrorBoundary renderError={renderError} key={key}>
-      <InnerWrapper embed={embed} post={post} />
+      <InnerWrapper
+        key={getVideoMediaKey({postUri: post?.uri, playlist: embed.playlist})}
+        embed={embed}
+        post={post}
+      />
     </ErrorBoundary>
   )
 
@@ -75,6 +85,9 @@ export function VideoEmbed({embed, post}: Props) {
 function InnerWrapper({embed, post}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
+  const videoWatchBinding = useVideoWatchBinding()
+  /** Unknown until the player reports it. */
+  const videoDurationSeconds = useRef<number | undefined>(undefined)
   const ref = useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
@@ -92,9 +105,12 @@ function InnerWrapper({embed, post}: Props) {
   const impressionTrackedRef = useRef(false)
   const playbackStartTrackedRef = useRef(false)
   const [durationTracker] = useState(() => {
-    const tracker = createPlaybackDurationTracker({
+    const tracker = createBoundPlaybackDurationTracker({
       enabled: embed.presentation !== 'gif',
-      onSegment: segment => {
+      binding: videoWatchBinding,
+      // The player reports its real mode before playback starts.
+      mode: {muted: true, fullscreen: false, autoplay: true},
+      onSegment: (segment, binding, mode) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post?.uri,
@@ -102,14 +118,36 @@ function InnerWrapper({embed, post}: Props) {
           context: 'embed',
           presentation: embed.presentation === 'gif' ? 'gif' : 'video',
         })
+        sendVideoWatchSegment({
+          binding,
+          segment,
+          mode,
+          context: 'embed',
+          videoDurationSeconds: videoDurationSeconds.current,
+        })
       },
     })
     tracker.setForeground(getCurrentState() === 'active')
     return tracker
   })
+  const isAppActive = useRef(getCurrentState() === 'active')
+  const isFullscreen = useRef(false)
+  /*
+   * Android plays fullscreen video in a separate Activity, which AppState
+   * reports as the app going to the background. Keep counting while it's up.
+   */
+  const updateForeground = () => {
+    durationTracker.setForeground(
+      isAppActive.current || (IS_ANDROID && isFullscreen.current),
+    )
+  }
   useOnAppStateChange(state => {
-    durationTracker.setForeground(state === 'active')
+    isAppActive.current = state === 'active'
+    updateForeground()
   })
+  useEffect(() => {
+    durationTracker.rebind(videoWatchBinding)
+  }, [durationTracker, videoWatchBinding])
   useEffect(() => {
     return () => {
       telemetryRef.current?.deactivated()
@@ -180,8 +218,18 @@ function InnerWrapper({embed, post}: Props) {
             autoplay,
           })
         }}
-        onPlaybackProgress={progressSeconds => {
+        onPlaybackProgress={(progressSeconds, durationSeconds) => {
+          if (durationSeconds !== undefined) {
+            videoDurationSeconds.current = durationSeconds
+          }
           durationTracker.observeProgress(progressSeconds)
+        }}
+        onPlaybackModeChange={mode => {
+          durationTracker.setMode(mode)
+          if (mode.fullscreen !== undefined) {
+            isFullscreen.current = mode.fullscreen
+            updateForeground()
+          }
         }}
         onError={error => {
           durationTracker.flush('error')

@@ -1,3 +1,4 @@
+import {type VideoWatchMode} from '#/lib/media/video/feedFeedback'
 import {type app} from '#/lexicons'
 
 export type VideoEmbedInnerWebProps = {
@@ -7,7 +8,16 @@ export type VideoEmbedInnerWebProps = {
   onScreen: boolean
   lastKnownTime: React.RefObject<number | undefined>
   onPlaybackStart: (autoplay: boolean) => void
-  onPlaybackProgress: (progressSeconds: number) => void
+  /**
+   * `durationSeconds` is the media element's length, which is NaN until
+   * metadata loads (and Infinity for live streams).
+   */
+  onPlaybackProgress: (progressSeconds: number, durationSeconds: number) => void
+  /**
+   * Called before `onPlaybackStateChange('playing')` with the full mode, and
+   * again whenever muting or fullscreen changes.
+   */
+  onPlaybackModeChange: (mode: Partial<VideoWatchMode>) => void
   onPlaybackStateChange: (state: 'playing' | 'paused' | 'buffering') => void
   onPlaybackEnd: () => void
 }

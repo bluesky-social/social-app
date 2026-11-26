@@ -11,12 +11,20 @@ import {type AtUriString, type DidString} from '@atproto/syntax'
 import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS, TRENDING_DID} from '#/lib/constants'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {
+  isFinalVideoWatchSegment,
+  isVideoWatchInteraction,
+  type VideoWatchBinding,
+  type VideoWatchInteraction,
+  type VideoWatchPayload,
+} from '#/lib/media/video/feedFeedback'
 import {type FeedSourceInfo, isFeedSourceFeedInfo} from '#/state/queries/feed'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
-import {useAppviewClient} from '#/state/session'
+import {useAppviewClient, useIsCurrentAppviewClient} from '#/state/session'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
@@ -59,6 +67,11 @@ export type UnspeccedInteractionPayload =
   | {type: 'unmuteAuthor'}
   /** `reason` is the report option the user picked. */
   | {type: 'report'; reason?: string}
+  /**
+   * A segment of video watch time. Off behind `FeedVideoWatchEnable`; see
+   * `src/lib/media/video/feedFeedback.md`.
+   */
+  | VideoWatchPayload
 
 /**
  * An `interactionUnspecced` event about `item`, the post the action was taken
@@ -94,6 +107,12 @@ export type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: app.bsky.feed.defs.Interaction) => void
+  /**
+   * Video watch feedback. Only provided by `useFeedFeedback`, and gated there
+   * behind `FeedVideoWatchEnable` and the signed-in session. Use
+   * `useVideoWatchBinding` rather than reading this directly.
+   */
+  sendVideoWatch?: (interaction: VideoWatchInteraction) => void
   feedDescriptor: FeedDescriptor | undefined
   feedSourceInfo: FeedSourceInfo | undefined
 }
@@ -119,7 +138,7 @@ export function useFeedFeedback(
 
   const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
   const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
-  const {enabled, sendInteraction} = useFeedFeedbackCore({
+  const {enabled, sendInteraction, sendVideoWatch} = useFeedFeedbackCore({
     feedUri: feed?.uri,
     feedDid: feed?.view?.did,
     enabled: acceptsInteractions && hasSession,
@@ -157,10 +176,11 @@ export function useFeedFeedback(
       // call on various events
       // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
+      sendVideoWatch,
       feedDescriptor: feed?.feedDescriptor,
       feedSourceInfo: typeof feed === 'object' ? feed : undefined,
     }
-  }, [enabled, onItemSeen, sendInteraction, feed])
+  }, [enabled, onItemSeen, sendInteraction, sendVideoWatch, feed])
 }
 
 /** Sends feedback without requiring feed metadata or post-feed rows. */
@@ -185,20 +205,11 @@ export function useFeedFeedbackCore({
     ? `feedgen|${feedUri}`
     : undefined
 
-  /*
-   * Keyed by `toKey` so the same interaction is only sent once per batch.
-   * Re-adding a key moves it to the end, so a toggle like save, unsave, save
-   * arrives as unsave then save, and the last event is the current state.
-   */
-  const queue = useRef<Map<string, app.bsky.feed.defs.Interaction>>(new Map())
   const history = useRef<WeakSet<app.bsky.feed.defs.Interaction>>(new WeakSet())
 
-  const flushEvents = useCallback(
-    (stats: AggregatedStats | null, feedDescriptor: string) => {
-      if (stats === null) {
-        return
-      }
-
+  // Each queue passes in its own stats and feed label.
+  const flushStats = useNonReactiveCallback(
+    (stats: AggregatedStats, feedDescriptor: string) => {
       if (stats.clickthroughCount > 0) {
         ax.metric('feed:clickthrough', {
           count: stats.clickthroughCount,
@@ -223,111 +234,127 @@ export function useFeedFeedbackCore({
         stats.seenCount = 0
       }
     },
-    [ax],
+  )
+  const logFlushed = useNonReactiveCallback(() => logger.debug('flushed'))
+
+  /*
+   * Watch feedback is private, so it also requires the queue's client to still
+   * be the CURRENT signed-in session. This is a live check, so an old queue
+   * (or an unmounting child's late segment) may still flush route-only changes
+   * for the same client, but nothing after logout or an account switch, even
+   * when the provider is removed without re-rendering.
+   */
+  const isCurrentAppviewClient = useIsCurrentAppviewClient()
+  const isVideoWatchEnabled = useNonReactiveCallback(() =>
+    ax.features.enabled(ax.features.FeedVideoWatchEnable),
   )
 
-  const aggregatedStats = useRef<AggregatedStats | null>(null)
-  const throttledFlushAggregatedStats = useMemo(
-    () =>
-      throttle(
-        () => flushEvents(aggregatedStats.current, feedDescriptor ?? 'unknown'),
-        45e3,
-        {
-          leading: true, // The outer call is already throttled somewhat.
-          trailing: true,
-        },
-      ),
-    [feedDescriptor, flushEvents],
-  )
-
-  const sendToFeedNoDelay = useCallback(() => {
-    const interactions = Array.from(queue.current.values(), interaction => ({
-      ...interaction,
-      viewContext,
-    }))
-    queue.current.clear()
-
-    const interactionsToSend = interactions.filter(
-      interaction =>
-        interaction.event &&
-        isInteractionAllowed(enabled, feedDescriptor, interaction.event),
-    )
-
-    if (interactionsToSend.length === 0) {
-      return
+  /*
+   * One queue per transport binding (client, feed, proxy, view context). When
+   * any of these change, the old queue is flushed through its own transport
+   * rather than leaking into the new feed, and anything that arrives late (e.g.
+   * a child's unmount cleanup running after ours) is sent immediately through
+   * it too. Its stats are likewise reported under its own feed.
+   */
+  const queue = useMemo(() => {
+    if (!enabled || !feedDescriptor || !proxyDid) {
+      return null
     }
-
-    /*
-     * Send to the feed. Interactions go to the feed generator rather than the
-     * appview, which the agent did by setting `atproto-proxy` by hand; the
-     * client's per-call `service` option writes that same header.
-     */
-    client
-      .call(
-        app.bsky.feed.sendInteractions,
-        {
-          interactions: interactionsToSend,
-          feed: feedUri as AtUriString | undefined,
-        },
-        {service: `${proxyDid as DidString}#bsky_fg`},
-      )
-      .catch(() => {}) // ignore upstream errors
-
-    if (aggregatedStats.current === null) {
-      aggregatedStats.current = createAggregatedStats()
-    }
-    sendOrAggregateInteractionsForStats(
-      aggregatedStats.current,
-      interactionsToSend,
+    const stats = createAggregatedStats()
+    const throttledFlushStats = throttle(
+      () => flushStats(stats, feedDescriptor),
+      45e3,
+      {
+        leading: true, // The outer call is already throttled somewhat.
+        trailing: true,
+      },
     )
-    throttledFlushAggregatedStats()
-    logger.debug('flushed')
+    return createFeedbackQueue({
+      isAllowed: interaction =>
+        isInteractionAllowed(
+          feedDescriptor,
+          interaction,
+          () => isCurrentAppviewClient(client) && isVideoWatchEnabled(),
+        ),
+      send: interactions => {
+        /*
+         * Send to the feed. Interactions go to the feed generator rather than
+         * the appview, which the agent did by setting `atproto-proxy` by hand;
+         * the client's per-call `service` option writes that same header.
+         */
+        client
+          .call(
+            app.bsky.feed.sendInteractions,
+            {
+              interactions: interactions.map(interaction => ({
+                ...interaction,
+                viewContext,
+              })),
+              feed: feedUri as AtUriString | undefined,
+            },
+            {service: `${proxyDid as DidString}#bsky_fg`},
+          )
+          .catch(() => {}) // ignore upstream errors
+        sendOrAggregateInteractionsForStats(stats, interactions)
+        throttledFlushStats()
+        logFlushed()
+      },
+    })
   }, [
-    client,
-    throttledFlushAggregatedStats,
-    proxyDid,
     enabled,
+    client,
     feedUri,
     feedDescriptor,
+    proxyDid,
     viewContext,
+    isCurrentAppviewClient,
+    isVideoWatchEnabled,
+    flushStats,
+    logFlushed,
   ])
 
-  const sendToFeed = useMemo(
-    () =>
-      throttle(sendToFeedNoDelay, 10e3, {
-        leading: false,
-        trailing: true,
-      }),
-    [sendToFeedNoDelay],
-  )
-
   useEffect(() => {
-    if (!enabled) {
+    if (!queue) {
       return
     }
+    queue.attach()
     const sub = AppState.addEventListener('change', (state: AppStateStatus) => {
       if (state === 'background') {
-        sendToFeed.flush()
+        queue.flush()
       }
     })
-    return () => sub.remove()
-  }, [enabled, sendToFeed])
+    return () => {
+      sub.remove()
+      queue.detach()
+    }
+  }, [queue])
 
   const sendInteraction = useCallback(
     (interaction: app.bsky.feed.defs.Interaction) => {
-      if (!enabled) {
+      if (!queue) {
         return
       }
       if (!history.current.has(interaction)) {
         history.current.add(interaction)
-        enqueue(queue.current, interaction)
-        sendToFeed()
+        queue.enqueue(interaction)
       }
     },
-    [enabled, sendToFeed],
+    [queue],
   )
 
-  return {enabled, sendInteraction}
+  const sendVideoWatch = useCallback(
+    (interaction: VideoWatchInteraction) => {
+      if (!queue?.isAllowed(interaction)) {
+        return
+      }
+      queue.enqueue(interaction, {
+        immediate: isFinalVideoWatchSegment(interaction),
+      })
+    },
+    [queue],
+  )
+
+  return {enabled, sendInteraction, sendVideoWatch}
 }
 
 export const FeedFeedbackProvider = stateContext.Provider
@@ -406,6 +433,22 @@ export function useFeedItemFeedback() {
   return {item, feedDescriptor, send, sendUnspecced}
 }
 
+/**
+ * Where a video player should send its watch feedback: the feed item it's
+ * inside of, through this feed's queue. Quoted videos inherit the outer feed
+ * item. Outside a feed item, `attribution` is undefined and nothing is sent.
+ */
+export function useVideoWatchBinding(): VideoWatchBinding {
+  const {sendVideoWatch} = useFeedFeedbackContext()
+  const item = useContext(feedItemContext)
+  return {
+    sendVideoWatch,
+    attribution: item?.uri
+      ? {item: item.uri, feedContext: item.feedContext, reqId: item.reqId}
+      : undefined,
+  }
+}
+
 // TODO
 // We will introduce a permissions framework for 3p feeds to
 // take advantage of the feed feedback API. Until that's in
@@ -420,28 +463,26 @@ export function isTrendingFeed(feed?: FeedDescriptor) {
 }
 
 function isInteractionAllowed(
-  enabled: boolean,
-  feed: FeedDescriptor | undefined,
-  interaction: app.bsky.feed.defs.Interaction['event'],
+  feed: FeedDescriptor,
+  interaction: app.bsky.feed.defs.Interaction,
+  isVideoWatchAllowed: () => boolean,
 ) {
-  if (!enabled || !feed) {
+  if (!interaction.event) {
     return false
   }
-  if (isDiscoverFeed(feed) || isTrendingFeed(feed)) {
-    return true
+  const isOfficialFeed = isDiscoverFeed(feed) || isTrendingFeed(feed)
+  if (isVideoWatchInteraction(interaction)) {
+    return isOfficialFeed && isVideoWatchAllowed()
   }
-  return THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
+  return (
+    isOfficialFeed || THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction.event)
+  )
 }
 
-function enqueue(
-  queue: Map<string, app.bsky.feed.defs.Interaction>,
-  interaction: app.bsky.feed.defs.Interaction,
-) {
-  const key = toKey(interaction)
-  queue.delete(key)
-  queue.set(key, interaction)
-}
-
+/**
+ * Dedup key within a batch. The payload is part of it, so distinct video watch
+ * segments (by session and index) are all kept.
+ */
 function toKey(interaction: app.bsky.feed.defs.Interaction): string {
   return JSON.stringify([
     interaction.item,
@@ -450,6 +491,63 @@ function toKey(interaction: app.bsky.feed.defs.Interaction): string {
     interaction.reqId ?? '',
     interaction.payload ?? null,
   ])
+}
+
+function createFeedbackQueue({
+  isAllowed,
+  send,
+}: {
+  isAllowed: (interaction: app.bsky.feed.defs.Interaction) => boolean
+  send: (interactions: app.bsky.feed.defs.Interaction[]) => void
+}) {
+  /*
+   * Keyed by `toKey` so the same interaction is only sent once per batch.
+   * Re-adding a key moves it to the end, so a toggle like save, unsave, save
+   * arrives as unsave then save, and the last event is the current state.
+   */
+  const pending = new Map<string, app.bsky.feed.defs.Interaction>()
+  let attached = true
+
+  const sendNow = () => {
+    const interactions = Array.from(pending.values()).filter(isAllowed)
+    pending.clear()
+    if (interactions.length > 0) {
+      send(interactions)
+    }
+  }
+  const sendThrottled = throttle(sendNow, 10e3, {
+    leading: false,
+    trailing: true,
+  })
+  const flush = () => {
+    sendThrottled.cancel()
+    sendNow()
+  }
+
+  return {
+    isAllowed,
+    enqueue(
+      interaction: app.bsky.feed.defs.Interaction,
+      {immediate = false}: {immediate?: boolean} = {},
+    ) {
+      const key = toKey(interaction)
+      pending.delete(key)
+      pending.set(key, interaction)
+      if (immediate || !attached) {
+        flush()
+      } else {
+        sendThrottled()
+      }
+    },
+    flush,
+    attach() {
+      attached = true
+    },
+    detach() {
+      attached = false
+      flush()
+    },
+  }
 }
 
 type AggregatedStats = {

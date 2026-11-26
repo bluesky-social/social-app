@@ -2024,6 +2024,11 @@ export type Events = {
       | 'ended'
       | 'error'
       | 'unmounted'
+      | 'looped'
+      | 'muteChanged'
+      | 'fullscreenChanged'
+    /** 0 for the first time through the video, 1 for the second, etc. */
+    loop: number
   }
   /**
    * The user activated a third-party media player. Cross-origin players do

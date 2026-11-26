@@ -25,6 +25,12 @@ export enum Features {
   ShareDestinationsEnable = 'share_destinations:enable',
   PostViewCountsEnable = 'post_view_counts:enable',
   WebListVirtualizationEnable = 'web_list:virtualization:enable',
+  /**
+   * Provisional private video watch feed feedback. Keep off until the
+   * contract is published and receivers are deployed (see
+   * src/lib/media/video/feedFeedback.md).
+   */
+  FeedVideoWatchEnable = 'feed:video_watch:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',

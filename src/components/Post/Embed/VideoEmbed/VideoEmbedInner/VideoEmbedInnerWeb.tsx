@@ -40,6 +40,7 @@ export function VideoEmbedInnerWeb({
   lastKnownTime,
   onPlaybackStart,
   onPlaybackProgress,
+  onPlaybackModeChange,
   onPlaybackStateChange,
   onPlaybackEnd,
 }: VideoEmbedInnerWebProps) {
@@ -70,6 +71,10 @@ export function VideoEmbedInnerWeb({
   })
 
   useEffect(() => {
+    onPlaybackModeChange({fullscreen: isFullscreen})
+  }, [isFullscreen, onPlaybackModeChange])
+
+  useEffect(() => {
     if (lastKnownTime.current && videoRef.current) {
       videoRef.current.currentTime = lastKnownTime.current
     }
@@ -93,7 +98,7 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               const currentTime = e.currentTarget.currentTime
               lastKnownTime.current = currentTime
-              onPlaybackProgress(currentTime)
+              onPlaybackProgress(currentTime, e.currentTarget.duration)
               if (
                 !playbackStartTrackedRef.current &&
                 hasPlaybackStarted(currentTime)
@@ -110,7 +115,18 @@ export function VideoEmbedInnerWeb({
                 reportDialogMetadata.current.videoTimestampSeconds = currentTime
               }
             }}
-            onPlaying={() => onPlaybackStateChange('playing')}
+            onPlaying={e => {
+              onPlaybackModeChange({
+                // Focusing the player is how the user starts it.
+                autoplay: !focused,
+                muted: isMuted(e.currentTarget),
+                fullscreen: isFullscreen,
+              })
+              onPlaybackStateChange('playing')
+            }}
+            onVolumeChange={e => {
+              onPlaybackModeChange({muted: isMuted(e.currentTarget)})
+            }}
             onPause={() => onPlaybackStateChange('paused')}
             onWaiting={() => onPlaybackStateChange('buffering')}
             onCanPlay={() => {
@@ -493,4 +509,9 @@ function useHLS({
     loop: !hasLowQualityFragmentAtStart,
     updateCuePositions,
   }
+}
+
+/** Silent playback counts as muted, whether by `muted` or zero volume. */
+function isMuted(video: HTMLVideoElement) {
+  return video.muted || video.volume === 0
 }

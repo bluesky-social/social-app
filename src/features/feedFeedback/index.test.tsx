@@ -30,6 +30,7 @@ jest.mock('#/state/session', () => ({
   useAppviewClient: () => ({
     call: (...args: unknown[]) => mockCall(...args),
   }),
+  useIsCurrentAppviewClient: () => () => true,
 }))
 jest.mock('#/analytics', () => ({useAnalytics: () => mockAnalytics}))
 // Only used by onItemSeen, and importing it pulls in the whole feed list.

@@ -45,10 +45,13 @@ import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {
-  createPlaybackDurationTracker,
-  hasPlaybackStarted,
-} from '#/lib/media/video/analytics'
+  createBoundPlaybackDurationTracker,
+  getSourceLoadDurationSeconds,
+  getVideoMediaKey,
+  sendVideoWatchSegment,
+} from '#/lib/media/video/feedFeedback'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -107,11 +110,27 @@ import {
   useFeedFeedback,
   useFeedFeedbackContext,
   useFeedItemFeedback,
+  useVideoWatchBinding,
 } from '#/features/feedFeedback'
 import {usePostFeedQuery as useFollowingV2PostFeedQuery} from '#/features/followingV2/home/queries/postFeed'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
+
+/**
+ * Players whose next play was started by the user rather than by becoming the
+ * active item, for video watch feedback's `autoplay`.
+ */
+const userStartedPlayers = new WeakSet<VideoPlayer>()
+
+function markUserStartedPlayback(player: VideoPlayer) {
+  userStartedPlayers.add(player)
+}
+
+/** Whether the user started this play, clearing the mark. */
+function consumeUserStartedPlayback(player: VideoPlayer) {
+  return userStartedPlayers.delete(player)
+}
 
 function createThreeVideoPlayers(
   sources?: [string, string, string],
@@ -598,6 +617,10 @@ let VideoItem = ({
           <VideoItemPlaceholder embed={embed} />
           {shouldRenderVideo && player && (
             <VideoItemInner
+              key={getVideoMediaKey({
+                postUri: post.uri,
+                playlist: embed.playlist,
+              })}
               player={player}
               embed={embed}
               post={post}
@@ -653,16 +676,28 @@ function VideoItemInner({
     ReportDialogMetadataContext.useReportDialogMetadataContext()
   const ax = useAnalytics()
   const playbackStartTrackedRef = useRef(false)
+  const videoWatchBinding = useVideoWatchBinding()
+  const videoDurationSeconds = useRef<number | undefined>(undefined)
   const [durationTracker] = useState(() => {
-    const tracker = createPlaybackDurationTracker({
+    const tracker = createBoundPlaybackDurationTracker({
       enabled: embed.presentation !== 'gif',
-      onSegment: segment => {
+      binding: videoWatchBinding,
+      // There's no fullscreen mode here, and the active item plays by itself.
+      mode: {muted: player.muted, fullscreen: false, autoplay: true},
+      onSegment: (segment, binding, mode) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post.uri,
           postAuthorDid: post.author.did,
           context: 'immersiveFeed',
           presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+        sendVideoWatchSegment({
+          binding,
+          segment,
+          mode,
+          context: 'immersiveFeed',
+          videoDurationSeconds: videoDurationSeconds.current,
         })
       },
     })
@@ -677,6 +712,10 @@ function VideoItemInner({
   useEffect(() => {
     durationTracker.setActive(active)
   }, [active, durationTracker])
+
+  useEffect(() => {
+    durationTracker.rebind(videoWatchBinding)
+  }, [durationTracker, videoWatchBinding])
 
   useEffect(() => {
     return () => durationTracker.flush('unmounted')
@@ -724,7 +763,26 @@ function VideoItemInner({
   })
 
   useEventListener(player, 'playingChange', evt => {
+    if (evt.isPlaying) {
+      durationTracker.setMode({autoplay: !consumeUserStartedPlayback(player)})
+    }
     durationTracker.setPlaying(evt.isPlaying)
+  })
+
+  useEventListener(player, 'mutedChange', evt => {
+    durationTracker.setMode({muted: evt.muted})
+  })
+
+  /*
+   * Players are pooled and preloaded with other items' sources, so only trust
+   * a length reported for this item's own source. If that load happened before
+   * this component mounted, the length stays unknown and is omitted.
+   */
+  useEventListener(player, 'sourceLoad', evt => {
+    const seconds = getSourceLoadDurationSeconds(evt, embed.playlist)
+    if (seconds !== undefined) {
+      videoDurationSeconds.current = seconds
+    }
   })
 
   useEventListener(player, 'statusChange', evt => {
@@ -953,6 +1011,7 @@ function Overlay({
   }))
 
   const onPressShow = useCallback(() => {
+    if (player) markUserStartedPlayback(player)
     player?.play()
   }, [player])
 
@@ -1263,6 +1322,7 @@ function PlayPauseTapArea({
       if (player.playing) {
         player.pause()
       } else {
+        markUserStartedPlayback(player)
         player.play()
       }
     } catch (err) {
