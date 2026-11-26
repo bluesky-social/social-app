@@ -373,7 +373,7 @@ export function labelToDomain(label: string): string | undefined {
 }
 
 export function isPossiblyAUrl(str: string): boolean {
-  str = str.trim()
+  str = str.trim().toLowerCase()
   if (str.startsWith('http://')) {
     return true
   }
