@@ -25,6 +25,12 @@
             "maxSize": 1000000,
             "description": "Small image to be displayed next to posts from account. AKA, 'profile picture'"
           },
+          "avatarAlt": {
+            "type": "string",
+            "description": "Alt text description of the avatar image, for accessibility.",
+            "maxGraphemes": 2000,
+            "maxLength": 20000
+          },
           "banner": {
             "type": "blob",
             "accept": [
@@ -33,6 +39,12 @@
             ],
             "maxSize": 1000000,
             "description": "Larger horizontal image to display behind profile view."
+          },
+          "bannerAlt": {
+            "type": "string",
+            "description": "Alt text description of the banner image, for accessibility.",
+            "maxGraphemes": 2000,
+            "maxLength": 20000
           },
           "labels": {
             "refs": [

@@ -33,16 +33,19 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
+import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_NATIVE} from '#/env'
 
 export function UserBanner({
   type,
   banner,
+  alt,
   moderation,
   onSelectNewBanner,
 }: {
   type?: 'labeler' | 'default'
   banner?: string | null
+  alt?: string
   moderation?: ModerationUI
   onSelectNewBanner?: (img: PickerImage | null) => void
 }) {
@@ -220,15 +223,38 @@ export function UserBanner({
     </>
   ) : banner &&
     !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
-    <Image
-      style={[styles.bannerImage, t.atoms.bg_contrast_25]}
-      contentFit="cover"
-      source={{uri: banner}}
-      blurRadius={moderation?.blur ? 100 : 0}
-      accessible={true}
-      accessibilityIgnoresInvertColors
-      useAppleWebpCodec
-    />
+    <View>
+      <Image
+        style={[styles.bannerImage, t.atoms.bg_contrast_25]}
+        contentFit="cover"
+        source={{uri: banner}}
+        blurRadius={moderation?.blur ? 100 : 0}
+        accessible={true}
+        accessibilityLabel={alt}
+        accessibilityHint=""
+        alt={alt}
+        accessibilityIgnoresInvertColors
+        useAppleWebpCodec
+      />
+      {!!alt && !moderation?.blur && (
+        // same badge as post images (AutoSizedImage); the alt text itself
+        // is read from the Image label and shown in the lightbox
+        <View
+          accessible={false}
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.justify_center,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+            styles.altBadge,
+          ]}>
+          <Text style={[a.font_bold, a.text_xs]}>
+            <Trans>ALT</Trans>
+          </Text>
+        </View>
+      )}
+    </View>
   ) : (
     <View
       style={[
@@ -253,6 +279,12 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 150,
+  },
+  altBadge: {
+    bottom: 8,
+    right: 8,
+    padding: 6,
+    opacity: 0.8,
   },
   labelerBanner: {
     backgroundColor: tokens.color.temp_purple,

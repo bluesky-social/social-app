@@ -4,7 +4,12 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
-import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
+import {
+  MAX_ALT_TEXT,
+  MAX_DESCRIPTION,
+  MAX_DISPLAY_NAME,
+  urls,
+} from '#/lib/constants'
 import {useCallOnce} from '#/lib/once'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -160,6 +165,10 @@ function DialogInner({
   const [newUserAvatar, setNewUserAvatar] = useState<
     ImageMeta | undefined | null
   >()
+  const initialAvatarAlt = profile.avatarAlt || ''
+  const [avatarAlt, setAvatarAlt] = useState(initialAvatarAlt)
+  const initialBannerAlt = profile.bannerAlt || ''
+  const [bannerAlt, setBannerAlt] = useState(initialBannerAlt)
 
   const linksEnabled = useCanEditProfileLinks()
   const {data: storedLinks} = useOwnProfileLinksQuery(profile.did, {
@@ -191,6 +200,8 @@ function DialogInner({
     displayName !== initialDisplayName ||
     description !== initialDescription ||
     pronouns !== initialPronouns ||
+    avatarAlt !== initialAvatarAlt ||
+    bannerAlt !== initialBannerAlt ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
   const linksDirty =
@@ -206,6 +217,8 @@ function DialogInner({
   const onSelectNewAvatar = useCallback(
     (img: ImageMeta | null) => {
       setImageError('')
+      // the old alt text described the old image
+      setAvatarAlt('')
       if (img === null) {
         setNewUserAvatar(null)
         setUserAvatar(null)
@@ -224,6 +237,7 @@ function DialogInner({
   const onSelectNewBanner = useCallback(
     (img: ImageMeta | null) => {
       setImageError('')
+      setBannerAlt('')
       if (!img) {
         setNewUserBanner(null)
         setUserBanner(null)
@@ -256,6 +270,8 @@ function DialogInner({
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
           ...(pronouns !== initialPronouns && {pronouns: pronouns.trim()}),
+          ...(avatarAlt !== initialAvatarAlt && {avatarAlt: avatarAlt.trim()}),
+          ...(bannerAlt !== initialBannerAlt && {bannerAlt: bannerAlt.trim()}),
           ...(written && {
             links: written.refs.length ? written.refs : undefined,
           }),
@@ -297,6 +313,10 @@ function DialogInner({
     description,
     pronouns,
     initialPronouns,
+    avatarAlt,
+    initialAvatarAlt,
+    bannerAlt,
+    initialBannerAlt,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -318,6 +338,9 @@ function DialogInner({
     text: description,
     maxCount: MAX_DESCRIPTION,
   })
+  const altTextTooLong =
+    isOverMaxGraphemeCount({text: avatarAlt, maxCount: MAX_ALT_TEXT}) ||
+    isOverMaxGraphemeCount({text: bannerAlt, maxCount: MAX_ALT_TEXT})
 
   const cancelButton = useCallback(
     () => (
@@ -343,7 +366,11 @@ function DialogInner({
         label={_(msg`Save`)}
         onPress={onPressSave}
         disabled={
-          !dirty || isSaving || displayNameTooLong || descriptionTooLong
+          !dirty ||
+          isSaving ||
+          displayNameTooLong ||
+          descriptionTooLong ||
+          altTextTooLong
         }
         size="small"
         color="primary"
@@ -364,6 +391,7 @@ function DialogInner({
       isSaving,
       displayNameTooLong,
       descriptionTooLong,
+      altTextTooLong,
     ],
   )
 
@@ -493,6 +521,30 @@ function DialogInner({
           )}
         </View>
 
+        {!!userAvatar && (
+          <AltTextField
+            label={_(msg`Avatar alt text`)}
+            placeholder={_(
+              msg`Describe your avatar for people who can't see it`,
+            )}
+            value={avatarAlt}
+            onChangeText={setAvatarAlt}
+            testID="editProfileAvatarAltInput"
+          />
+        )}
+
+        {!!userBanner && (
+          <AltTextField
+            label={_(msg`Banner alt text`)}
+            placeholder={_(
+              msg`Describe your banner for people who can't see it`,
+            )}
+            value={bannerAlt}
+            onChangeText={setBannerAlt}
+            testID="editProfileBannerAltInput"
+          />
+        )}
+
         <View>
           <TextField.LabelText>
             <Trans>Pronouns</Trans>
@@ -579,5 +631,51 @@ function DialogInner({
         )}
       </View>
     </Dialog.ScrollableInner>
+  )
+}
+
+function AltTextField({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  testID,
+}: {
+  label: string
+  placeholder: string
+  value: string
+  onChangeText: (text: string) => void
+  testID: string
+}) {
+  const t = useTheme()
+  const tooLong = isOverMaxGraphemeCount({text: value, maxCount: MAX_ALT_TEXT})
+  return (
+    <View>
+      <TextField.LabelText>{label}</TextField.LabelText>
+      <TextField.Root isInvalid={tooLong}>
+        <Dialog.Input
+          value={value}
+          onChangeText={onChangeText}
+          multiline
+          label={label}
+          placeholder={placeholder}
+          testID={testID}
+        />
+      </TextField.Root>
+      {tooLong && (
+        <Text
+          style={[
+            a.text_sm,
+            a.mt_xs,
+            a.font_semi_bold,
+            {color: t.palette.negative_400},
+          ]}>
+          <Plural
+            value={MAX_ALT_TEXT}
+            other="Alt text is too long. The maximum number of characters is #."
+          />
+        </Text>
+      )}
+    </View>
   )
 }
