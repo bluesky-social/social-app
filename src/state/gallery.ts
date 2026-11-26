@@ -47,9 +47,10 @@ export type ComposerImage =
 
 export async function createComposerImage(
   raw: ImageMeta,
+  alt = '',
 ): Promise<ComposerImageWithoutTransformation> {
   return {
-    alt: '',
+    alt,
     source: {
       id: nanoid(),
       // Copy to cache to ensure file survives OS temporary file cleanup
