@@ -55,6 +55,11 @@ export type CommonNavigatorParams = {
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
   PostQuotes: {name: string; rkey: string}
+  /**
+   * Native only. `story` ends in Instagram Stories; `image` shares or saves
+   * the picture itself.
+   */
+  PostImage: {name: string; rkey: string; mode?: 'story' | 'image'}
   CustomFeed: {
     name: string
     rkey: string

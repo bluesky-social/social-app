@@ -12,6 +12,15 @@ export const MessagesBubble = createSinglePathSVG({
   path: 'M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a10 10 0 0 1-4.136-.893l-4.68.876a1 1 0 0 1-1.164-1.184l.931-4.537A10 10 0 0 1 2 12Z',
 })
 
+/**
+ * Instagram's glyph: a rounded square outline, the lens ring and the flash
+ * dot. Drawn here rather than taken from Simple Icons, whose path is much
+ * longer for the same shape.
+ */
+export const InstagramGlyph = createSinglePathSVG({
+  path: 'M8 2h8a6 6 0 0 1 6 6v8a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6V8a6 6 0 0 1 6-6Zm0 2a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4ZM12 7a5 5 0 1 1 0 10a5 5 0 1 1 0-10Zm0 2a3 3 0 1 0 0 6a3 3 0 1 0 0-6ZM17.5 5.25a1.25 1.25 0 1 1 0 2.5a1.25 1.25 0 1 1 0-2.5Z',
+})
+
 /*
  * Logos that aren't a single flat color, so they can't come from the icon
  * generator. They ignore `fill` and draw a square of `width`.

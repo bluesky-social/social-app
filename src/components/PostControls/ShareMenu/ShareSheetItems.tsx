@@ -1,9 +1,11 @@
 import {useMemo} from 'react'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {type NavigationProp} from '#/lib/routes/types'
 import {simpleShareText} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -14,10 +16,20 @@ import {
   Bookmark_Stroke2_Corner0_Rounded as BookmarkIcon,
 } from '#/components/icons/Bookmark'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as Menu from '#/components/Menu'
-import {type ShareAction} from '#/components/ShareDialog/ShareRow'
+import {INSTAGRAM_APPEARANCE} from '#/components/ShareDialog/SharePlatformIcon'
+import {
+  type ShareAction,
+  type ShareAppTile,
+} from '#/components/ShareDialog/ShareRow'
 import {ShareSheetOuter} from '#/components/ShareDialog/ShareSheet'
 import {type ShareSubject} from '#/components/ShareDialog/types'
+import {useAnalytics} from '#/analytics'
+import {
+  useCanSharePostImage,
+  useInstagramStoryAvailable,
+} from '#/features/postImage'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {usePostBookmark} from '../BookmarkButton'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
@@ -35,6 +47,8 @@ export function ShareSheetItems({
   const {t: l} = useLingui()
   const [devModeEnabled] = useDevMode()
   const queryClient = useQueryClient()
+  const navigation = useNavigation<NavigationProp>()
+  const ax = useAnalytics()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -70,7 +84,55 @@ export function ShareSheetItems({
     chatEmbed: postUri,
   }
 
-  const actions: ShareAction[] = hasSession
+  const canShareImage = useCanSharePostImage(post)
+  const canShareStory = useInstagramStoryAvailable({enabled: canShareImage})
+  const openPostImage = (mode: 'story' | 'image') => {
+    ax.metric('share:press:postImage', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      mode,
+    })
+    onShare()
+    navigation.navigate('PostImage', {
+      name: postAuthor.did,
+      rkey: new AtUri(postUri).rkey,
+      mode,
+    })
+  }
+
+  const appTiles: ShareAppTile[] = canShareStory
+    ? [
+        {
+          id: 'instagramStory',
+          label: l({
+            message: 'Story',
+            comment:
+              'Share menu tile with the Instagram logo that shares the post to an Instagram story',
+          }),
+          accessibilityLabel: l`Share to Instagram Story`,
+          appearance: INSTAGRAM_APPEARANCE,
+          onPress: () => openPostImage('story'),
+        },
+      ]
+    : []
+
+  const imageActions: ShareAction[] = canShareImage
+    ? [
+        {
+          id: 'shareAsImage',
+          label: l({
+            message: 'Image',
+            comment:
+              'Share menu item that turns the post into a picture to share or save',
+          }),
+          accessibilityLabel: l`Share as image`,
+          icon: ImageIcon,
+          onPress: () => openPostImage('image'),
+        },
+      ]
+    : []
+
+  const saveActions: ShareAction[] = hasSession
     ? [
         {
           id: 'save',
@@ -95,6 +157,8 @@ export function ShareSheetItems({
       ]
     : []
 
+  const actions = [...saveActions, ...imageActions]
+
   const onShareATURI = () => {
     void simpleShareText(postUri)
   }
@@ -107,6 +171,7 @@ export function ShareSheetItems({
     <ShareSheetOuter
       subject={subject}
       actions={actions}
+      appTiles={appTiles}
       onShare={onShare}
       onBeforeSendToChat={() => precachePost(queryClient, postUri, post)}>
       {devModeEnabled && (

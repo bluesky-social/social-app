@@ -8,7 +8,8 @@
       "ExpoBlueskyVisibilityViewModule",
       "ExpoPlatformInfoModule",
       "ExpoBlueskyNotificationSettingsModule",
-      "ExpoBlueskyWidgetInfoModule"
+      "ExpoBlueskyWidgetInfoModule",
+      "ExpoBlueskyInstagramStoryModule"
     ]
   },
   "android": {
@@ -19,7 +20,8 @@
       "expo.modules.blueskyswissarmy.visibilityview.ExpoBlueskyVisibilityViewModule",
       "expo.modules.blueskyswissarmy.platforminfo.ExpoPlatformInfoModule",
       "expo.modules.blueskyswissarmy.share.ExpoBlueskyShareModule",
-      "expo.modules.blueskyswissarmy.widgetinfo.ExpoBlueskyWidgetInfoModule"
+      "expo.modules.blueskyswissarmy.widgetinfo.ExpoBlueskyWidgetInfoModule",
+      "expo.modules.blueskyswissarmy.instagramstory.ExpoBlueskyInstagramStoryModule"
     ]
   }
 }

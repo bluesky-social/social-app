@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The story images are captured into the app's cache. react-native-view-shot
+  picks the internal or external cache, whichever has more free space.
+-->
+<paths>
+  <cache-path name="instagram_story_cache" path="." />
+  <external-cache-path name="instagram_story_external_cache" path="." />
+</paths>

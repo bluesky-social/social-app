@@ -1,2 +1,18 @@
-<manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <provider
+      android:name="expo.modules.blueskyswissarmy.instagramstory.InstagramStoryFileProvider"
+      android:authorities="${applicationId}.InstagramStoryFileProvider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/instagram_story_paths" />
+    </provider>
+  </application>
+
+  <!-- Lets isAvailable() see Instagram on Android 11+ -->
+  <queries>
+    <package android:name="com.instagram.android" />
+  </queries>
 </manifest>

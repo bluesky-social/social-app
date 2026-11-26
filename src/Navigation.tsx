@@ -156,9 +156,10 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
-import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
+import {PostImageScreen} from '#/features/postImage'
 import {router} from '#/routes'
 
 const navigationRef = createNavigationContainerRef<RootNavigatorParams>()
@@ -316,6 +317,21 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
         })}
+      />
+      <Stack.Screen
+        name="PostImage"
+        getComponent={() => PostImageScreen}
+        options={{
+          title: title(msg`Share as image`),
+          requireAuth: true,
+          /*
+           * Covers the tab bar, so the share button sits at the bottom. Only
+           * iOS presents it over the bar; Android hides the bar instead (see
+           * `NativeTabBar`).
+           */
+          presentation: 'fullScreenModal',
+          animation: 'slide_from_bottom',
+        }}
       />
       <Stack.Screen
         name="PostLikedBy"
@@ -748,6 +764,7 @@ function NativeTabBar(props: BottomTabBarProps) {
     showLoggedOut,
     onboardingActive: onboardingState.isActive,
     isVideoFeed: currentRouteName === 'VideoFeed',
+    isFullScreen: IS_ANDROID && currentRouteName === 'PostImage',
   })
 
   useEffect(() => {

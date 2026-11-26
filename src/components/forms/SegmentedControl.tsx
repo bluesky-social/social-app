@@ -12,6 +12,7 @@ import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a, native, platform, useTheme} from '#/alf'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {
   Button,
   type ButtonProps,
@@ -244,6 +245,28 @@ export function ItemText({style, ...props}: ButtonTextProps) {
       ]}
     />
   )
+}
+
+/**
+ * An icon before an item's text, colored to match it.
+ */
+export function ItemIcon({
+  icon: Icon,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+}) {
+  const t = useTheme()
+  const ctx = useContext(InternalItemContext)
+  if (!ctx)
+    throw new Error(
+      'SegmentedControl.ItemIcon must be used within a SegmentedControl.Item',
+    )
+  const color = ctx.active
+    ? t.atoms.text.color
+    : ctx.focused || ctx.hovered || ctx.pressed
+      ? t.atoms.text_contrast_medium.color
+      : t.atoms.text_contrast_low.color
+  return <Icon size="sm" fill={color} />
 }
 
 function Slider({x, width}: {x: number; width: number}) {

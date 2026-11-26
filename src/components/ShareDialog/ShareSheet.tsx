@@ -28,7 +28,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {SHEET_GUTTER} from './const'
 import {RecentChats} from './RecentChats'
-import {type ShareAction, ShareRow} from './ShareRow'
+import {type ShareAction, type ShareAppTile, ShareRow} from './ShareRow'
 import {type ShareSubject} from './types'
 import {useInstalledSharePlatforms} from './useInstalledSharePlatforms'
 
@@ -45,6 +45,11 @@ type ShareSheetProps = {
   subject: ShareSubject
   /** Extra actions after "Copy link", e.g. a post's Save toggle. */
   actions?: ShareAction[]
+  /**
+   * Brand tiles before the installed apps, e.g. a post's Instagram Story.
+   * Hidden with the apps for logged-in-only subjects.
+   */
+  appTiles?: ShareAppTile[]
   /**
    * Runs when it's shared to an app, copied or sent to the system share
    * sheet. Not run for chats.
@@ -79,6 +84,7 @@ export function ShareSheet({
 export function ShareSheetOuter({
   subject,
   actions = [],
+  appTiles = [],
   onShare = () => {},
   onBeforeSendToChat,
   children,
@@ -231,6 +237,7 @@ export function ShareSheetOuter({
             // Logged-out viewers can't open it, so only link options show
             showApps={!loggedInOnly}
             actions={allActions}
+            appTiles={loggedInOnly ? [] : appTiles}
             subject={subject}
             onShare={onShare}
             overChats={showChats}

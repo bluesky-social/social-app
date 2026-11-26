@@ -36,6 +36,15 @@ describe('getNativeTabBarVisibility', () => {
     })
   })
 
+  it.each([
+    ['phones', false],
+    ['tablets', true],
+  ])('hides all navigation for full-screen routes on %s', (_size, gtMobile) => {
+    expect(
+      getNativeTabBarVisibility({...base, gtMobile, isFullScreen: true}),
+    ).toEqual({showTabletSidebar: false, hideTabBar: true})
+  })
+
   it('preserves phone-like navigation in compact windows', () => {
     expect(getNativeTabBarVisibility({...base, gtMobile: false})).toEqual({
       showTabletSidebar: false,
