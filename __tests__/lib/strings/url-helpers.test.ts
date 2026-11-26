@@ -114,6 +114,11 @@ describe('isPossiblyAUrl', () => {
     [' https://domain.com ', true],
     ['http://domain.com/foo', true],
     ['http://domain.com stuff', true],
+    ['Domain.COM', true],
+    ['DOMAIN.COM/foo', true],
+    ['HTTP://domain.com', true],
+    ['HTTPS://domain.com', true],
+    ['Some Domain.COM', false],
   ]
 
   it.each(cases)('given input uri %p, returns %p', (str, expected) => {
