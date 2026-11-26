@@ -51,7 +51,12 @@ function Inner({state}: {state: ComposerOpts}) {
         ])}
         onFocusOutside={evt => evt.preventDefault()}
         onInteractOutside={evt => evt.preventDefault()}
-        onDismiss={() => ref.current?.onPressCancel()}>
+        onDismiss={() => ref.current?.onPressCancel()}
+        onPointerDown={evt => {
+          if (evt.target === evt.currentTarget) {
+            ref.current?.onPressCancel()
+          }
+        }}>
         <View
           style={[
             styles.container,
