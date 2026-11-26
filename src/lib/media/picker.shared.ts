@@ -54,7 +54,9 @@ export async function openUnifiedPicker({
   videoMaxDurationMs?: number
 }) {
   return await launchImageLibraryAsync({
-    exif: false,
+    // Returns the file's metadata to JS so a description written into it can
+    // become the initial alt text. The file itself is unchanged.
+    exif: true,
     mediaTypes: ['images', 'videos'],
     quality: 1,
     allowsMultipleSelection: true,

@@ -1,8 +1,8 @@
 import {type PermissionResponse, PermissionStatus} from 'expo'
-import type {
-  Album as NativeAlbum,
-  Asset as NativeAsset,
-  GranularPermission,
+import {
+  type Album as NativeAlbum,
+  type Asset as NativeAsset,
+  type GranularPermission,
 } from 'expo-media-library'
 
 const noPermissionResponse: PermissionResponse = {
@@ -32,6 +32,12 @@ export const Asset = {
   create(_filePath: string, _album?: NativeAlbum): Promise<NativeAsset> {
     return unavailable()
   },
+}
+
+export function getAssetExif(
+  _assetId: string,
+): Promise<Record<string, unknown>> {
+  return unavailable()
 }
 
 export function requestPermissionsAsync(

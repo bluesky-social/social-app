@@ -65,6 +65,7 @@ import {
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {resolveAltFromMetadata} from '#/lib/media/image/altFromMetadata'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
@@ -2261,12 +2262,15 @@ function ComposerFooter({
 
           await Promise.all(
             assets.map(async image => {
-              const composerImage = await createComposerImage({
-                path: image.uri,
-                width: image.width,
-                height: image.height,
-                mime: image.mimeType!,
-              })
+              const composerImage = await createComposerImage(
+                {
+                  path: image.uri,
+                  width: image.width,
+                  height: image.height,
+                  mime: image.mimeType!,
+                },
+                await resolveAltFromMetadata(image),
+              )
               selectedImages.push(composerImage)
             }),
           ).catch(e => {
