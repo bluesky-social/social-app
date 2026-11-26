@@ -979,6 +979,10 @@ msgstr ""
 msgid "{remaining, plural, one {# character remaining} other {# characters remaining}}"
 msgstr "{remaining, plural, one {# character remaining} other {# characters remaining}}"
 
+#: src/screens/SavedFeeds.tsx:708
+msgid "{removedCount, plural, one {# invalid saved feed marked for removal. Save your changes to apply.} other {# invalid saved feeds marked for removal. Save your changes to apply.}}"
+msgstr "{removedCount, plural, one {# invalid saved feed marked for removal. Save your changes to apply.} other {# invalid saved feeds marked for removal. Save your changes to apply.}}"
+
 #: src/components/dms/MessageItem.tsx:826
 msgid "{replierDisplayName} replied"
 msgstr "{replierDisplayName} replied"
@@ -1009,6 +1013,10 @@ msgstr "{serviceName} removed your content for violating our <0>Community Guidel
 #: src/screens/Atmosphere/ActivityTab/components/ActivityHeader.tsx:84
 msgid "{timeElapsed} on <0>{appName}</0>"
 msgstr "{timeElapsed} on <0>{appName}</0>"
+
+#: src/screens/SavedFeeds.tsx:759
+msgid "{title}. {description}"
+msgstr "{title}. {description}"
 
 #. Accessibility label for a scrollable row of photos. The number is how many photos are in it.
 #: src/screens/Atmosphere/components/PhotoDialog/PhotoDialogGallery.tsx:93
@@ -6272,8 +6280,8 @@ msgstr ""
 
 #: src/Navigation.tsx:596
 #: src/screens/Atmosphere/components/appCategories.ts:13
-#: src/screens/SavedFeeds.tsx:112
-#: src/screens/SavedFeeds.tsx:303
+#: src/screens/SavedFeeds.tsx:116
+#: src/screens/SavedFeeds.tsx:314
 #: src/screens/Search/SearchResults.tsx:108
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Feeds.tsx:505
@@ -6292,14 +6300,14 @@ msgstr "Feeds ✨"
 msgid "Feeds and lists keep only nearby posts in the page, so performance stays steady however far you scroll."
 msgstr "Feeds and lists keep only nearby posts in the page, so performance stays steady however far you scroll."
 
-#: src/screens/SavedFeeds.tsx:227
-#: src/screens/SavedFeeds.tsx:398
+#: src/screens/SavedFeeds.tsx:237
+#: src/screens/SavedFeeds.tsx:415
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr ""
 
 #: src/components/FeedCard.tsx:332
-#: src/screens/SavedFeeds.tsx:92
-#: src/screens/SavedFeeds.tsx:271
+#: src/screens/SavedFeeds.tsx:96
+#: src/screens/SavedFeeds.tsx:282
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr ""
@@ -6608,7 +6616,7 @@ msgid "Following"
 msgstr ""
 
 #: src/lib/strings/feed-names.ts:13
-#: src/screens/SavedFeeds.tsx:618
+#: src/screens/SavedFeeds.tsx:658
 #: src/view/screens/Feeds.tsx:597
 msgctxt "feed-name"
 msgid "Following"
@@ -7821,6 +7829,14 @@ msgstr ""
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:39
 msgid "Invalid rescind request."
 msgstr "Invalid rescind request."
+
+#: src/screens/SavedFeeds.tsx:754
+msgid "Invalid saved feed"
+msgstr "Invalid saved feed"
+
+#: src/screens/SavedFeeds.tsx:754
+msgid "Invalid saved list"
+msgstr "Invalid saved list"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:88
 msgid "Invalid Verification Code"
@@ -9088,11 +9104,11 @@ msgstr "More ways to share"
 msgid "Move earlier"
 msgstr "Move earlier"
 
-#: src/screens/SavedFeeds.tsx:488
+#: src/screens/SavedFeeds.tsx:519
 msgid "Move feed down"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:478
+#: src/screens/SavedFeeds.tsx:509
 msgid "Move feed up"
 msgstr ""
 
@@ -10752,7 +10768,7 @@ msgstr ""
 #: src/components/FeedCard.tsx:392
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:612
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:621
-#: src/screens/SavedFeeds.tsx:559
+#: src/screens/SavedFeeds.tsx:598
 msgid "Pin feed"
 msgstr ""
 
@@ -10780,8 +10796,8 @@ msgstr ""
 msgid "Pinned {0} to Home"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:146
-#: src/screens/SavedFeeds.tsx:337
+#: src/screens/SavedFeeds.tsx:156
+#: src/screens/SavedFeeds.tsx:354
 msgid "Pinned Feeds"
 msgstr ""
 
@@ -11754,7 +11770,8 @@ msgstr "Remove from chat"
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:379
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:215
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:218
-#: src/screens/SavedFeeds.tsx:549
+#: src/screens/SavedFeeds.tsx:491
+#: src/screens/SavedFeeds.tsx:587
 msgid "Remove from my feeds"
 msgstr ""
 
@@ -11827,6 +11844,10 @@ msgstr ""
 #: src/screens/Settings/FindContactsSettings.tsx:357
 msgid "Remove suggestion"
 msgstr ""
+
+#: src/screens/SavedFeeds.tsx:755
+msgid "Remove this entry to continue."
+msgstr "Remove this entry to continue."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove this feed from your saved feeds"
@@ -12535,8 +12556,8 @@ msgstr "Sad GIFs"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
 #: src/screens/Profile/Header/EditProfileDialog.tsx:343
 #: src/screens/Profile/Header/EditProfileDialog.tsx:354
-#: src/screens/SavedFeeds.tsx:124
-#: src/screens/SavedFeeds.tsx:315
+#: src/screens/SavedFeeds.tsx:130
+#: src/screens/SavedFeeds.tsx:328
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
 #: src/view/com/composer/GifAltText.tsx:219
 #: src/view/com/composer/GifAltText.tsx:228
@@ -12560,10 +12581,10 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
 #: src/features/profileLinks/components/LinkFormDialog.tsx:403
 #: src/features/profileLinks/components/LinkFormDialog.tsx:421
-#: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
-#: src/screens/SavedFeeds.tsx:311
-#: src/screens/SavedFeeds.tsx:315
+#: src/screens/SavedFeeds.tsx:130
+#: src/screens/SavedFeeds.tsx:322
+#: src/screens/SavedFeeds.tsx:328
 #: src/view/com/composer/Composer.tsx:1609
 #: src/view/com/composer/drafts/DraftsButton.tsx:121
 msgid "Save changes"
@@ -12626,8 +12647,8 @@ msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:198
-#: src/screens/SavedFeeds.tsx:375
+#: src/screens/SavedFeeds.tsx:208
+#: src/screens/SavedFeeds.tsx:392
 msgid "Saved Feeds"
 msgstr ""
 
@@ -12884,8 +12905,8 @@ msgstr "See more trending topics"
 msgid "See suggested accounts"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:232
-#: src/screens/SavedFeeds.tsx:403
+#: src/screens/SavedFeeds.tsx:242
+#: src/screens/SavedFeeds.tsx:420
 msgid "See this guide"
 msgstr ""
 
@@ -13823,6 +13844,10 @@ msgstr ""
 msgid "Some people can reply"
 msgstr ""
 
+#: src/screens/SavedFeeds.tsx:716
+msgid "Some saved feeds are invalid. Remove them before saving your changes."
+msgstr "Some saved feeds are invalid. Remove them before saving your changes."
+
 #: src/components/dms/getSystemMessageInfo.ts:91
 msgid "Someone joined"
 msgstr "Someone joined"
@@ -14758,8 +14783,8 @@ msgstr ""
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:190
 #: src/screens/ProfileList/components/Header.tsx:96
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:120
-#: src/screens/SavedFeeds.tsx:99
-#: src/screens/SavedFeeds.tsx:278
+#: src/screens/SavedFeeds.tsx:103
+#: src/screens/SavedFeeds.tsx:289
 msgid "There was an issue contacting the server"
 msgstr ""
 
@@ -15852,7 +15877,7 @@ msgstr ""
 #: src/components/FeedCard.tsx:383
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:612
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:619
-#: src/screens/SavedFeeds.tsx:467
+#: src/screens/SavedFeeds.tsx:491
 msgid "Unpin feed"
 msgstr ""
 
@@ -17376,13 +17401,13 @@ msgstr ""
 msgid "You don't have any lists yet."
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:153
-#: src/screens/SavedFeeds.tsx:343
+#: src/screens/SavedFeeds.tsx:163
+#: src/screens/SavedFeeds.tsx:360
 msgid "You don't have any pinned feeds."
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:205
-#: src/screens/SavedFeeds.tsx:381
+#: src/screens/SavedFeeds.tsx:215
+#: src/screens/SavedFeeds.tsx:398
 msgid "You don't have any saved feeds."
 msgstr ""
 
