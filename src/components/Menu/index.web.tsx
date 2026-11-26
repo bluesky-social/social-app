@@ -188,6 +188,13 @@ export function Outer({children, style, onCloseAutoFocus}: OuterProps) {
         loop
         aria-label="Test"
         onCloseAutoFocus={onCloseAutoFocus}
+        onKeyDown={event => {
+          // Enter on the menu itself can activate an enclosing post link.
+          if (event.key === 'Enter' && event.target === event.currentTarget) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+        }}
         className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
