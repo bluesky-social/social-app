@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
@@ -11,74 +12,88 @@ import {Text} from '#/components/Typography'
 
 export function EditNamePrompt({
   control,
-  value,
-  onChangeText,
+  initialValue,
   onConfirm,
 }: {
   control: Dialog.DialogOuterProps['control']
-  value: string
-  onChangeText: (value: string) => void
-  onConfirm: () => void
+  initialValue: string
+  onConfirm: (name: string) => void
+}) {
+  return (
+    <Prompt.Outer control={control}>
+      <EditNamePromptInner initialValue={initialValue} onConfirm={onConfirm} />
+    </Prompt.Outer>
+  )
+}
+
+/**
+ * Owns the name being edited. The state has to live inside `Prompt.Outer`:
+ * the sheet's portal forwards its children from an effect, so state held above
+ * it reaches the controlled input a commit late and makes typing jumpy.
+ */
+function EditNamePromptInner({
+  initialValue,
+  onConfirm,
+}: {
+  initialValue: string
+  onConfirm: (name: string) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const [value, setValue] = useState(initialValue)
 
   const nameTooLong = isOverMaxGraphemeCount({
     text: value,
     maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
   })
 
+  const confirm = () => onConfirm(value)
+
   return (
-    <Prompt.Outer control={control}>
-      <>
-        <Prompt.Content>
-          <Prompt.TitleText>
-            <Trans>Edit group name</Trans>
-          </Prompt.TitleText>
-          <View style={[a.my_sm]}>
-            <TextField.Root isInvalid={nameTooLong}>
-              <TextField.Input
-                label={l`Edit group name`}
-                placeholder={l`Group name`}
-                value={value}
-                onChangeText={onChangeText}
-                returnKeyType="done"
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                autoFocus
-                onSubmitEditing={nameTooLong ? undefined : onConfirm}
-              />
-            </TextField.Root>
-            {nameTooLong ? (
-              <Text
-                style={[
-                  a.text_sm,
-                  a.mt_xs,
-                  a.font_semi_bold,
-                  {color: t.palette.negative_400},
-                ]}>
-                <Trans>
-                  Group name is too long.{' '}
-                  <Plural
-                    value={MAX_GROUP_NAME_GRAPHEME_LENGTH}
-                    other="The maximum number of characters is #."
-                  />
-                </Trans>
-              </Text>
-            ) : null}
-          </View>
-        </Prompt.Content>
-        <Prompt.Actions>
-          <Prompt.Action
-            cta={l`Save`}
-            onPress={onConfirm}
-            disabled={nameTooLong}
-          />
-          <Prompt.Cancel />
-        </Prompt.Actions>
-      </>
-    </Prompt.Outer>
+    <>
+      <Prompt.Content>
+        <Prompt.TitleText>
+          <Trans>Edit group name</Trans>
+        </Prompt.TitleText>
+        <View style={[a.my_sm]}>
+          <TextField.Root isInvalid={nameTooLong}>
+            <TextField.Input
+              label={l`Edit group name`}
+              placeholder={l`Group name`}
+              value={value}
+              onChangeText={setValue}
+              returnKeyType="done"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
+              autoFocus
+              onSubmitEditing={nameTooLong ? undefined : confirm}
+            />
+          </TextField.Root>
+          {nameTooLong ? (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_semi_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Trans>
+                Group name is too long.{' '}
+                <Plural
+                  value={MAX_GROUP_NAME_GRAPHEME_LENGTH}
+                  other="The maximum number of characters is #."
+                />
+              </Trans>
+            </Text>
+          ) : null}
+        </View>
+      </Prompt.Content>
+      <Prompt.Actions>
+        <Prompt.Action cta={l`Save`} onPress={confirm} disabled={nameTooLong} />
+        <Prompt.Cancel />
+      </Prompt.Actions>
+    </>
   )
 }
 
