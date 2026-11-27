@@ -51,11 +51,11 @@ appId: xyz.blueskyweb.app
           direction: "DOWN"
           duration: 1000
       - assertVisible:
-          id: "saveChangesBtn"
+          text: "Save changes"
           enabled: true
       - tapOn:
             label: "Save button"
-            id: "saveChangesBtn"
+            text: "Save changes"
       - tapOn: "Go back"
       - assertVisible:
           id: "homeScreenFeedTabs-selector-0"
@@ -77,11 +77,11 @@ appId: xyz.blueskyweb.app
           direction: "DOWN"
           duration: 1000
       - assertVisible:
-          id: "saveChangesBtn"
+          text: "Save changes"
           enabled: true
       - tapOn:
           label: "Save button"
-          id: "saveChangesBtn"
+          text: "Save changes"
       - tapOn: "Go back"
       - assertVisible:
           id: "homeScreenFeedTabs-selector-0"
@@ -123,7 +123,7 @@ appId: xyz.blueskyweb.app
     id: "feed-timeline-togglePin"
 - tapOn:
       label: "Save button"
-      id: "saveChangesBtn"
+      text: "Save changes"
 - tapOn: "Go back"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
