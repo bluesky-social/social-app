@@ -26,6 +26,7 @@ import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   type ScrollEvent,
   useAnimatedStyle,
+  useDerivedValue,
 } from 'react-native-reanimated'
 import {
   SafeAreaInsetsContext,
@@ -549,17 +550,14 @@ export function FlatListFooter({
   const {presentationBottomOffset} = useDialogContext()
   const {height} = useReanimatedKeyboardAnimation()
 
+  // Derived so frames where the clamped offset stays the same are skipped
+  const translateY = useDerivedValue(() =>
+    Math.min(0, height.get() + bottom + presentationBottomOffset - 10),
+  )
   const animatedStyle = useAnimatedStyle(() => {
     if (!IS_IOS) return {}
     return {
-      transform: [
-        {
-          translateY: Math.min(
-            0,
-            height.get() + bottom + presentationBottomOffset - 10,
-          ),
-        },
-      ],
+      transform: [{translateY: translateY.get()}],
     }
   })
 
