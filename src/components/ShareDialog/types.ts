@@ -25,3 +25,27 @@ export type ShareSubject = {
    */
   chatEmbed?: string
 }
+
+/**
+ * Where opening an app from the apps row failed. Logged with
+ * `share:platform:openFailed`.
+ */
+export type OpenSharePlatformStep =
+  /** The check ran and found the app's scheme or package missing. */
+  | 'notInstalled'
+  /**
+   * The check for the app threw. On iOS that means the build can't query the
+   * scheme (it's missing from `LSApplicationQueriesSchemes`, e.g. an OTA added
+   * the app before a native build did), not that the app is gone.
+   */
+  | 'checkInstalled'
+  /** Copying the link before opening the app failed (iOS). */
+  | 'clipboard'
+  /** The OS refused to open the app or its share link. */
+  | 'openUrl'
+  /** Sending the link straight to the app failed (Android). */
+  | 'shareToPackage'
+  /** The app has no config for this OS. */
+  | 'unsupported'
+  /** Something else threw. */
+  | 'unknown'

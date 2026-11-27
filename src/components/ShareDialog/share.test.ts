@@ -3,7 +3,12 @@ import * as Clipboard from 'expo-clipboard'
 import {Share} from '@bsky.app/expo-bluesky-swiss-army'
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 
-import {hasPasteFallback, needsPaste, openSharePlatform} from './share'
+import {
+  hasPasteFallback,
+  needsPaste,
+  openSharePlatform,
+  OpenSharePlatformError,
+} from './share'
 
 let mockOS: 'ios' | 'android' | 'web' = 'ios'
 
@@ -100,6 +105,105 @@ describe('openSharePlatform', () => {
     await expect(openSharePlatform('whatsapp', content)).rejects.toThrow(
       'not supported',
     )
+  })
+})
+
+describe('openSharePlatform errors', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(true)
+    jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined)
+  })
+
+  async function getError(promise: Promise<unknown>) {
+    const error = await promise.catch((e: unknown) => e)
+    expect(error).toBeInstanceOf(OpenSharePlatformError)
+    return error as OpenSharePlatformError
+  }
+
+  it('says the app is gone when its scheme no longer opens', async () => {
+    mockOS = 'ios'
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(false)
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('notInstalled')
+  })
+
+  it('says the check failed, not that the app is gone, when it throws', async () => {
+    mockOS = 'ios'
+    jest
+      .spyOn(Linking, 'canOpenURL')
+      .mockRejectedValueOnce(
+        new Error(
+          'Unable to open URL: sgnl://. Add sgnl to LSApplicationQueriesSchemes',
+        ),
+      )
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('checkInstalled')
+    expect(Clipboard.setUrlAsync).not.toHaveBeenCalled()
+  })
+
+  it('says the check failed when listing packages throws on Android', async () => {
+    mockOS = 'android'
+    jest
+      .mocked(Share.getInstalledPackages)
+      .mockRejectedValueOnce(new Error('no module'))
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('checkInstalled')
+  })
+
+  it('says copying failed when the clipboard throws', async () => {
+    mockOS = 'ios'
+    jest.mocked(Clipboard.setUrlAsync).mockRejectedValueOnce(new Error('nope'))
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('clipboard')
+    expect(error.message).toBe('nope')
+  })
+
+  it('says the OS refused, without the link it tried', async () => {
+    mockOS = 'ios'
+    const shareUrl = `whatsapp://send?text=${encodeURIComponent(content.url)}`
+    jest
+      .spyOn(Linking, 'openURL')
+      .mockRejectedValueOnce(new Error(`Unable to open URL: ${shareUrl}`))
+    const error = await getError(openSharePlatform('whatsapp', content))
+    expect(error.step).toBe('openUrl')
+    expect(error.message).toBe('Unable to open URL: whatsapp:<link>')
+  })
+
+  it('redacts the link when the OS repeats it decoded', async () => {
+    mockOS = 'android'
+    const shareUrl = `https://x.com/intent/post?text=${encodeURIComponent(content.url)}`
+    jest
+      .spyOn(Linking, 'openURL')
+      .mockRejectedValueOnce(
+        new Error(
+          `Could not open URL '${shareUrl}': No Activity found to handle Intent { act=android.intent.action.VIEW dat=${decodeURIComponent(shareUrl)} }`,
+        ),
+      )
+    const error = await getError(openSharePlatform('x', content))
+    expect(error.step).toBe('openUrl')
+    expect(error.message).not.toContain('bsky.app')
+    expect(error.message).toBe(
+      "Could not open URL 'https:<link>': No Activity found to handle Intent { act=android.intent.action.VIEW dat=https:<link> }",
+    )
+  })
+
+  it('says sending failed when direct share throws on Android', async () => {
+    mockOS = 'android'
+    jest
+      .mocked(Share.getInstalledPackages)
+      .mockResolvedValueOnce(['org.thoughtcrime.securesms'])
+    jest
+      .mocked(Share.shareTextToPackage)
+      .mockRejectedValueOnce(new Error('no activity'))
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('shareToPackage')
+  })
+
+  it('says the platform is unsupported on this OS', async () => {
+    mockOS = 'web'
+    const error = await getError(openSharePlatform('whatsapp', content))
+    expect(error.step).toBe('unsupported')
   })
 })
 
