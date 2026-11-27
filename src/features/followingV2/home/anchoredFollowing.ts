@@ -61,6 +61,7 @@ export function useFollowingListReports(
     enabled,
     prepend,
     top,
+    pill,
     onHasNew,
   }: {
     /** Whether the feed settles at the top (see `useSettleAtTop`). */
@@ -68,6 +69,8 @@ export function useFollowingListReports(
     prepend: Pick<Prepend, 'staged' | 'markRead' | 'onBeginDrag' | 'onPageSeen'>
     /** The feed's top page as it renders. */
     top: FeedPage | undefined
+    /** The new posts pill (see `usePrependPill`). */
+    pill: {dismiss: () => void}
     /** Puts the Home dot out. */
     onHasNew?: (hasNew: boolean) => void
   },
@@ -75,7 +78,10 @@ export function useFollowingListReports(
   const settleAtTop = useSettleAtTop(feed, params, {
     enabled,
     // At the newest post, nothing is new to the reader any more.
-    onRestAtTop: () => onHasNew?.(false),
+    onRestAtTop: () => {
+      onHasNew?.(false)
+      pill.dismiss()
+    },
   })
   const onRowSeen = useNonReactiveCallback((row: Row) => {
     if (
@@ -97,7 +103,10 @@ export function useFollowingListReports(
         prepend.onBeginDrag()
       },
       // At the top, the reader has passed everything staged above them.
-      onReachTop: prepend.markRead,
+      onReachTop: () => {
+        prepend.markRead()
+        pill.dismiss()
+      },
     },
     onRowSeen,
   }

@@ -7,38 +7,33 @@ import {SETTLE_AT_TOP_LIMIT} from './useSettleAtTop'
 /** How many faces the pill shows. */
 const FACE_LIMIT = 3
 
+const NO_OFFER: PrependOffer = {count: 0, authors: []}
+
 /** The parts of a feed row that the pill reads. */
 type Row = {
   type: string
-  key: string
   slice?: FeedPostSlice
 }
 
 /** The parts of a rendered feed page that the pill reads. */
 type Page = {
   fetchedAt: number
+  /** See `FeedPageUnselected`. */
+  since?: string
   slices: readonly FeedPostSlice[]
 }
 
 /**
- * What the pill offers: the posts on a page the view staged above where the
- * reader was (see `usePostFeedPrepend`), as they rendered when it was first
- * offered. It's a
- * snapshot, so its count stays as it was however the rows change, while its
- * faces only ever drop out (see {@link livePrependOffer}).
+ * The posts on some pages that the list renders, and their authors with
+ * avatars safe to show.
  */
 export type PrependOffer = {
-  /** The keys of the offered rows. */
-  keys: string[]
   /**
    * How many posts are offered: one per feed item, as a reply's thread
    * context isn't a new post of its own.
    */
   count: number
-  /**
-   * Up to {@link FACE_LIMIT} of the posts' authors, distinct and newest
-   * first, leaving out any whose avatar isn't safe to show.
-   */
+  /** The posts' authors, distinct and newest first. */
   authors: NewPostsPillAuthor[]
 }
 
@@ -60,82 +55,47 @@ function faceOf(slice: FeedPostSlice): NewPostsPillAuthor | undefined {
 }
 
 /**
- * What a staged `page` offers, as the list renders it: the post rows from that
- * page, which are the rows above where the reader was. Rows the list leaves
- * out, such as muted authors', aren't offered. Neither are saved-feed samples,
- * as `page` is the page without them, nor the gap row below it. `undefined`
- * when none of its posts render.
+ * Counts the posts from `pages` that the list renders, and lists their
+ * authors. Rows the list leaves out, such as muted authors', don't count; nor
+ * do saved-feed samples, which `pages` lack, or gap rows.
  */
 export function getPrependOffer(
   rows: readonly Row[],
-  page: Page,
-): PrependOffer | undefined {
-  const slices = new Set(page.slices)
+  pages: readonly Page[],
+): PrependOffer {
+  const slices = new Set(pages.flatMap(page => page.slices))
   const counted = new Set<FeedPostSlice>()
-  const keys: string[] = []
   const authors: NewPostsPillAuthor[] = []
   for (const row of rows) {
-    if (row.type !== 'sliceItem' || !row.slice || !slices.has(row.slice)) {
+    if (
+      row.type !== 'sliceItem' ||
+      !row.slice ||
+      !slices.has(row.slice) ||
+      counted.has(row.slice)
+    ) {
       continue
     }
-    keys.push(row.key)
-    if (!counted.has(row.slice)) {
-      counted.add(row.slice)
-      const face = faceOf(row.slice)
-      if (
-        face &&
-        authors.length < FACE_LIMIT &&
-        !authors.some(author => author.did === face.did)
-      ) {
-        authors.push(face)
-      }
-    }
-  }
-  if (!counted.size) {
-    return undefined
-  }
-  return {keys, count: counted.size, authors}
-}
-
-/**
- * The parts of `offer` that follow the rows as they are now: the topmost of
- * its rows that still renders, `undefined` once none do, and the faces whose
- * posts still render with an avatar that's safe to show, as a deletion, a mute
- * or a block can take a post away and a label can make an avatar unsafe.
- */
-export function livePrependOffer(
-  offer: PrependOffer,
-  rows: readonly Row[],
-): {topKey: string | undefined; authors: NewPostsPillAuthor[]} {
-  const keys = new Set(offer.keys)
-  const faces = new Set<string>()
-  let topKey: string | undefined
-  for (const row of rows) {
-    if (row.type !== 'sliceItem' || !row.slice || !keys.has(row.key)) {
-      continue
-    }
-    topKey ??= row.key
+    counted.add(row.slice)
     const face = faceOf(row.slice)
-    if (face) {
-      faces.add(face.did)
+    if (face && !authors.some(author => author.did === face.did)) {
+      authors.push(face)
     }
   }
-  return {
-    topKey,
-    authors: offer.authors.filter(author => faces.has(author.did)),
-  }
+  return {count: counted.size, authors}
 }
 
 /**
- * The new posts pill for the page a view's prepends staged above the reader
- * (see `usePostFeedPrepend`). Once that page is offered and its rows render,
- * it takes a snapshot of them as its offer (see {@link getPrependOffer}).
+ * The new posts pill for posts a view's prepends staged above the reader (see
+ * `usePostFeedPrepend`). It outlives staging: reading a staged page unstages
+ * it, but the pill stays up until `dismiss`, which the caller calls when the
+ * reader reaches the true top.
  *
- * The pill shows while the view is active, the page is staged and offered,
- * and some of its rows still render, which includes a view that prepended in
- * the background becoming active. A page another replaces keeps the offer, so
- * the pill stays, with the new page's posts. It hides once the reader reaches
- * the posts, which reads the page.
+ * An offered page (see `StagedPage`) puts it up once its rows render. While
+ * it's up, every later staged page joins it, offered or not. Pages are matched
+ * by `since`, so a replacement takes its predecessor's place. It counts its
+ * posts that still render; its faces are taken as each page joins and only
+ * drop out after that. It comes down on `dismiss`, on press, and once none of
+ * its posts render, and shows only while the view is active.
  *
  * Pressing it scrolls up to the top, without fetching. Already at the top,
  * where there's no scroll to report reaching it, `onRead` reads the page.
@@ -167,34 +127,66 @@ export function usePrependPill({
   /** Reads the staged page. */
   onRead: () => void
 }) {
-  /** The offer of the last staged page offered, by its `fetchedAt`. */
-  const [snapshot, setSnapshot] = useState<{
-    fetchedAt: number
-    offer: PrependOffer | undefined
-  }>()
+  const [{takenAt, offer}, setPill] = useState<{
+    /**
+     * The last staged page the pill took in, by `fetchedAt`. Once dismissed, an
+     * offer of the same page doesn't put it back up: at most once per page.
+     */
+    takenAt?: number
+    /** Set while it's up: the `since` of each of its pages, and its faces. */
+    offer?: {sinces: string[]; authors: NewPostsPillAuthor[]}
+  }>({})
 
   const top = pages?.[0]
+  // A page's rows render after it commits, which may be after it's staged.
   const page = staged && top?.fetchedAt === staged.fetchedAt ? top : undefined
-  // A page's rows render after it commits, which may be after it's offered.
-  if (
+  const takesIn =
     enabled &&
-    page &&
-    staged?.offered &&
-    snapshot?.fetchedAt !== page.fetchedAt
-  ) {
-    setSnapshot({fetchedAt: page.fetchedAt, offer: getPrependOffer(rows, page)})
+    page !== undefined &&
+    page.fetchedAt !== takenAt &&
+    (!!staged?.offered || offer !== undefined)
+  const sinces =
+    takesIn && page.since !== undefined && !offer?.sinces.includes(page.since)
+      ? [...(offer?.sinces ?? []), page.since]
+      : (offer?.sinces ?? [])
+  // Down with nothing to take in, as on other feeds, it skips the rows.
+  const live =
+    takesIn || offer
+      ? getPrependOffer(
+          rows,
+          pages?.filter(
+            ({since}) => since !== undefined && sinces.includes(since),
+          ) ?? [],
+        )
+      : NO_OFFER
+  if (takesIn) {
+    setPill({
+      takenAt: page.fetchedAt,
+      offer: live.count
+        ? {sinces, authors: live.authors.slice(0, FACE_LIMIT)}
+        : undefined,
+    })
+  } else if (offer && !live.count) {
+    // None of its posts render any more, as after a refresh.
+    setPill({takenAt})
   }
-  const offer =
-    page && snapshot?.fetchedAt === page.fetchedAt ? snapshot.offer : undefined
-  const live = offer && livePrependOffer(offer, rows)
+
+  const dismiss = () => {
+    setPill(pill => (pill.offer ? {takenAt: pill.takenAt} : pill))
+  }
 
   return {
-    visible:
-      enabled && isActive && !!staged?.offered && live?.topKey !== undefined,
-    // The last offer's, so the pill keeps it as it hides.
-    count: snapshot?.offer?.count ?? 0,
-    authors: live?.authors ?? [],
+    visible: enabled && isActive && offer !== undefined && live.count > 0,
+    // Hits 0 as it hides, which NewPostsPill covers by keeping what it showed.
+    count: live.count,
+    authors:
+      offer?.authors.filter(author =>
+        live.authors.some(face => face.did === author.did),
+      ) ?? [],
+    /** Takes the pill down, as when the reader reaches the true top. */
+    dismiss,
     onPress: () => {
+      dismiss()
       if (offsetY.get() <= SETTLE_AT_TOP_LIMIT) {
         onRead()
       }
