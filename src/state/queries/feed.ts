@@ -377,8 +377,9 @@ export function usePopularFeedsSearch({
   enabled?: boolean
 }) {
   const client = useAppviewClient()
+  const {hasSession} = useSession()
   const moderationOpts = useModerationOpts()
-  const enabledInner = enabled ?? Boolean(moderationOpts)
+  const enabledInner = (enabled ?? true) && Boolean(moderationOpts)
 
   return useInfiniteQuery({
     enabled: enabledInner,
@@ -396,7 +397,7 @@ export function usePopularFeedsSearch({
       return data
     },
     initialPageParam: undefined as string | undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
+    getNextPageParam: lastPage => (hasSession ? lastPage.cursor : undefined),
     placeholderData: keepPreviousData,
     select(data) {
       return {

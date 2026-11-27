@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAppviewClient} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {app} from '#/lexicons'
 import {
@@ -46,6 +46,7 @@ export function useSearchPostsV2Query({
   filters?: SearchFilters
 }) {
   const client = useAppviewClient()
+  const {hasSession} = useSession()
   const moderationOpts = useModerationOpts()
   const selectArgs = useMemo(
     () => ({
@@ -101,8 +102,8 @@ export function useSearchPostsV2Query({
       })
     },
     initialPageParam: undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
-    enabled: enabled ?? !!moderationOpts,
+    getNextPageParam: lastPage => (hasSession ? lastPage.cursor : undefined),
+    enabled: (enabled ?? true) && !!moderationOpts,
     select: useCallback(
       (data: InfiniteData<app.bsky.feed.searchPostsV2.$OutputBody>) => {
         const {moderationOpts, isSearchingSpecificUser} = selectArgs

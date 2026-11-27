@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAppviewClient} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 
 export const RQKEY_ROOT = 'starter-pack-search'
@@ -28,6 +28,7 @@ export function useStarterPackSearch({
   limit?: number
 }) {
   const client = useAppviewClient()
+  const {hasSession} = useSession()
   return useInfiniteQuery<
     app.bsky.graph.searchStarterPacksV2.$OutputBody,
     Error,
@@ -46,7 +47,7 @@ export function useStarterPackSearch({
     },
     enabled: enabled && !!query,
     initialPageParam: undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
+    getNextPageParam: lastPage => (hasSession ? lastPage.cursor : undefined),
     placeholderData: maintainData ? keepPreviousData : undefined,
     select,
   })
