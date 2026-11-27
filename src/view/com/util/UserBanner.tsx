@@ -33,7 +33,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {IS_NATIVE} from '#/env'
 
 export function UserBanner({
   type,
@@ -218,8 +218,7 @@ export function UserBanner({
         aspectRatio={3}
       />
     </>
-  ) : banner &&
-    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
+  ) : banner ? (
     <Image
       style={[styles.bannerImage, t.atoms.bg_contrast_25]}
       contentFit="cover"
