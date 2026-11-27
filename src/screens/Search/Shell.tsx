@@ -21,6 +21,7 @@ import Animated, {
 import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
+  StackActions,
   useFocusEffect,
   useIsFocused,
   useNavigation,
@@ -37,6 +38,7 @@ import {
   type NavigationProp,
   type SearchParams,
 } from '#/lib/routes/types'
+import {atUriToHref} from '#/lib/strings/url-helpers'
 import {listenSoftReset} from '#/state/events'
 import {
   unstableCacheProfileView,
@@ -73,6 +75,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {router} from '#/routes'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
@@ -311,6 +314,18 @@ export function SearchScreenShell({
     (item: string, itemFilters: SearchFilters = filters) => {
       scrollToTopWeb()
       setShowAutocomplete(false)
+
+      /*
+       * AT-URIs aren't useful as search terms, so open the record they point
+       * to instead. This lets developers paste an `at://` link and view it.
+       */
+      const atUriHref = atUriToHref(item.trim())
+      if (atUriHref) {
+        textInput.current?.blur()
+        navigation.dispatch(StackActions.push(...router.matchPath(atUriHref)))
+        return
+      }
+
       updateSearchHistory(item, itemFilters)
 
       if (IS_WEB) {
