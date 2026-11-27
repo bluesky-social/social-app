@@ -73,15 +73,19 @@ describe('nextSeenAt', () => {
 describe('getMarkReadAt', () => {
   const WINDOW_START = REQUESTED_AT - MARK_READ_SAFETY_WINDOW_MS
 
-  it('marks up to the newest notification All loaded, not the request', () => {
-    // Anything between the two may not have reached the feed yet
+  it('marks just past the newest notification All loaded, not up to the request', () => {
+    /*
+     * Anything between the two may not have reached the feed yet. The server
+     * only counts what's strictly older than seenAt as seen, so marking up to
+     * newestAt exactly would leave the newest notification unread.
+     */
     const newestAt = REQUESTED_AT - 5000
-    expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt))
+    expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt + 1))
   })
 
-  it('marks up to the newest notification even past the request, e.g. when the server clock is ahead', () => {
+  it('marks just past the newest notification even past the request, e.g. when the server clock is ahead', () => {
     const newestAt = REQUESTED_AT + 5000
-    expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt))
+    expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt + 1))
   })
 
   it('marks up to the safety window when the newest notification is older', () => {

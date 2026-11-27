@@ -49,8 +49,11 @@ export const MARK_READ_SAFETY_WINDOW_MS = 10_000
  * How far a fresh load marks notifications as seen on the server, if at all.
  *
  * Only "All" marks notifications as seen, as the other tabs leave things out.
- * It marks up to the newest notification the load showed. The server ignores a
- * `seenAt` older than the one it has, so there's no need to check for that.
+ * It marks just past the newest notification the load showed, as the server
+ * only counts a notification as seen if it's strictly older than `seenAt`.
+ * Marking up to it exactly would leave it unread, bringing the badge back on
+ * the next unread check. The server ignores a `seenAt` older than the one it
+ * has, so there's no need to check for that.
  *
  * It doesn't mark up to the time of the request, as anything from just before
  * it may not have reached the feed yet, and would be marked as seen before
@@ -64,7 +67,7 @@ export function getMarkReadAt(load: FeedLoad): Date | undefined {
   if (load.feed !== 'all') return
   return new Date(
     Math.max(
-      load.newestAt ?? -Infinity,
+      (load.newestAt ?? -Infinity) + 1,
       load.requestedAt - MARK_READ_SAFETY_WINDOW_MS,
     ),
   )

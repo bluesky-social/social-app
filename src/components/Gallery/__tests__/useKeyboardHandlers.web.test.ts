@@ -161,4 +161,18 @@ describe('useKeyboardHandlers (web)', () => {
     dom.flushFrames()
     expect(onSettle).not.toHaveBeenCalled()
   })
+
+  it('cancels a pending move for a dot reveal and allows subsequent arrow keys', () => {
+    const {result, currentIndexRef} = setup()
+    press('ArrowRight', button)
+    result.current()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+
+    currentIndexRef.current = 1
+    press('ArrowRight', button)
+    dom.flushFrames()
+    expect(onSettle.mock.calls).toEqual([[2]])
+  })
 })

@@ -6,6 +6,7 @@ import {
   isPossiblyAUrl,
   isTrustedUrl,
   linkRequiresWarning,
+  parsePostAtUri,
   splitApexDomain,
 } from '../../../src/lib/strings/url-helpers'
 import {router} from '../../../src/routes'
@@ -307,5 +308,33 @@ describe('atUriToHref', () => {
     ],
   ])('routes %p to the %p screen', (input, screen, params) => {
     expect(router.matchPath(atUriToHref(input)!)).toEqual([screen, params])
+  })
+})
+
+describe('parsePostAtUri', () => {
+  type Case = [string | null | undefined, string | undefined]
+
+  const cases: Case[] = [
+    [
+      'at://did:plc:abc123/app.bsky.feed.post/3kabc',
+      'at://did:plc:abc123/app.bsky.feed.post/3kabc',
+    ],
+    // Handle authorities are kept for the post fetch to resolve
+    [
+      'at://alice.bsky.social/app.bsky.feed.post/3kabc',
+      'at://alice.bsky.social/app.bsky.feed.post/3kabc',
+    ],
+    [null, undefined],
+    [undefined, undefined],
+    ['', undefined],
+    ['at://did:plc:abc123', undefined],
+    ['at://did:plc:abc123/app.bsky.feed.post', undefined],
+    ['at://did:plc:abc123/app.bsky.feed.generator/hot', undefined],
+    ['https://bsky.app/profile/alice/post/3kabc', undefined],
+    ['not a uri', undefined],
+  ]
+
+  it.each(cases)('given input %p, returns %p', (input, expected) => {
+    expect(parsePostAtUri(input)).toEqual(expected)
   })
 })

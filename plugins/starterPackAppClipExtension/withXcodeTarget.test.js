@@ -41,7 +41,11 @@ describe('App Clip device family', () => {
       addBuildPhase: jest.fn(),
       addPbxGroup: jest.fn(() => ({uuid: 'APP_CLIP_GROUP'})),
       addFile: jest.fn(),
-      pbxXCBuildConfigurationSection: () => configurations,
+      pbxXCBuildConfigurationSection: () => ({
+        ...configurations,
+        CLIP_DEBUG_comment: 'Debug',
+        CLIP_RELEASE_comment: 'Release',
+      }),
       addTargetAttribute: jest.fn(),
       addTargetDependency: jest.fn(),
       getFirstTarget: () => ({uuid: 'APP_TARGET'}),
@@ -57,6 +61,19 @@ describe('App Clip device family', () => {
 
     IOSConfig.DeviceFamily.setDeviceFamily(config, {project})
     withXcodeTarget(config, {targetName: 'BlueskyClip'})
+
+    expect(project.addBuildPhase).toHaveBeenCalledWith(
+      [
+        'BlueskyClip/AppDelegate.swift',
+        'BlueskyClip/SceneDelegate.swift',
+        'BlueskyClip/ViewController.swift',
+      ],
+      'PBXSourcesBuildPhase',
+      'Sources',
+      'APP_CLIP_TARGET',
+      'application',
+      '"AppClips"',
+    )
 
     for (const buildType of ['DEBUG', 'RELEASE']) {
       const parent = configurations[`APP_${buildType}`].buildSettings

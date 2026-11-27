@@ -3,6 +3,8 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
+import {useAtmosphereContentContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
@@ -12,6 +14,7 @@ import {
   getContentHeight,
 } from '#/components/images/Gallery/utils'
 import {Link} from '#/components/Link'
+import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 
 /** Feeds show a single image no taller than 1:2. */
@@ -30,11 +33,23 @@ export function PhotoDialogGallery({
   const {t: l} = useLingui()
   const t = useTheme()
   const {gtPhone, gtMobile} = useBreakpoints()
+  const ax = useAnalytics()
+  const content = useAtmosphereContentContext()
+  const sendFeedback = useAtmosphereFeedback()
   const images = getGalleryImages(photo)
 
   if (images.length === 0) return null
 
   const total = images.length
+  const logImagePress = (imageIndex: number) => {
+    sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+    if (!content) return
+    ax.metric('atmosphere:photo:externalPressed', {
+      ...content,
+      source: 'image',
+      imageIndex,
+    })
+  }
   const label = (image: (typeof images)[number], index: number) => {
     const position = index + 1
     return (
@@ -53,8 +68,10 @@ export function PhotoDialogGallery({
     return (
       <Link
         to={photo.uri}
+        preferNativeApp
         label={image.alt || photo.title}
         accessibilityHint=""
+        onPress={() => logImagePress(0)}
         style={[a.w_full]}>
         <ConstrainedImage
           aspectRatio={Math.max(aspectRatio, MIN_SINGLE_ASPECT_RATIO)}>
@@ -78,7 +95,16 @@ export function PhotoDialogGallery({
         comment:
           'Accessibility label for a scrollable row of photos. The number is how many photos are in it.',
       })}
-      footer={<Gallery.PageDots />}>
+      footer={<Gallery.PageDots />}
+      onIndexChange={(toIndex, fromIndex) => {
+        if (!content) return
+        ax.metric('atmosphere:photo:imageChanged', {
+          ...content,
+          fromIndex,
+          toIndex,
+          imageCount: total,
+        })
+      }}>
       {images.map((image, index) => {
         const {aspectRatio, width} = computeDims({
           height,
@@ -89,8 +115,10 @@ export function PhotoDialogGallery({
             {({focusRef, tabIndex, onFocus}) => (
               <Link
                 to={photo.uri}
+                preferNativeApp
                 label={label(image, index)}
                 accessibilityHint=""
+                onPress={() => logImagePress(index)}
                 ref={focusRef}
                 tabIndex={tabIndex}
                 onFocus={onFocus}

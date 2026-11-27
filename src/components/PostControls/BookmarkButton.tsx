@@ -4,7 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
@@ -16,6 +15,7 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {type BookmarkEntryPoint} from '#/analytics/metrics/types'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
@@ -55,7 +55,8 @@ export const BookmarkButton = memo(function BookmarkButton({
 
 /**
  * Saves a post to the viewer's saved posts, or removes it, with the bookmark
- * button's metrics and toasts. Removing offers an undo.
+ * button's metrics and toasts. Removing offers an undo. Inside a feed item,
+ * saves and unsaves are also sent to the feed as feed feedback.
  */
 export function usePostBookmark({
   post,
@@ -71,7 +72,7 @@ export function usePostBookmark({
   const {t: l} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
-  const {feedDescriptor} = useFeedFeedbackContext()
+  const {feedDescriptor, sendUnspecced} = useFeedItemFeedback()
 
   const isBookmarked = !!post.viewer?.bookmarked
 
@@ -94,6 +95,7 @@ export function usePostBookmark({
         entryPoint,
         feedDescriptor,
       })
+      sendUnspecced({type: 'save'})
       return true
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
@@ -118,6 +120,7 @@ export function usePostBookmark({
         entryPoint,
         feedDescriptor,
       })
+      sendUnspecced({type: 'unsave'})
 
       toast.show(
         <toast.Outer>

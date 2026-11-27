@@ -31,6 +31,7 @@ import {useAnalytics} from '#/analytics'
 import {com, tools} from '#/lexicons'
 import {ContentBlock} from './components/ContentBlock'
 import {ReportActionSummary} from './components/ReportActionSummary'
+import {ReportedSubjectStatus} from './components/ReportedSubjectStatus'
 import {ReportSubjectPreview} from './components/ReportSubjectPreview'
 
 export function ModerationInboxReportDetailsScreen({
@@ -188,7 +189,8 @@ function ReportDetails({
       <ReportActionSummary report={report} resolution={resolution} />
 
       <ContentBlock header={l`What you reported`}>
-        <ReportSubjectPreview report={report} />
+        <ReportSubjectPreview report={report} allowReportRecordSnapshot />
+        <ReportedSubjectStatus report={report} />
 
         <View style={[a.gap_2xs]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_high]}>

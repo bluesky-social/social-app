@@ -514,7 +514,7 @@ function ProfileScreenLoaded({
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={repliesSectionRef}
-                feed={`author|${profile.did}|posts_with_replies`}
+                feed={`author|${profile.did}|posts_and_replies_only`}
                 headerHeight={headerHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}

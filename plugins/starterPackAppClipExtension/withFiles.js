@@ -1,8 +1,13 @@
+/* eslint-disable import/no-nodejs-modules -- Expo config plugins run in Node. */
 const {withXcodeProject} = require('expo/config-plugins')
 const path = require('path')
 const fs = require('fs')
 
-const FILES = ['AppDelegate.swift', 'ViewController.swift']
+const FILES = [
+  'AppDelegate.swift',
+  'SceneDelegate.swift',
+  'ViewController.swift',
+]
 
 const withFiles = (config, {targetName}) => {
   return withXcodeProject(config, config => {

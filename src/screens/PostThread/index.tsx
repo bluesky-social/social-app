@@ -15,11 +15,6 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
-import {
-  FeedFeedbackProvider,
-  type StateContext as FeedFeedbackStateContext,
-  useFeedFeedback,
-} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {
   PostThreadContextProvider,
@@ -29,7 +24,6 @@ import {
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
 import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
@@ -57,24 +51,41 @@ import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
+import {
+  FeedFeedbackProvider,
+  FeedItemProvider,
+  useFeedFeedback,
+} from '#/features/feedFeedback'
+import {
+  feedItemFromPostSource,
+  usePostSource,
+} from '#/features/feedFeedback/postSource'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
-const analyticsOnlyOnItemSeen: FeedFeedbackStateContext['onItemSeen'] = () => {}
-const analyticsOnlySendInteraction: FeedFeedbackStateContext['sendInteraction'] =
-  () => {}
 
 export function PostThread({uri}: {uri: string}) {
   const ax = useAnalytics()
+  const showViewCount = ax.features.enabled(ax.features.PostViewCountsEnable)
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
-  const anchorPostSource = useUnstablePostSource(uri)
+  const anchorPostSource = usePostSource(uri)
+  /*
+   * Only the anchor is the feed item the user tapped, so only it reports feed
+   * feedback. Parents and replies get the feed for analytics but no item.
+   */
+  const anchorFeedItem = useMemo(
+    () =>
+      anchorPostSource ? feedItemFromPostSource(anchorPostSource) : undefined,
+    [anchorPostSource],
+  )
   const feedFeedback = useFeedFeedback(
     anchorPostSource?.feedSourceInfo,
     hasSession,
+    'thread',
   )
 
   /*
@@ -147,12 +158,12 @@ export function PostThread({uri}: {uri: string}) {
       logContext: 'PostReply',
     })
 
-    if (anchorPostSource) {
+    if (anchorFeedItem) {
       feedFeedback.sendInteraction({
-        item: post.uri,
+        item: anchorFeedItem.uri,
         event: 'app.bsky.feed.defs#interactionReply',
-        feedContext: anchorPostSource.post.feedContext,
-        reqId: anchorPostSource.post.reqId,
+        feedContext: anchorFeedItem.feedContext,
+        reqId: anchorFeedItem.reqId,
       })
     }
   })
@@ -467,12 +478,14 @@ export function PostThread({uri}: {uri: string}) {
                 ref={anchorRef}
                 onLayout={() => setDeferParents(false)}
               />
-              <ThreadItemAnchor
-                item={item}
-                threadgateRecord={thread.data.threadgate?.record ?? undefined}
-                onPostSuccess={optimisticOnPostReply}
-                postSource={anchorPostSource}
-              />
+              <FeedItemProvider value={anchorFeedItem}>
+                <ThreadItemAnchor
+                  item={item}
+                  showViewCount={showViewCount}
+                  threadgateRecord={thread.data.threadgate?.record ?? undefined}
+                  onPostSuccess={optimisticOnPostReply}
+                />
+              </FeedItemProvider>
             </View>
           )
         } else {
@@ -549,7 +562,8 @@ export function PostThread({uri}: {uri: string}) {
       optimisticOnPostReply,
       onReplyToAnchor,
       gtMobile,
-      anchorPostSource,
+      anchorFeedItem,
+      showViewCount,
     ],
   )
 
@@ -580,8 +594,7 @@ export function PostThread({uri}: {uri: string}) {
           onRetry={thread.actions.refetch}
         />
       ) : (
-        <AnalyticsOnlyFeedFeedbackProvider
-          feedDescriptor={feedFeedback.feedDescriptor}>
+        <FeedFeedbackProvider value={feedFeedback}>
           <List
             ref={listRef}
             data={deferredSlices}
@@ -606,6 +619,12 @@ export function PostThread({uri}: {uri: string}) {
              * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
              */
             maintainVisibleContentPosition={{minIndexForVisible: 0}}
+            /*
+             * The web anchor positioning in onContentSizeChangeWebOnly reads
+             * the parents' layout as they're prepended, so the thread renders
+             * every row on web.
+             */
+            disableVirtualization={IS_WEB}
             desktopFixedHeight
             sideBorders={false}
             ListFooterComponent={
@@ -644,7 +663,7 @@ export function PostThread({uri}: {uri: string}) {
              */
             updateCellsBatchingPeriod={100}
           />
-        </AnalyticsOnlyFeedFeedbackProvider>
+        </FeedFeedbackProvider>
       )}
 
       {!gtMobile && canReply && hasSession && (
@@ -652,36 +671,6 @@ export function PostThread({uri}: {uri: string}) {
       )}
     </PostThreadContextProvider>
   )
-}
-
-function AnalyticsOnlyFeedFeedbackProvider({
-  children,
-  feedDescriptor,
-}: React.PropsWithChildren<{
-  feedDescriptor: FeedFeedbackStateContext['feedDescriptor']
-}>) {
-  /*
-   * Non-anchor posts (parents and replies) are not the post the user tapped
-   * from a feed, so they should not report feed interactions. But they should
-   * still carry the originating feedDescriptor for analytics, so events like
-   * post:clickQuotePost can be attributed to the feed the thread was opened
-   * from. This inert context value provides feedDescriptor while keeping
-   * interaction reporting disabled (enabled: false makes sendInteraction and
-   * onItemSeen no-ops). The anchor renders its own full provider that nests
-   * inside and overrides this for its subtree.
-   */
-  const value = useMemo<FeedFeedbackStateContext>(
-    () => ({
-      enabled: false,
-      onItemSeen: analyticsOnlyOnItemSeen,
-      sendInteraction: analyticsOnlySendInteraction,
-      feedDescriptor,
-      feedSourceInfo: undefined,
-    }),
-    [feedDescriptor],
-  )
-
-  return <FeedFeedbackProvider value={value}>{children}</FeedFeedbackProvider>
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {

@@ -8,9 +8,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type tools} from '#/lexicons'
+import {place, site, social, type tools} from '#/lexicons'
 import {getAccountPreview} from '../util/accountData'
 import {AccountSubjectPreview} from './AccountSubjectPreview'
+import {AtmosphereSubjectPreview} from './AtmosphereSubjectPreview'
 import {ChatSubjectPreview} from './ChatSubjectPreview'
 import {FeedSubjectPreview} from './FeedSubjectPreview'
 import {ListSubjectPreview} from './ListSubjectPreview'
@@ -27,10 +28,12 @@ export function ReportSubjectPreview({
   report,
   enforcement,
   allowOwnRecordSnapshot = false,
+  allowReportRecordSnapshot = false,
 }: {
   report: Report
   enforcement?: tools.ozone.inbox.defs.EnforcementView
   allowOwnRecordSnapshot?: boolean
+  allowReportRecordSnapshot?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -75,20 +78,57 @@ export function ReportSubjectPreview({
             uri={uri}
             subjectLabel={subjectLabel}
             allowOwnRecordSnapshot={allowOwnRecordSnapshot}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
           />
         )
         break
       case 'app.bsky.graph.starterpack':
-        preview = <StarterPackSubjectPreview report={report} uri={uri} />
+        preview = (
+          <StarterPackSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.feed.generator':
-        preview = <FeedSubjectPreview report={report} uri={uri} />
+        preview = (
+          <FeedSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.graph.list':
-        preview = <ListSubjectPreview report={report} uri={uri} />
+        preview = (
+          <ListSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.actor.status':
-        preview = <StatusSubjectPreview report={report} uri={uri} />
+        preview = (
+          <StatusSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
+        break
+      case site.standard.document.$type:
+      case site.standard.publication.$type:
+      case place.stream.livestream.$type:
+      case social.grain.gallery.$type:
+        preview = (
+          <AtmosphereSubjectPreview
+            report={report}
+            uri={uri}
+            subjectLabel={subjectLabel}
+          />
+        )
         break
       default:
         preview = (

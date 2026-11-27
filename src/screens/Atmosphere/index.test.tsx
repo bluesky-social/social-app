@@ -31,14 +31,24 @@ jest.mock('#/alf', () => ({
   }),
 }))
 let mockEnabled = true
+const mockMetric = jest.fn()
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({
+    metric: mockMetric,
     features: {
       enabled: () => mockEnabled,
       AtmosphereScreenEnable: 'AtmosphereScreenEnable',
     },
   }),
 }))
+jest.mock('@react-navigation/native', () => {
+  const {useEffect} = jest.requireActual<typeof import('react')>('react')
+  return {
+    // Focused once on mount, like the real one with a stable callback
+    useFocusEffect: (effect: React.EffectCallback) =>
+      useEffect(effect, [effect]),
+  }
+})
 jest.mock('#/view/screens/NotFound', () => {
   const {View} = jest.requireActual('react-native')
   return {NotFoundScreen: () => <View testID="notFoundScreen" />}
@@ -67,6 +77,10 @@ jest.mock('./ActivityTab', () => {
   const {View} = jest.requireActual('react-native')
   return {ActivityTab: () => <View testID="activityTab" />}
 })
+jest.mock('./DiscoverTab', () => {
+  const {View} = jest.requireActual('react-native')
+  return {AtmosphereDiscoverTab: () => <View testID="atmosphereDiscoverTab" />}
+})
 jest.mock('./AppsTab', () => {
   const {View} = jest.requireActual('react-native')
   return {AtmosphereAppsTab: () => <View testID="atmosphereAppsTab" />}
@@ -80,10 +94,14 @@ jest.mock('#/view/com/pager/Pager', () => {
       children,
       initialPage = 0,
       renderTabBar,
+      onTabPressed,
+      onPageSelected,
       testID,
       ref,
     }: React.PropsWithChildren<{
       initialPage?: number
+      onTabPressed?: (index: number) => void
+      onPageSelected?: (index: number) => void
       renderTabBar: (props: {
         selectedPage: number
         onSelect: (index: number) => void
@@ -94,9 +112,16 @@ jest.mock('#/view/com/pager/Pager', () => {
       ref?: React.Ref<{setPage: (index: number) => void}>
     }>) => {
       const [selectedPage, setSelectedPage] = React.useState(initialPage)
-      React.useImperativeHandle(ref, () => ({setPage: setSelectedPage}))
+      const setPage = (index: number) => {
+        setSelectedPage(index)
+        onPageSelected?.(index)
+      }
+      React.useImperativeHandle(ref, () => ({setPage}))
       const pages = React.Children.toArray(children)
-      const onSelect = (index: number) => setSelectedPage(index)
+      const onSelect = (index: number) => {
+        onTabPressed?.(index)
+        setPage(index)
+      }
       return (
         <View testID={testID}>
           {renderTabBar({
@@ -180,6 +205,7 @@ function renderScreen() {
 
 beforeEach(() => {
   mockEnabled = true
+  mockMetric.mockClear()
 })
 
 describe('AtmosphereScreen', () => {
@@ -189,18 +215,23 @@ describe('AtmosphereScreen', () => {
 
     expect(screen.getByTestId('notFoundScreen')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereScreen')).toBeNull()
+    expect(mockMetric).not.toHaveBeenCalled()
   })
 
-  it('defaults to Following and switches between tabs', () => {
+  it('defaults to Discover and switches between tabs', () => {
     const screen = renderScreen()
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Following', 'Explore', 'Apps'])
+    ).toEqual(['Discover', 'Following', 'Explore', 'Apps'])
     expect(
-      screen.getByRole('tab', {name: 'Following'}).props.accessibilityState,
+      screen.getByRole('tab', {name: 'Discover'}).props.accessibilityState,
     ).toEqual({selected: true})
+    expect(screen.getByTestId('atmosphereDiscoverTab')).toBeTruthy()
+
+    fireEvent.press(screen.getByRole('tab', {name: 'Following'}))
     expect(screen.getByTestId('activityTab')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereDiscoverTab')).toBeNull()
 
     fireEvent.press(screen.getByRole('tab', {name: 'Explore'}))
     expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
@@ -212,5 +243,16 @@ describe('AtmosphereScreen', () => {
       screen.getByRole('tab', {name: 'Apps'}).props.accessibilityState,
     ).toEqual({selected: true})
     expect(screen.getByTestId('atmosphereAppsTab')).toBeTruthy()
+
+    expect(
+      mockMetric.mock.calls
+        .filter(([event]) => event === 'atmosphere:tab:displayed')
+        .map(([, payload]) => payload),
+    ).toEqual([
+      {tab: 'discover', reason: 'focus'},
+      {tab: 'following', previousTab: 'discover', reason: 'tap'},
+      {tab: 'explore', previousTab: 'following', reason: 'tap'},
+      {tab: 'apps', previousTab: 'explore', reason: 'seeMoreApps'},
+    ])
   })
 })

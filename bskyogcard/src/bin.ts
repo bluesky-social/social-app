@@ -1,48 +1,53 @@
-import cluster, {type Worker} from 'node:cluster'
+import cluster from 'node:cluster'
 
 import {envInt} from '@atproto/common'
 
+import {CardCluster} from './cluster.js'
 import {CardService, envToCfg, httpLogger, readEnv} from './index.js'
+import {serveWorkerMetrics} from './metrics.js'
+import {installShutdown} from './shutdown.js'
 
 async function main() {
-  const env = readEnv()
-  const cfg = envToCfg(env)
-  const card = await CardService.create(cfg)
-  await card.start()
-  httpLogger.info('card service is running')
-  process.on('SIGTERM', async () => {
-    httpLogger.info('card service is stopping')
-    await card.destroy()
-    httpLogger.info('card service is stopped')
-    if (cluster.isWorker) process.exit(0)
-  })
-}
-
-const workerCount = envInt('CARD_CLUSTER_WORKER_COUNT')
-
-if (workerCount) {
-  if (cluster.isPrimary) {
+  const cfg = envToCfg(readEnv())
+  const workerCount = envInt('CARD_CLUSTER_WORKER_COUNT')
+  if (workerCount && cluster.isPrimary) {
     httpLogger.info(`primary ${process.pid} is running`)
-    const workers = new Set<Worker>()
-    for (let i = 0; i < workerCount; ++i) {
-      workers.add(cluster.fork())
+    const service = new CardCluster(cfg.service.metricsPort, workerCount)
+    try {
+      await service.start()
+    } catch (err) {
+      await service.destroy()
+      throw err
     }
-    let teardown = false
-    cluster.on('exit', worker => {
-      workers.delete(worker)
-      if (!teardown) {
-        workers.add(cluster.fork()) // restart on crash
-      }
-    })
-    process.on('SIGTERM', () => {
-      teardown = true
-      httpLogger.info('disconnecting workers')
-      workers.forEach(w => w.kill('SIGTERM'))
-    })
-  } else {
-    httpLogger.info(`worker ${process.pid} is running`)
-    main()
+    installShutdown(() => service.destroy())
+    return
   }
-} else {
-  main() // non-clustering
+
+  const workerSlot = cluster.isWorker ? envInt('CARD_WORKER_SLOT') : 0
+  const card = await CardService.create(cfg, workerSlot)
+  const stopMetrics = cluster.isWorker
+    ? serveWorkerMetrics(card.registry)
+    : () => {}
+  const shutdown = installShutdown(async () => {
+    stopMetrics()
+    await card.destroy()
+  })
+  card.onFatalError = () => shutdown(1)
+  try {
+    await card.start({serveMetrics: !cluster.isWorker})
+  } catch (err) {
+    stopMetrics()
+    await card.destroy()
+    throw err
+  }
+  httpLogger.info(
+    {worker: workerSlot},
+    `card service ${process.pid} is running`,
+  )
 }
+
+main().catch(err => {
+  httpLogger.error({err}, 'card service startup failed')
+  process.exitCode = 1
+  if (cluster.isWorker) process.exit(1)
+})

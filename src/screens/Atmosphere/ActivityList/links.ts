@@ -9,8 +9,11 @@ export const MAX_ACTIVITY_LIST_URIS = 150
 
 /** Link to the activity list screen, which shows the given records as cards. */
 export function makeActivityListLink(uris: string[]) {
-  const list = uris.slice(0, MAX_ACTIVITY_LIST_URIS).join(',')
-  return `/atmosphere/activity?uris=${encodeURIComponent(list)}`
+  return `/atmosphere/activity?uris=${encodeURIComponent(toList(uris))}`
+}
+
+function toList(uris: string[]) {
+  return uris.slice(0, MAX_ACTIVITY_LIST_URIS).join(',')
 }
 
 /** The URIs from an activity list link, dropping any that aren't valid. */

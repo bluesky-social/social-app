@@ -4,7 +4,13 @@ import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {AtmosphereAppsTab} from '#/screens/Atmosphere/AppsTab'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
+
+const mockMetric = jest.fn()
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
@@ -30,6 +36,10 @@ jest.mock('react-native-reanimated', () => ({
     })[0]
   },
   withTiming: (value: number) => value,
+}))
+
+jest.mock('#/components/KnownFollowers', () => ({
+  shouldShowKnownFollowers: () => false,
 }))
 
 jest.mock('#/screens/Atmosphere/data/useAtmosphereAppsQuery', () => ({
@@ -241,6 +251,41 @@ describe('AtmosphereAppsTab', () => {
     expect(screen.queryByText('Missing app')).toBeNull()
     expect(screen.getAllByText(/ app$/)).toHaveLength(1)
     expect(refetch).not.toHaveBeenCalled()
+  })
+
+  it('logs category changes with their app count', () => {
+    setQuery({data})
+    render(
+      <AtmosphereMetricsScope tab="apps" surface="tab" isActive={false}>
+        <AtmosphereAppsTab />
+      </AtmosphereMetricsScope>,
+    )
+
+    fireEvent.press(screen.getByTestId('pill-all'))
+    fireEvent.press(screen.getByTestId('pill-writing'))
+    fireEvent.press(screen.getByTestId('pill-all'))
+    expect(mockMetric.mock.calls).toEqual([
+      [
+        'atmosphere:apps:categorySelected',
+        {
+          tab: 'apps',
+          surface: 'tab',
+          category: 'writing',
+          previousCategory: 'all',
+          resultCount: 1,
+        },
+      ],
+      [
+        'atmosphere:apps:categorySelected',
+        {
+          tab: 'apps',
+          surface: 'tab',
+          category: 'all',
+          previousCategory: 'writing',
+          resultCount: 10,
+        },
+      ],
+    ])
   })
 
   it('shows only All and populated categories, in order', () => {

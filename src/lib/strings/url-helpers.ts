@@ -319,6 +319,23 @@ export function atUriToHref(uri: string): string | undefined {
   }
 }
 
+/**
+ * Returns the at-uri when it points to a post, otherwise undefined. For
+ * untrusted input like link params.
+ */
+export function parsePostAtUri(
+  uri: string | null | undefined,
+): string | undefined {
+  if (!uri) return
+  try {
+    const urip = new AtUri(uri)
+    if (urip.collection !== 'app.bsky.feed.post' || !urip.rkey) return
+    return urip.toString()
+  } catch {
+    return
+  }
+}
+
 export function postUriToRelativePath(
   uri: string,
   options?: {handle?: string},

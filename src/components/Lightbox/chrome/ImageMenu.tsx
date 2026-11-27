@@ -22,7 +22,7 @@ import {type Props as IconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {Text} from '#/components/Typography'
-import {IS_IPAD} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {CircleChromeButton} from './CircleChromeButton'
 
 type Props = {
@@ -73,9 +73,27 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
     )
   }
 
+  const pendingActionRef = useRef<(() => void) | null>(null)
+
   const runAction = (action: () => void) => {
-    close()
-    action()
+    if (IS_IOS) {
+      /*
+       * Anything presented while this Modal is still up (e.g. the share
+       * sheet) is presented on top of it and gets dismissed along with it,
+       * so wait until the Modal is gone. onDismiss is iOS-only.
+       */
+      pendingActionRef.current = action
+      close()
+    } else {
+      close()
+      action()
+    }
+  }
+
+  const onModalDismiss = () => {
+    const action = pendingActionRef.current
+    pendingActionRef.current = null
+    action?.()
   }
 
   return (
@@ -93,6 +111,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         visible={isMounted}
         animationType="none"
         onRequestClose={close}
+        onDismiss={onModalDismiss}
         supportedOrientations={
           IS_IPAD
             ? [

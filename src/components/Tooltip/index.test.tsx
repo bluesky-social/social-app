@@ -49,10 +49,13 @@ jest.mock('#/state/global-gesture-events', () => ({
     children,
 }))
 
-function Fixture({visible}: {visible: boolean}) {
+function Fixture({visible, maxWidth}: {visible: boolean; maxWidth?: number}) {
   return (
     <Portal.Provider>
-      <Tooltip.Outer visible={visible} onVisibleChange={() => {}}>
+      <Tooltip.Outer
+        visible={visible}
+        maxWidth={maxWidth}
+        onVisibleChange={() => {}}>
         <Tooltip.Target>
           <Text>Target</Text>
         </Tooltip.Target>
@@ -65,14 +68,14 @@ function Fixture({visible}: {visible: boolean}) {
   )
 }
 
-function setup() {
-  const result = render(<Fixture visible={false} />)
+function setup(maxWidth?: number) {
+  const result = render(<Fixture visible={false} maxWidth={maxWidth} />)
   const target = result.UNSAFE_getByType(Tooltip.Target).findByType(View)
   jest
     .spyOn(target.instance as React.ComponentRef<typeof View>, 'measure')
     .mockImplementation(callback => callback(0, 0, 100, 20, 40, 100))
   fireEvent(target, 'layout', {nativeEvent: {layout: {width: 100, height: 20}}})
-  result.rerender(<Fixture visible />)
+  result.rerender(<Fixture visible maxWidth={maxWidth} />)
   expect(result.getByLabelText('Explanation')).toBeTruthy()
   return result
 }
@@ -109,4 +112,12 @@ it('ignores a queued close completion after reopening', () => {
   result.rerender(<Fixture visible />)
   act(() => mockCompletions.forEach(callback => callback()))
   expect(result.getByLabelText('Explanation')).toBeTruthy()
+})
+
+it.each([
+  {maxWidth: undefined, expected: 240},
+  {maxWidth: 272, expected: 272},
+])('uses a bubble width of $expected', ({maxWidth, expected}) => {
+  const result = setup(maxWidth)
+  expect(result.getByLabelText('Explanation')).toHaveStyle({width: expected})
 })

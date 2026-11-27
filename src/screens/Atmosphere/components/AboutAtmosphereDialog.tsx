@@ -34,41 +34,43 @@ export function AboutAtmosphereDialog({
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
-                The Atmosphere is an open ecosystem of apps and integrations
-                that connect to each other via the AT Protocol. Think of this
-                protocol as the social connective layer of the internet you
-                already know and love. In fact, Bluesky is just another
-                Atmosphere app, so you’re already using it!
+                The Atmosphere is an open network of connected apps. Bluesky is
+                one of them, so you’re already part of it!
               </Trans>
             </Text>
           </View>
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
-              In the Atmosphere, a single login grants you access to hundreds of
-              apps and services, and allows you to transfer your audience and
-              data between apps as you see fit. No more being locked into a
-              single platform because your friends are there.
+              You can use your Bluesky account to explore other Atmosphere apps
+              for blogging, photos, livestreams, and more. You don't have to
+              start over with a new account every time you try something new.
             </Trans>
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
-              Anything can be built on the AT Protocol, and any app can
-              integrate parts of it to enhance the experience for their users.
-              On this page you’ll find articles, photos, apps and more. They’re
-              all part of the Atmosphere, and so are you!
+              These apps are built on the AT Protocol, a shared technology that
+              lets them work together. Instead of keeping your identity,
+              connections, and content locked inside one platform, the
+              Atmosphere gives you choice in where and how you connect.
+            </Trans>
+          </Text>
+          <Text style={[a.text_md, a.leading_snug]}>
+            <Trans>
+              On this screen, you can discover apps, explore what people are
+              making, and keep up with people you follow.
             </Trans>
           </Text>
           <Text emoji style={[a.text_md, a.leading_snug]}>
             <Trans>Welcome to the social internet 😀</Trans>
           </Text>
           <Button
-            label={l`Okay`}
+            label={l`Got it`}
             color="primary"
             size="large"
             testID="aboutAtmosphereDialogOkay"
             onPress={() => control.close()}>
             <ButtonText>
-              <Trans>Okay</Trans>
+              <Trans>Got it</Trans>
             </ButtonText>
           </Button>
         </View>

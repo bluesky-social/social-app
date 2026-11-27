@@ -17,6 +17,9 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {canShowBskyRecordSnapshot} from './bskyRecordSnapshot'
+import {BskyRecordSnapshotPreview} from './BskyRecordSnapshotPreview'
+import {postCidMatch} from './postCidMatch'
 
 type Report = Pick<
   tools.ozone.inbox.getReport.$OutputBody['report'],
@@ -29,33 +32,39 @@ export function PostSubjectPreview({
   uri,
   subjectLabel,
   allowOwnRecordSnapshot = false,
+  allowReportRecordSnapshot = false,
 }: {
   report: Report
   enforcement?: tools.ozone.inbox.defs.EnforcementView
   uri: AtUri
   subjectLabel: string
   allowOwnRecordSnapshot?: boolean
+  allowReportRecordSnapshot?: boolean
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const {currentAccount, hasSession} = useSession()
   const postQuery = usePostQuery(uri.toString())
-  // Do not present an edited post as the content that was reported.
-  const post =
+  const cidMatch =
     postQuery.data &&
     'cid' in report.subject &&
-    report.subject.cid === postQuery.data.cid
-      ? postQuery.data
-      : undefined
-  const record = bsky.matches(app.bsky.feed.post, report.record)
-    ? report.record
-    : post && bsky.matches(app.bsky.feed.post, post.record)
+    postCidMatch(postQuery.data, report.subject.cid)
+  const post = cidMatch ? postQuery.data : undefined
+  // A blob match identifies the current media, not the original post text.
+  const record =
+    cidMatch === 'embed' &&
+    post &&
+    bsky.matches(app.bsky.feed.post, post.record, {strict: false})
       ? post.record
-      : undefined
+      : bsky.matches(app.bsky.feed.post, report.record)
+        ? report.record
+        : post && bsky.matches(app.bsky.feed.post, post.record, {strict: false})
+          ? post.record
+          : undefined
   /*
-   * Ozone can return the owner's removed record even when appview cannot.
-   * Report previews still require a live, moderated post with the same CID.
+   * Ozone can return the owner's removed record even when AppView cannot.
+   * Reported records use the separate text-only fallback below.
    */
   const canUseSnapshot =
     allowOwnRecordSnapshot &&
@@ -96,6 +105,27 @@ export function PostSubjectPreview({
     </Text>
   ) : null
 
+  if (
+    allowReportRecordSnapshot &&
+    !isLoading &&
+    !post &&
+    canShowBskyRecordSnapshot(uri, report)
+  ) {
+    return (
+      <BskyRecordSnapshotPreview
+        report={report}
+        uri={uri}
+        subjectLabel={subjectLabel}
+        liveLabels={postQuery.data?.labels}
+        liveCid={
+          postQuery.data?.uri === uri.toString()
+            ? postQuery.data.cid
+            : undefined
+        }
+      />
+    )
+  }
+
   return (
     <View testID="moderationInboxPostPreview" style={[a.gap_sm]}>
       <Text emoji style={[a.text_md, a.font_semi_bold]}>
@@ -117,6 +147,11 @@ export function PostSubjectPreview({
           ) : (
             text
           )}
+          {cidMatch === 'embed' ? (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Current version of post</Trans>
+            </Text>
+          ) : null}
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             <Trans>
               Posted{' '}

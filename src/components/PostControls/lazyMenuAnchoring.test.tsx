@@ -101,8 +101,14 @@ jest.mock('#/analytics', () => ({
     },
   }),
 }))
-jest.mock('#/state/feed-feedback', () => ({
+jest.mock('#/features/feedFeedback', () => ({
   useFeedFeedbackContext: () => ({feedDescriptor: undefined}),
+  useFeedItemFeedback: () => ({
+    item: undefined,
+    feedDescriptor: undefined,
+    send: () => {},
+    sendUnspecced: () => {},
+  }),
 }))
 jest.mock('#/lib/routes/links', () => ({makeProfileLink: jest.fn()}))
 jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
@@ -138,8 +144,6 @@ describe('lazy post menu anchoring', () => {
       <PostMenuButton
         testID="post"
         post={post as never}
-        postFeedContext={undefined}
-        postReqId={undefined}
         record={{} as never}
         richText={{} as never}
         timestamp="2026-09-27T00:00:00.000Z"

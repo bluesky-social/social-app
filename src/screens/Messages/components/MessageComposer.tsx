@@ -263,9 +263,7 @@ export function MessageComposer({
                     composerInternalApiRef.current?.insert(emoji.native)
                   }
                   nextFocusRef={() =>
-                    composerInternalApiRef.current?.input
-                      ?.element as unknown as
-                      {focus: () => void} | null | undefined
+                    composerInternalApiRef.current?.input?.element
                   }>
                   <EmojiPicker.Trigger label={l`Open emoji picker`}>
                     {({props, state, control}) => (

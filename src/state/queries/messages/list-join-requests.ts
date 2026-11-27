@@ -32,6 +32,12 @@ export function useListJoinRequestsQuery({
 
     return messagesBus.on(
       event => {
+        if (event.type === 'gap') {
+          void queryClient.invalidateQueries({
+            queryKey: createListJoinRequestsQueryKey({convoId}),
+          })
+          return
+        }
         if (event.type !== 'logs') return
         for (const log of event.logs) {
           if (

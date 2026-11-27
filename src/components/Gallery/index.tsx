@@ -28,6 +28,7 @@ import {GalleryContext} from '#/components/Gallery/context'
 import {type GalleryRef} from '#/components/Gallery/types'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers'
+import {useScrollNavigation} from '#/components/Gallery/useScrollNavigation'
 import {
   getIndexForOffset,
   getMaxOffset,
@@ -99,16 +100,16 @@ export function Root({
   /** Snap native scrolling to item boundaries. Ignored on web. */
   snapToItems?: boolean
   /**
-   * Called when the user navigates to a different item via native swipe,
-   * mouse drag, arrow keys, or Safari horizontal wheel events. Browser touch
-   * and non-Safari wheel scrolling do not report index changes. Not called on
-   * mount, for `scrollIntoView`, when focus
-   * simply lands on an item, or when items are added, removed, or reordered.
+   * Called when the user navigates to a different item: native swipes, and on
+   * web touch scrolling, mouse drags, arrow keys, horizontal wheel or trackpad
+   * scrolling, and page-dot navigation that scrolls to a different navigation
+   * index. Not called on mount, for `scrollIntoView`, when focus simply lands on
+   * an item, or when items are added, removed, or reordered.
    */
   onIndexChange?: (index: number, previousIndex: number) => void
 }) {
   const {t: l} = useLingui()
-  const {screenReaderEnabled} = useA11y()
+  const {screenReaderEnabled, reduceMotionEnabled} = useA11y()
 
   const slides = flattenReactChildren(children).filter(isValidElement)
   const keys = slides.map(slide => String(slide.key))
@@ -327,7 +328,7 @@ export function Root({
     },
   )
 
-  useKeyboardHandlers({
+  const cancelKeyboardNavigation = useKeyboardHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -337,7 +338,7 @@ export function Root({
     resetKey: keysSignature,
   })
 
-  usePointerHandlers({
+  const cancelPointerNavigation = usePointerHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -346,6 +347,34 @@ export function Root({
     itemCount,
     resetKey: keysSignature,
   })
+
+  const stopScrollNavigation = useScrollNavigation({
+    scrollRef,
+    itemWidthsRef,
+    currentIndexRef,
+    itemCount,
+    resetKey: keysSignature,
+    onNavigate: setCurrentIndex,
+  })
+
+  const revealIndex = (index: number) => {
+    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
+    cancelKeyboardNavigation()
+    cancelPointerNavigation()
+    stopScrollNavigation()
+    const current = getScrollNode()?.scrollLeft ?? 0
+    const next = Math.min(
+      getOffsetForIndex(itemWidthsRef.current, index),
+      getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
+    )
+    // Browser zoom can leave an aligned scroll offset a fraction of a pixel away.
+    const isAligned = Math.abs(next - current) < 1
+    /* An immediate scroll also stops an earlier smooth scroll at this offset. */
+    scrollTo({offset: next, animated: !isAligned && !reduceMotionEnabled})
+    if (isAligned) return
+    setCurrentIndex(index)
+    setFocusIndex(index)
+  }
 
   /*
    * Only count scrolls the user is doing. The rest are programmatic, or the
@@ -368,7 +397,7 @@ export function Root({
       scrollOffsetRef.current = offset
       /*
        * Browser touch and trackpad scrolling must update the dots without
-       * changing the existing navigation callback or moving keyboard focus.
+       * moving keyboard focus. useScrollNavigation reports it.
        */
       updatePageForOffset(offset)
       return
@@ -393,7 +422,7 @@ export function Root({
 
   return (
     <GalleryContext.Provider
-      value={{label, itemKeys: keys, activeIndex: pageIndex}}>
+      value={{label, itemKeys: keys, activeIndex: pageIndex, revealIndex}}>
       <View style={a.w_full}>
         <View
           ref={contentRef}

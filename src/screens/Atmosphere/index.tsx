@@ -15,30 +15,45 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
+import {AtmosphereDiscoverTab} from './DiscoverTab'
 import {AtmosphereExploreTab} from './ExploreTab'
+import {AtmosphereMetricsScope} from './metrics/context'
+import {type AtmosphereTab} from './metrics/types'
+import {useTabMetrics} from './metrics/useTabMetrics'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
-/** Matches the Apps position in the sections below. */
-const APPS_TAB_INDEX = 2
+/** In pager order, matching the sections below. */
+const TABS: AtmosphereTab[] = ['discover', 'following', 'explore', 'apps']
+const APPS_TAB_INDEX = TABS.indexOf('apps')
 
 export function AtmosphereScreen({}: Props) {
-  const t = useTheme()
-  const {t: l} = useLingui()
   const ax = useAnalytics()
-  const pagerRef = useRef<PagerRef>(null)
 
   if (!ax.features.enabled(ax.features.AtmosphereScreenEnable)) {
     return <NotFoundScreen />
   }
 
+  return <AtmosphereScreenInner />
+}
+
+function AtmosphereScreenInner() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const pagerRef = useRef<PagerRef>(null)
+  const tabMetrics = useTabMetrics(TABS)
+
   const sections = [
+    {title: l`Discover`, component: <AtmosphereDiscoverTab />},
     {title: l`Following`, component: <ActivityTab />},
     {
       title: l`Explore`,
       component: (
         <AtmosphereExploreTab
-          onPressSeeMoreApps={() => pagerRef.current?.setPage(APPS_TAB_INDEX)}
+          onPressSeeMoreApps={() => {
+            tabMetrics.onSeeMoreApps(APPS_TAB_INDEX)
+            pagerRef.current?.setPage(APPS_TAB_INDEX)
+          }}
         />
       ),
     },
@@ -51,6 +66,8 @@ export function AtmosphereScreen({}: Props) {
         ref={pagerRef}
         testID="atmospherePager"
         initialPage={0}
+        onTabPressed={tabMetrics.onTabPressed}
+        onPageSelected={tabMetrics.onPageSelected}
         renderTabBar={props => (
           <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
             <Layout.Header.Outer noBottomBorder>
@@ -89,9 +106,14 @@ export function AtmosphereScreen({}: Props) {
             />
           </Layout.Center>
         )}>
-        {sections.map(section => (
+        {sections.map((section, index) => (
           <View key={section.title} style={a.flex_1}>
-            {section.component}
+            <AtmosphereMetricsScope
+              tab={TABS[index]}
+              surface="tab"
+              isActive={tabMetrics.isShowing && tabMetrics.page === index}>
+              {section.component}
+            </AtmosphereMetricsScope>
           </View>
         ))}
       </Pager>

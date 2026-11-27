@@ -1,8 +1,22 @@
-import {render, screen} from '@testing-library/react-native'
+import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {PhotoDialogGallery} from '#/screens/Atmosphere/components/PhotoDialog/PhotoDialogGallery'
+import {
+  AtmosphereContentItem,
+  AtmosphereMetricsScope,
+} from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
 
+const mockMetric = jest.fn()
+let mockOnIndexChange: ((index: number, previous: number) => void) | undefined
+
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
     _: (value: {message: string; values?: Record<string, unknown>}) =>
@@ -23,15 +37,20 @@ jest.mock('#/components/Gallery', () => {
     Root: ({
       children,
       footer,
+      onIndexChange,
     }: {
       children: React.ReactNode
       footer: React.ReactNode
-    }) => (
-      <View testID="carousel">
-        {children}
-        {footer}
-      </View>
-    ),
+      onIndexChange?: (index: number, previous: number) => void
+    }) => {
+      mockOnIndexChange = onIndexChange
+      return (
+        <View testID="carousel">
+          {children}
+          {footer}
+        </View>
+      )
+    },
     PageDots: () => <View testID="pageDots" />,
     Item: ({
       children,
@@ -64,25 +83,32 @@ jest.mock('#/components/images/AutoSizedImage', () => {
   }
 })
 jest.mock('#/components/Link', () => {
-  const {View} =
+  const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
     Link: ({
       to,
       label,
+      preferNativeApp,
+      onPress,
       children,
     }: {
       to: string
       label: string
+      preferNativeApp?: boolean
+      onPress?: () => void
       children: React.ReactNode
     }) => (
-      <View
+      <Pressable
         testID="link"
+        accessibilityRole="link"
         accessibilityLabel={label}
         accessibilityHint=""
-        accessibilityValue={{text: to}}>
+        accessibilityState={{selected: Boolean(preferNativeApp)}}
+        accessibilityValue={{text: to}}
+        onPress={onPress}>
         {children}
-      </View>
+      </Pressable>
     ),
   }
 })
@@ -133,6 +159,35 @@ function renderGallery(items: unknown[]) {
   )
 }
 
+const card = {
+  uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/social.grain.gallery/1',
+  collection: 'social.grain.gallery',
+  authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
+  position: 0,
+} as const
+
+function renderInCard(items: unknown[]) {
+  render(
+    <AtmosphereMetricsScope
+      tab="following"
+      surface="photoDialog"
+      isActive={false}>
+      <AtmosphereContentItem item={card}>
+        <PhotoDialogGallery
+          photo={
+            {
+              uri: URI,
+              title: 'Spiral Jetty',
+              description: '',
+              items,
+            } as unknown as app.bsky.embed.external.ViewGallery
+          }
+        />
+      </AtmosphereContentItem>
+    </AtmosphereMetricsScope>,
+  )
+}
+
 describe('a single image', () => {
   it('is shown whole as a link to the gallery, not a carousel', () => {
     renderGallery([image(1, {width: 4, height: 3}, 'Alt text')])
@@ -142,6 +197,7 @@ describe('a single image', () => {
     const link = screen.getByTestId('link')
     expect(link.props.accessibilityLabel).toBe('Alt text')
     expect((link.props.accessibilityValue as {text: string}).text).toBe(URI)
+    expect(link.props.accessibilityState).toEqual({selected: true})
     expect(
       (screen.getByTestId('image').props.accessibilityValue as {text: string})
         .text,
@@ -174,6 +230,7 @@ describe('several images', () => {
     ])
     for (const link of links) {
       expect((link.props.accessibilityValue as {text: string}).text).toBe(URI)
+      expect(link.props.accessibilityState).toEqual({selected: true})
     }
     expect(
       screen
@@ -202,4 +259,37 @@ it('renders nothing without any usable image', () => {
   renderGallery([])
 
   expect(screen.queryByTestId('link')).toBeNull()
+})
+
+describe('metrics', () => {
+  const context = {tab: 'following', surface: 'photoDialog', ...card}
+
+  beforeEach(() => {
+    mockMetric.mockClear()
+  })
+
+  it('logs image changes and image presses', () => {
+    renderInCard([image(1), image(2), image(3)])
+
+    mockOnIndexChange?.(2, 0)
+    fireEvent.press(screen.getAllByTestId('link')[2])
+    expect(mockMetric.mock.calls).toEqual([
+      [
+        'atmosphere:photo:imageChanged',
+        {...context, fromIndex: 0, toIndex: 2, imageCount: 3},
+      ],
+      [
+        'atmosphere:photo:externalPressed',
+        {...context, source: 'image', imageIndex: 2},
+      ],
+    ])
+  })
+
+  it('logs nothing outside an Atmosphere card', () => {
+    renderGallery([image(1), image(2)])
+
+    mockOnIndexChange?.(1, 0)
+    fireEvent.press(screen.getAllByTestId('link')[1])
+    expect(mockMetric).not.toHaveBeenCalled()
+  })
 })
