@@ -17,7 +17,6 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
-import {Message_Stroke2_Corner0_Rounded as ChatIcon} from '#/components/icons/Message'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {type chat} from '#/lexicons'
@@ -58,30 +57,26 @@ function getGridHeight(chatCount: number) {
 }
 
 /**
- * The viewer's most recent chats, to send something to one in a tap. `row` is
- * a single scrolling row; `grid` is the share sheet's taller grid.
+ * The chats `RecentChats` shows for this layout: accepted and unlocked, minus
+ * muted chats and ones with a deleted account. Undefined until they load.
  */
-export function RecentChats({
-  onSelectChat: onSelectChatProp,
+export function useRecentChats({
   layout = 'row',
+  enabled = true,
 }: {
-  /**
-   * Runs once the sheet has closed, with the chat's position among those
-   * shown.
-   */
-  onSelectChat: (conversation: string, position: number) => void
   layout?: 'row' | 'grid'
-}) {
-  const control = useDialogContext()
+  enabled?: boolean
+} = {}) {
   const {currentAccount} = useSession()
   const isGrid = layout === 'grid'
   const {data} = useListConvosQuery({
+    enabled,
     status: 'accepted',
     lockStatus: 'unlocked',
     // A few extra so muted or broken chats don't leave the grid short
     limit: isGrid ? GRID_MAX_CHATS + 6 : undefined,
   })
-  const convos = data?.pages[0]?.convos
+  return data?.pages[0]?.convos
     ?.flatMap(c => {
       const convo = parseConvoView(c, currentAccount?.did)
       const primaryMember = convo?.primaryMember
@@ -96,6 +91,27 @@ export function RecentChats({
       return [{convo, primaryMember}]
     })
     .slice(0, isGrid ? GRID_MAX_CHATS : 10)
+}
+
+/**
+ * The viewer's most recent chats, to send something to one in a tap. `row` is
+ * a single scrolling row; `grid` is the share sheet's taller grid, which
+ * renders nothing once it's loaded empty. The share sheet hides it then.
+ */
+export function RecentChats({
+  onSelectChat: onSelectChatProp,
+  layout = 'row',
+}: {
+  /**
+   * Runs once the sheet has closed, with the chat's position among those
+   * shown.
+   */
+  onSelectChat: (conversation: string, position: number) => void
+  layout?: 'row' | 'grid'
+}) {
+  const control = useDialogContext()
+  const isGrid = layout === 'grid'
+  const convos = useRecentChats({layout})
   const moderationOpts = useModerationOpts()
   /** Shows a line at the top of the grid once chats scroll under it. */
   const [isScrolled, setIsScrolled] = useState(false)
@@ -119,17 +135,18 @@ export function RecentChats({
             isGrid={isGrid}
           />
         ))
-      : // The grid only shows placeholders while loading, not when empty
-        (!isGrid || !convos) &&
-        Array.from({length: isGrid ? GRID_COLUMNS * 3 : 5}, (_, i) => (
+      : Array.from({length: isGrid ? GRID_COLUMNS * 3 : 5}, (_, i) => (
           <ConvoSkeleton key={i} isGrid={isGrid} />
         ))
 
   if (isGrid) {
+    // The share sheet hides the chat section instead of showing an empty grid
+    if (convos?.length === 0) return null
+
     return (
       <View style={[a.relative, {marginHorizontal: SHEET_GUTTER * -1}]}>
         <ScrollView
-          // Full height while loading, and for the empty state
+          // Full height while loading
           style={{
             height:
               convos && convos.length > 0
@@ -159,7 +176,6 @@ export function RecentChats({
             ]}
           />
         )}
-        {convos && convos.length === 0 && <GridNoConvos />}
       </View>
     )
   }
@@ -288,47 +304,6 @@ function ConvoSkeleton({isGrid}: {isGrid: boolean}) {
           a.rounded_xs,
         ]}
       />
-    </View>
-  )
-}
-
-/**
- * Shown in place of the grid when there are no chats yet, centered in the
- * part of the grid that's visible.
- */
-function GridNoConvos() {
-  const t = useTheme()
-
-  return (
-    <View
-      style={[
-        a.absolute,
-        a.justify_center,
-        a.align_center,
-        a.px_2xl,
-        /*
-         * The visible part runs from the search bar (the gap above the grid)
-         * down to the share row, which overlaps the grid's bottom edge.
-         */
-        {
-          top: -tokens.space.xl,
-          left: 0,
-          right: 0,
-          height: GRID_HEIGHT + tokens.space.xl - tokens.space.lg,
-        },
-      ]}>
-      {/* The chat icon from the bottom bar */}
-      <ChatIcon size="2xl" fill={t.atoms.text.color} />
-      <Text
-        style={[
-          a.mt_xs,
-          a.text_sm,
-          a.font_semi_bold,
-          a.text_center,
-          t.atoms.text,
-        ]}>
-        <Trans>No chats yet</Trans>
-      </Text>
     </View>
   )
 }

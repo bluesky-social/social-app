@@ -123,4 +123,12 @@ export type Account = {
    * labeler headers.
    */
   labelers?: string[]
+
+  /**
+   * Whether the share sheet last found any recent chats to show. Read when the
+   * sheet opens, so an account without chats doesn't get a grid of
+   * placeholders that then collapses. Unset until the sheet has loaded chats
+   * once.
+   */
+  shareSheetHasChats?: boolean
 }
