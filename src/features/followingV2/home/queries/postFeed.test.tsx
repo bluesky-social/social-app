@@ -13,8 +13,8 @@ import {
 import {type PersistedClient} from '@tanstack/react-query-persist-client'
 import {act, render, renderHook, waitFor} from '@testing-library/react-native'
 
+import {RETURN_MIN_TIME_AWAY} from '#/lib/appState'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
 import {
   findAllPostsInQueryData,
@@ -23,15 +23,16 @@ import {
   RQKEY_ROOT,
 } from '#/state/queries/post-feed'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
+import {
+  checkFollowing,
+  useFollowingListReports,
+} from '#/features/followingV2/home/anchoredFollowing'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {
   LIST_REST_QUIET_MS,
   useListRest,
 } from '#/features/followingV2/home/useListRest'
-import {
-  RETURN_STALE_AFTER,
-  useNewPostsCheck,
-} from '#/features/followingV2/home/useNewPostsCheck'
+import {useNewPostsCheck} from '#/features/followingV2/home/useNewPostsCheck'
 import {usePrependPill} from '#/features/followingV2/home/usePrependPill'
 import {
   SETTLE_QUIET_MS,
@@ -56,9 +57,9 @@ import {
   type FeedPostSlice,
   findGaps,
   gapBelow,
-  hasUnseenPosts,
   pollLatest,
   type PostFeedData,
+  PREPEND_LIMIT,
   PROCESS_STARTED_AT,
   RQKEY,
   type StagedPage,
@@ -122,7 +123,7 @@ jest.mock('react-native-worklets', () => ({
 /*
  * What the app subscribes to `AppState` with, for tests to report a change of
  * state to. It's in place before anything subscribes, so it has the one
- * subscription `onAppReturnedFromBackground` keeps for good.
+ * subscription `#/lib/appState`'s return tracker keeps for good.
  */
 const appStateListeners = new Set<(state: AppStateStatus) => void>()
 jest.mocked(AppState.addEventListener).mockImplementation((_type, listener) => {
@@ -891,7 +892,7 @@ describe('usePostFeedRefresh', () => {
 
 describe('usePostFeedPrepend', () => {
   const KEY = RQKEY('following')
-  const SINCE_REQUEST = 'timeline since:start:1 limit:100'
+  const SINCE_REQUEST = `timeline since:start:1 limit:${PREPEND_LIMIT}`
   /** A scroll event, whose contents the list's rest tracking doesn't read. */
   const EVENT = {} as ScrollEvent
 
@@ -956,17 +957,13 @@ describe('usePostFeedPrepend', () => {
           isActive,
           isBusy:
             isRefreshing || (query.isFetching && !query.isFetchingNextPage),
-          check: async trigger => {
-            const staging = prepend.check(trigger)
-            if (!staging) {
-              return pollLatest(query.data?.pages[0], createFeedApi())
-            }
-            const page = await staging
-            if (page && hasUnseenPosts(query.data?.pages[0], page.feed)) {
-              onHasNew(true)
-            }
-            return undefined
-          },
+          check: trigger =>
+            checkFollowing(trigger, {
+              prepend,
+              top: query.data?.pages[0],
+              createFeedApi,
+              onHasNew,
+            }),
           onFound,
         })
         return {query, listRest, refresh, prepend}
@@ -1129,7 +1126,7 @@ describe('usePostFeedPrepend', () => {
 
       expect(requested()).toEqual([
         SINCE_REQUEST,
-        'timeline since:start:0 limit:100',
+        `timeline since:start:0 limit:${PREPEND_LIMIT}`,
       ])
       expect(postsOf(cached())).toEqual([
         ['newer'],
@@ -1467,7 +1464,7 @@ describe('usePostFeedPrepend', () => {
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
   })
 
-  describe('on a real return to the app', () => {
+  describe('on a significant return to the app', () => {
     /** Two pages fetched just now, as a feed loaded this session has. */
     function fetchedData(): PostFeedData {
       const data = restoredData()
@@ -1520,7 +1517,7 @@ describe('usePostFeedPrepend', () => {
       await wait(0)
       expect(requested()).toEqual([])
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       // It peeks first, and the newest post isn't the one on top.
       expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
 
@@ -1553,7 +1550,7 @@ describe('usePostFeedPrepend', () => {
       newer(['new'], {cursor: 'gap:1'})
       const {cached} = renderView({data: fetchedData(), isActive: true})
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       await wait(LIST_REST_QUIET_MS)
 
       expect(postsOf(cached())).toEqual([
@@ -1568,12 +1565,12 @@ describe('usePostFeedPrepend', () => {
       renderView({data: fetchedData(), isActive: true})
 
       // As the notification shade or Control Center leave it.
-      await leaveFor(10 * RETURN_STALE_AFTER, 'inactive')
+      await leaveFor(10 * RETURN_MIN_TIME_AWAY, 'inactive')
       expect(requested()).toEqual([])
 
       answerPeek()
       newer([])
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
     })
 
@@ -1586,7 +1583,7 @@ describe('usePostFeedPrepend', () => {
       await wait(0)
       expect(requested()).toEqual([SINCE_REQUEST])
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       act(() => {
         since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
       })
@@ -1607,7 +1604,7 @@ describe('usePostFeedPrepend', () => {
         data: fetchedData(),
         isActive: true,
       })
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       mockClient.call.mockReturnValueOnce({
         cursor: 'timeline:1',
         feed: [feedItem('fresh')],
@@ -1630,7 +1627,7 @@ describe('usePostFeedPrepend', () => {
       delete data.pages[0].startCursor
       const {onFound} = renderView({data, isActive: true})
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
 
       expect(requested()).toEqual(['timeline latest'])
       expect(onFound).toHaveBeenCalledWith(true, 'return')
@@ -1715,7 +1712,7 @@ describe('staging new posts on Home Following', () => {
 
   /** A since request from `t:<n>`, as `requested` has it. */
   function since(n: number) {
-    return `timeline since:t:${n} limit:100`
+    return `timeline since:t:${n} limit:${PREPEND_LIMIT}`
   }
 
   const PEEK = 'timeline latest'
@@ -1786,27 +1783,19 @@ describe('staging new posts on Home Following', () => {
         listAtRest: listRest.atRest,
         isRefreshing: isPending,
       })
-      const settleAtTop = useSettleAtTop('following', undefined, {
-        enabled: true,
-        onRestAtTop: () => onHasNew(false),
-      })
       useNewPostsCheck({
         topFetchedAt,
         isEmpty: false,
         isActive,
         isBusy: isRefreshing || (query.isFetching && !query.isFetchingNextPage),
         interval: MINUTE,
-        check: async trigger => {
-          const staging = prepend.check(trigger)
-          if (!staging) {
-            return pollLatest(pages?.[0], createFeedApi())
-          }
-          const page = await staging
-          if (page && hasUnseenPosts(pages?.[0], page.feed)) {
-            onHasNew(true)
-          }
-          return undefined
-        },
+        check: trigger =>
+          checkFollowing(trigger, {
+            prepend,
+            top: pages?.[0],
+            createFeedApi,
+            onHasNew,
+          }),
         onFound: () => onHasNew(true),
       })
       const offsetY = useSharedValue(400)
@@ -1821,27 +1810,14 @@ describe('staging new posts on Home Following', () => {
         scrollToTop,
         onRead: prepend.markRead,
       })
-      const onItemSeen = useNonReactiveCallback((row: Row) => {
-        const top = pages?.[0]
-        if (
-          prepend.staged &&
-          top &&
-          ((row.type === 'sliceItem' && top.slices.includes(row.slice)) ||
-            (row.type === 'gap' && row.cursor === top.cursor))
-        ) {
-          prepend.onPageSeen(top.fetchedAt)
-        }
-      })
+      const {reports, onRowSeen: onItemSeen} = useFollowingListReports(
+        'following',
+        undefined,
+        {enabled: true, prepend, top: pages?.[0], onHasNew},
+      )
       const scrollHandlers = useSettleScrollHandlers(
         listRest.scrollHandlers,
-        {
-          ...settleAtTop,
-          onBeginDrag: () => {
-            settleAtTop.onBeginDrag()
-            prepend.onBeginDrag()
-          },
-          onReachTop: prepend.markRead,
-        },
+        reports,
         offsetY,
       )
       Object.assign(latest, {rows, pill, staged: prepend.staged, refresh})
@@ -1908,13 +1884,18 @@ describe('staging new posts on Home Following', () => {
     })
   }
 
-  /**
-   * Leaves the app in the background for two minutes, then opens it again,
-   * and lets the check that makes finish.
-   */
+  /** A significant return to the app, and the check it makes. */
   async function warmOpen() {
     setAppState('background')
-    await wait(RETURN_STALE_AFTER)
+    await wait(RETURN_MIN_TIME_AWAY)
+    setAppState('active')
+    await wait(SECOND)
+  }
+
+  /** A quick hop away, as to a share sheet, and the check it makes. */
+  async function quickHop() {
+    setAppState('background')
+    await wait(SECOND)
     setAppState('active')
     await wait(SECOND)
   }
@@ -1990,7 +1971,7 @@ describe('staging new posts on Home Following', () => {
       newest = 12 + 150
       await anInterval()
       expect(cached().pages).toHaveLength(3)
-      expect(cached().pages[0].feed).toHaveLength(100)
+      expect(cached().pages[0].feed).toHaveLength(PREPEND_LIMIT)
       expect(postsOf(cached())[0][0]).toBe('p162')
       expect(gapBelow(cached().pages, 0)).toBe('open')
       const staged = cached()
@@ -2004,7 +1985,7 @@ describe('staging new posts on Home Following', () => {
 
       // Reached, the posts above them go on top.
       list.beginDrag(400)
-      list.see(100)
+      list.see(162)
       list.endDrag(300)
       await anInterval()
       expect(requested()).toEqual([PEEK, since(12), PEEK, since(162)])
@@ -2227,7 +2208,10 @@ describe('staging new posts on Home Following', () => {
       await warmOpen()
 
       expect(requested()).toEqual([PEEK, since(12)])
-      expect(latest.pill).toMatchObject({visible: true, count: 100})
+      expect(latest.pill).toMatchObject({
+        visible: true,
+        count: PREPEND_LIMIT,
+      })
     })
 
     it('raises no pill with nothing staged', async () => {
@@ -2262,6 +2246,49 @@ describe('staging new posts on Home Following', () => {
 
       expect(latest.pill.visible).toBe(false)
       expect(latest.staged).toBeUndefined()
+    })
+  })
+
+  describe('on a quick hop away and back', () => {
+    it('stages what is newer above the reader and lights the Home dot, with no pill', async () => {
+      const {latest, cached, onHasNew} = renderHome()
+
+      newest = 14
+      await quickHop()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(postsOf(cached())).toEqual([
+        ['p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
+      expect(onHasNew).toHaveBeenLastCalledWith(true)
+      expect(latest.pill.visible).toBe(false)
+    })
+
+    it('leaves what is staged without the pill, for a significant return to offer', async () => {
+      const {latest} = renderHome()
+      newest = 14
+      await anInterval()
+
+      await quickHop()
+      expect(requested()).toEqual([PEEK, since(12), PEEK])
+      expect(latest.pill.visible).toBe(false)
+
+      await warmOpen()
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+    })
+
+    it('leaves what is staged without the pill, without checking, while it is full', async () => {
+      const {latest} = renderHome()
+      newest = 12 + 150
+      await anInterval()
+
+      newest += 5
+      await quickHop()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(latest.pill.visible).toBe(false)
     })
   })
 

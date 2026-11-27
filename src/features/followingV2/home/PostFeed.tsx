@@ -77,6 +77,7 @@ import {
 } from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {checkFollowing, useFollowingListReports} from './anchoredFollowing'
 import {GapRow} from './GapRow'
 import {mixSamples} from './mixSamples'
 import {PrependPill} from './PrependPill'
@@ -87,7 +88,6 @@ import {
   type FeedPostSlice,
   type FeedPostSliceItem,
   findGaps,
-  hasUnseenPosts,
   pollLatest,
   RQKEY,
   usePostFeedFetcher,
@@ -101,7 +101,6 @@ import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHand
 import {useListRest} from './useListRest'
 import {useNewPostsCheck} from './useNewPostsCheck'
 import {usePrependPill} from './usePrependPill'
-import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
 type FeedRow =
@@ -413,11 +412,6 @@ let PostFeed = ({
     }
     return fillGap(cursor)
   })
-  const settleAtTop = useSettleAtTop(feed, feedParams, {
-    enabled: isAnchored && enabled !== false,
-    // At the newest post, nothing is new to the reader any more.
-    onRestAtTop: () => onHasNew?.(false),
-  })
   /** The list's scroll offset, which its scroll handlers keep. */
   const listOffsetY = useSharedValue(0)
 
@@ -492,9 +486,10 @@ let PostFeed = ({
   /*
    * Anchored Following's checks, made by the view on screen only. Each one
    * that finds newer posts stages them above the reader at rest (see
-   * `usePostFeedPrepend`) and lights the Home dot. Only a return to the app
-   * offers them with the pill. With no boundary to fetch above, as for an
-   * empty feed, it peeks for the Home dot instead, as other feeds do.
+   * `usePostFeedPrepend`) and lights the Home dot. Only one on a significant
+   * return to the app, or one that joins a restore's prepend, offers them with
+   * the pill. With no boundary to fetch above, as for an empty feed, it peeks
+   * for the Home dot instead, as other feeds do.
    */
   useNewPostsCheck({
     topFetchedAt: lastFetchedAt,
@@ -507,17 +502,13 @@ let PostFeed = ({
      * check replaces what's staged with the newest posts.
      */
     interval: pollInterval,
-    check: async trigger => {
-      const staging = prepend.check(trigger)
-      if (!staging) {
-        return pollLatest(feedData?.pages[0], createFeedApi())
-      }
-      const page = await staging
-      if (page && hasUnseenPosts(feedData?.pages[0], page.feed)) {
-        onHasNew?.(true)
-      }
-      return undefined
-    },
+    check: trigger =>
+      checkFollowing(trigger, {
+        prepend,
+        top: feedData?.pages[0],
+        createFeedApi,
+        onHasNew,
+      }),
     onFound: () => {
       if (isEmpty) {
         void refreshToTop()
@@ -987,18 +978,13 @@ let PostFeed = ({
     },
     onRead: prepend.markRead,
   })
-  /** Tells the prepend the reader saw a row, if it's from the top page. */
-  const onTopRowSeen = useNonReactiveCallback((row: FeedRow) => {
-    const top = data?.pages[0]
-    if (
-      prepend.staged &&
-      top &&
-      ((row.type === 'sliceItem' && top.slices.includes(row.slice)) ||
-        (row.type === 'gap' && row.cursor === top.cursor))
-    ) {
-      prepend.onPageSeen(top.fetchedAt)
-    }
-  })
+  const {reports: listReports, onRowSeen: onTopRowSeen} =
+    useFollowingListReports(feed, feedParams, {
+      enabled: isAnchored && enabled !== false,
+      prepend,
+      top: data?.pages[0],
+      onHasNew,
+    })
   /**
    * The list's scroll handlers. Settling, staging and the pill judge the
    * offset as the list reports it, as they have to know where the list really
@@ -1008,17 +994,7 @@ let PostFeed = ({
    */
   const scrollHandlers = useSettleScrollHandlers(
     listRest.scrollHandlers,
-    isAnchored
-      ? {
-          ...settleAtTop,
-          onBeginDrag: () => {
-            settleAtTop.onBeginDrag()
-            prepend.onBeginDrag()
-          },
-          // At the top, the reader has passed everything staged above them.
-          onReachTop: prepend.markRead,
-        }
-      : undefined,
+    isAnchored ? listReports : undefined,
     listOffsetY,
   )
 
