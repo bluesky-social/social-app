@@ -186,6 +186,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
+  const hasEngagement =
+    post.repostCount !== 0 ||
+    post.likeCount !== 0 ||
+    post.quoteCount !== 0 ||
+    post.bookmarkCount !== 0
   const record = item.value.post.record
   const postNumbering = item.value
   const showPostNumber = useHasThreadItemPostNumber(postNumbering)
@@ -402,10 +407,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               isThreadAuthor={isThreadAuthor}
               showViewCount={showViewCount}
             />
-            {post.repostCount !== 0 ||
-            post.likeCount !== 0 ||
-            post.quoteCount !== 0 ||
-            post.bookmarkCount !== 0 ? (
+            {hasEngagement ? (
               // Show this section unless we're *sure* it has no engagement.
               <View
                 style={[
@@ -488,6 +490,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <View
               style={[
                 a.pb_2xs,
+                !hasEngagement && a.pt_sm,
                 {
                   marginLeft: -5,
                 },
