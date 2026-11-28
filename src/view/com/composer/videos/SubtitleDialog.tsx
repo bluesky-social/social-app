@@ -119,9 +119,22 @@ function SubtitleDialogInner({
             multiline
             style={{maxHeight: 300}}
             numberOfLines={3}
-            onKeyPress={({nativeEvent}) => {
+            onKeyPress={e => {
+              const {nativeEvent} = e
               if (nativeEvent.key === 'Escape') {
                 control.close()
+              } else if (
+                IS_WEB &&
+                nativeEvent.key === 'Enter' &&
+                (('ctrlKey' in nativeEvent && nativeEvent.ctrlKey) ||
+                  ('metaKey' in nativeEvent && nativeEvent.metaKey))
+              ) {
+                e.preventDefault()
+                e.stopPropagation()
+                if (!isOverMaxLength) {
+                  saveAltText(altText)
+                  control.close()
+                }
               }
             }}
           />

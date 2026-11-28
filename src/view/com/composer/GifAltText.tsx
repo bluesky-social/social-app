@@ -24,6 +24,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 
 export function GifAltTextDialog({
@@ -184,8 +185,18 @@ function AltTextInner({
                   multiline
                   autoFocus
                   scrollEnabled={false}
-                  onKeyPress={({nativeEvent}) => {
+                  onKeyPress={e => {
+                    const {nativeEvent} = e
                     if (nativeEvent.key === 'Escape') {
+                      control.close()
+                    } else if (
+                      IS_WEB &&
+                      nativeEvent.key === 'Enter' &&
+                      (('ctrlKey' in nativeEvent && nativeEvent.ctrlKey) ||
+                        ('metaKey' in nativeEvent && nativeEvent.metaKey))
+                    ) {
+                      e.preventDefault()
+                      e.stopPropagation()
                       control.close()
                     }
                   }}
