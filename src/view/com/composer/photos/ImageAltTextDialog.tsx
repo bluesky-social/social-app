@@ -84,8 +84,6 @@ const ImageAltTextInner = ({
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
-      <Dialog.Close />
-
       <View>
         {/* vertical space is too precious - gets scrolled out of the way anyway */}
         {IS_WEB && (
@@ -167,6 +165,7 @@ const ImageAltTextInner = ({
           </Button>
         </AltTextCounterWrapper>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
