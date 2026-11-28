@@ -125,6 +125,19 @@ const ImageAltTextInner = ({
                 multiline
                 autoFocus
                 scrollEnabled={false}
+                onKeyPress={e => {
+                  const {nativeEvent} = e
+                  if (
+                    IS_WEB &&
+                    nativeEvent.key === 'Enter' &&
+                    (('ctrlKey' in nativeEvent && nativeEvent.ctrlKey) ||
+                      ('metaKey' in nativeEvent && nativeEvent.metaKey))
+                  ) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    control.close()
+                  }
+                }}
               />
             </TextField.Root>
           </View>
